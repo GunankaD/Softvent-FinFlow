@@ -72,6 +72,30 @@ ALWAYS end sql commands with semicolon (;) otherwise it wont be executed
     - this connects to the database as mentioned. 
 4. `DROP DATABASE database-name;`
     - cannot drop the currently connected db, have to exit.
+5. `CREATE TABLE ( colname1 dtype1, colname2 dtype2... )`
+	- the command wont be executed until we enter semicolon so we can hit enter for each line.
+	- `test` is the name of the database
+	```
+		test=# CREATE TABLE person (
+		test(# id BIGSERIAL NOT NULL PRIMARY KEY,
+		test(# first_name VARCHAR(50) NOT NULL,
+		test(# last_name VARCHAR(50) NOT NULL,
+		test(# gender VARCHAR (6) NOT NULL,
+		test(# date_of_birth DATE NOT NULL,
+		test(# email VARCHAR(150) );
+	```
+6. `\d`
+	- describes current database. ie displays all the tables
+	- `\d tablename` describes the table ie displays all columns
+7. `INSERT INTO person (...) VALUES (...)`
+	- values need to follow the order of columns displayed after person
+	```
+		test=# INSERT INTO person (first_name, last_name, gender, date_of_birth)
+		test-# VALUES ('Anne', 'Smith', 'FEMALE', date '1988-01-09');
+		INSERT 0 1
+	```
+8. `\i X:/path/to/sql/file.sql`
+	- this executes any sql file
 
 ## How data is stored in a disk
 ```
@@ -179,3 +203,4 @@ Disk
 		- pointers to rows
 		- free space info
 
+#### Dummy data is available in mockaroo website
