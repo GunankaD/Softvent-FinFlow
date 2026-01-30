@@ -1,0 +1,108 @@
+softvent_finflow=# \d
+                     List of relations
+ Schema |            Name            |   Type   |  Owner
+--------+----------------------------+----------+----------
+ public | auth                       | table    | postgres
+ public | auth_uid_seq               | sequence | postgres
+ public | customers                  | table    | postgres
+ public | customers_cid_seq          | sequence | postgres
+ public | items                      | table    | postgres
+ public | items_iid_seq              | sequence | postgres
+ public | outstanding_summary        | table    | postgres
+ public | transaction_items          | table    | postgres
+ public | transaction_items_tiid_seq | sequence | postgres
+ public | transactions               | table    | postgres
+ public | transactions_tid_seq       | sequence | postgres
+
+
+                                     Table "public.auth"
+  Column  |          Type          | Collation | Nullable |              Default
+----------+------------------------+-----------+----------+-----------------------------------
+ uid      | bigint                 |           | not null | nextval('auth_uid_seq'::regclass)
+ emailid  | character varying(50)  |           | not null |
+ pwd_hash | character varying(100) |           | not null |
+Indexes:
+    "auth_pkey" PRIMARY KEY, btree (uid)
+    "auth_pkey" PRIMARY KEY, btree (uid)
+
+                                          Table "public.customers"
+    Column     |            Type             | Collation | Nullable |                Default
+---------------+-----------------------------+-----------+----------+----------------------------------------
+ cid           | bigint                      |           | not null | nextval('customers_cid_seq'::regclass)
+ ccode         | character varying(20)       |           | not null |
+ cname         | character varying(100)      |           | not null |
+ address       | text                        |           | not null |
+ city          | character varying(50)       |           | not null |
+ state         | character varying(50)       |           | not null |
+ country       | character varying(50)       |           | not null |
+ pincode       | character varying(10)       |           | not null |
+ mobile_number | character varying(15)       |           | not null |
+ email_id      | character varying(100)      |           | not null |
+ gst_no        | character varying(15)       |           | not null |
+ pan_no        | character varying(10)       |           | not null |
+ bank_name     | character varying(100)      |           | not null |
+ branch_name   | character varying(100)      |           | not null |
+ account_no    | character varying(20)       |           | not null |
+ created_at    | timestamp without time zone |           | not null | CURRENT_TIMESTAMP
+Indexes:
+    "customers_pkey" PRIMARY KEY, btree (cid)
+    "customers_ccode_key" UNIQUE CONSTRAINT, btree (ccode)
+
+
+                                          Table "public.items"
+    Column    |            Type             | Collation | Nullable |              Default
+--------------+-----------------------------+-----------+----------+------------------------------------
+ iid          | bigint                      |           | not null | nextval('items_iid_seq'::regclass)
+ icode        | character varying(30)       |           | not null |
+ name         | character varying(100)      |           | not null |
+ description  | text                        |           | not null |
+ hsn_sac_code | character varying(10)       |           | not null |
+ item_group   | character varying(50)       |           | not null |
+ item_type    | character varying(20)       |           | not null |
+ uom          | character varying(20)       |           | not null |
+ is_bom       | boolean                     |           | not null | false
+ created_at   | timestamp without time zone |           | not null | CURRENT_TIMESTAMP
+Indexes:
+    "items_pkey" PRIMARY KEY, btree (iid)
+    "items_icode_key" UNIQUE CONSTRAINT, btree (icode)
+
+
+                                            Table "public.transactions"
+      Column      |            Type             | Collation | Nullable |                  Default
+------------------+-----------------------------+-----------+----------+-------------------------------------------
+ tid              | bigint                      |           | not null | nextval('transactions_tid_seq'::regclass)
+ cid              | bigint                      |           | not null |
+ transaction_type | character varying(20)       |           | not null |
+ parent_tid       | bigint                      |           |          |
+ total_amount     | numeric(12,2)               |           | not null |
+ paid_amount      | numeric(12,2)               |           | not null |
+ balance_amount   | numeric(12,2)               |           | not null |
+ transaction_date | date                        |           | not null |
+ created_at       | timestamp without time zone |           | not null | CURRENT_TIMESTAMP
+Indexes:
+    "transactions_pkey" PRIMARY KEY, btree (tid)
+
+
+                                  Table "public.transaction_items"
+   Column   |     Type      | Collation | Nullable |                     Default
+------------+---------------+-----------+----------+-------------------------------------------------
+ tiid       | bigint        |           | not null | nextval('transaction_items_tiid_seq'::regclass)
+ tid        | bigint        |           | not null |
+ iid        | bigint        |           | not null |
+ quantity   | numeric(12,2) |           | not null |
+ rate       | numeric(12,2) |           | not null |
+ line_total | numeric(12,2) |           | not null |
+Indexes:
+    "transaction_items_pkey" PRIMARY KEY, btree (tiid)
+
+
+                      Table "public.outstanding_summary"
+        Column        |         Type          | Collation | Nullable | Default
+----------------------+-----------------------+-----------+----------+---------
+ cid                  | bigint                |           | not null |
+ ccode                | character varying(20) |           | not null |
+ total_bill_amount    | numeric(12,2)         |           | not null | 0
+ total_receipt_amount | numeric(12,2)         |           | not null | 0
+ balance_amount       | numeric(12,2)         |           | not null | 0
+Indexes:
+    "outstanding_summary_pkey" PRIMARY KEY, btree (cid)
