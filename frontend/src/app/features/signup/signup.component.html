@@ -1,7 +1,7 @@
 <div class="login-container">
     <mat-card class="login-card">
         <h2>FinFlow</h2>
-        <p class="subtitle">Sign in to continue</p>
+        <p class="subtitle">Start your journey with us</p>
 
     <!-- FORM GROUP BEGINS -->
         <form>
@@ -26,28 +26,29 @@
             </mat-form-field>
         <!-- PASSWORD ENDS -->
 
-        <!-- LOGIN BUTTON BEGINS -->
+        <!-- CREATE NEW ACCOUNT BUTTON BEGINS -->
+        
             <div
-                class="login-btn-wrapper"
+                class="create-acc-btn-wrapper"
                 [class.invalid]="email.invalid || password.invalid">
 
                 <button
                     mat-raised-button
-                    class="full login-btn"
+                    class="full create-acc-btn"
                     [disabled]="email.invalid || password.invalid">
-                    Login
+                    Create Account
                 </button>
             </div>
-        <!-- LOGIN BUTTON ENDS -->
-
-        <!-- CREATE NEW ACCOUNT BUTTON BEGINS -->
+        <!-- CREATE NEW ACCOUNT BUTTON ENDS -->
+        
+        <!-- LOGIN BUTTON BEGINS -->
             <button
                 mat-button
-                class="full create-acc-btn"
-                routerLink="/signup">
-                Create new account
+                class="full login-btn"
+                routerLink="/login">
+                Back to Login
             </button>
-        <!-- CREATE NEW ACCOUNT BUTTON ENDS -->
+        <!-- LOGIN BUTTON ENDS -->
 
         </form>
     <!-- FORM GROUP ENDS -->

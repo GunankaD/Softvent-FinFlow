@@ -33,7 +33,7 @@ h2 {
   width: 100%;
 }
 
-.login-btn {
+.create-acc-btn {
   margin-top: 12px;
   height: 44px;
   font-weight: 500;
@@ -42,12 +42,12 @@ h2 {
 }
 
 /* Cursor invalid */
-.login-btn-wrapper.invalid {
+.create-acc-btn-wrapper.invalid {
   cursor: not-allowed;
 }
 
 /* Disabled button look */
-.login-btn-wrapper.invalid .login-btn {
+.create-acc-btn-wrapper.invalid .create-acc-btn {
   background-color: #0D3C71 !important; /* grey */
   color: #6D757A!important;
   pointer-events: none;
@@ -55,11 +55,12 @@ h2 {
 }
 
 /* Hover feedback */
-.login-btn-wrapper.invalid:hover {
+.create-acc-btn-wrapper.invalid:hover {
   opacity: 0.9;
 }
 
-.create-acc-btn{
+
+.login-btn{
   margin-top: 12px;
   height: 44px;
   font-weight: 500;

@@ -16,10 +16,9 @@ import {
 } from '@angular/forms';
 
 @Component({
-  standalone: true,
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss'],
+  selector: 'app-signup',
+  templateUrl: './signup.component.html',
+  styleUrl: './signup.component.scss',
   imports: [
     MatCardModule,
     MatFormFieldModule,
@@ -30,9 +29,8 @@ import {
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoginComponent {
-
-  // FORM CONTROL FIELDS
+export class SignupComponent {
+ // FORM CONTROL FIELDS
   email = new FormControl('', [
     Validators.required,
     Validators.email,
@@ -91,6 +89,4 @@ export class LoginComponent {
       this.passwordError.set('defaulting');
     }
   }
-
 }
-
