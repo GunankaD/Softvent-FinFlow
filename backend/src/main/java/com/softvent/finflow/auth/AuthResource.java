@@ -64,4 +64,3 @@ public class AuthResource {
         return Response.status(Response.Status.NO_CONTENT).build(); // 204
     }
 }
-
