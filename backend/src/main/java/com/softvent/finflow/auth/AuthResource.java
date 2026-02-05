@@ -63,4 +63,30 @@ public class AuthResource {
 
         return Response.status(Response.Status.NO_CONTENT).build(); // 204
     }
+
+    @POST
+    @Path("/login")
+    @Transactional
+    public Response login(LoginRequest req) {
+
+        if (req == null || req.emailid == null || req.password == null) {
+            return Response.status(Response.Status.BAD_REQUEST).build(); // 400
+        }
+
+        Auth user = Auth.find("emailid", req.emailid).firstResult();
+
+        // even if the user doesnt exist, return 401 error only. do not reveal.
+        if (user == null) {
+            return Response.status(Response.Status.UNAUTHORIZED).build(); // 401
+        }
+
+        boolean passwordMatch = BCrypt.checkpw(req.password, user.pwdHash);
+
+        if (!passwordMatch) {
+            return Response.status(Response.Status.UNAUTHORIZED).build(); // 401
+        }
+
+        return Response.ok().build(); // 200
+    }
+
 }
