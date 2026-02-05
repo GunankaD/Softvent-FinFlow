@@ -106,3 +106,15 @@ Indexes:
  balance_amount       | numeric(12,2)         |           | not null | 0
 Indexes:
     "outstanding_summary_pkey" PRIMARY KEY, btree (cid)
+
+
+                                        Table "public.password_reset"
+   Column   |            Type             | Collation | Nullable |                  Default
+------------+-----------------------------+-----------+----------+--------------------------------------------
+ id         | bigint                      |           | not null | nextval('password_reset_id_seq'::regclass)
+ emailid    | character varying(50)       |           | not null |
+ token      | character varying(255)      |           | not null |
+ expires_at | timestamp without time zone |           | not null |
+Indexes:
+    "password_reset_pkey" PRIMARY KEY, btree (id)
+    "password_reset_token_key" UNIQUE CONSTRAINT, btree (token)
