@@ -136,7 +136,8 @@ export class SignupComponent {
     if (
       this.email.invalid ||
       this.password.invalid ||
-      this.confirmPassword.invalid
+      this.password.value != this.confirmPassword.value ||
+      this.confirmPassword.invalid 
     ) {
       return;
     }

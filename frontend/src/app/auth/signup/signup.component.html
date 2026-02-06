@@ -72,7 +72,11 @@
         <!-- CREATE NEW ACCOUNT BUTTON BEGINS -->
             <div
                 class="create-acc-btn-wrapper"
-                [class.invalid]="email.invalid || password.invalid">
+                [class.invalid]="
+                    email.invalid || 
+                    password.invalid || 
+                    confirmPassword.invalid ||
+                    (password.value != confirmPassword.value)">
 
                 <button
                     mat-raised-button
