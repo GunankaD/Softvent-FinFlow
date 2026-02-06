@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { merge } from 'rxjs';
 
 // Material UI
@@ -10,10 +10,14 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { 
   ReactiveFormsModule, 
+  FormsModule,
   FormGroup, 
   FormControl,
   Validators,
 } from '@angular/forms';
+
+import { LoginRequest } from '../../core/models/auth.models';
+import { AuthService } from '../../core/services/auth.service';
 
 @Component({
   standalone: true,
@@ -26,6 +30,7 @@ import {
     MatInputModule,
     MatButtonModule,
     ReactiveFormsModule,
+    FormsModule,
     RouterModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -50,8 +55,11 @@ export class LoginComponent {
   emailError = signal('');
   passwordError = signal('');
 
-  // SUBCRIBE TO SIGNALS
-  constructor() {
+  // SUBSCRIBE TO SIGNALS
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {
     merge(
       this.email.statusChanges,
       this.email.valueChanges
@@ -92,5 +100,24 @@ export class LoginComponent {
     }
   }
 
+  onLogin() {
+    if (this.email.invalid || this.password.invalid) return;
+
+    const payload: LoginRequest = {
+      emailid: this.email.value!,
+      password: this.password.value!,
+    };
+
+    this.authService.login(payload).subscribe({
+      next: () => {
+        this.router.navigate(['/'])
+      },
+      error: (err) => {
+        if (err.status === 401) {
+          this.passwordError.set('Invalid email or password');
+        }
+      }
+    });
+  }
 }
 

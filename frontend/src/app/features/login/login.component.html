@@ -1,10 +1,10 @@
 <div class="login-container">
     <mat-card class="login-card">
         <h2>FinFlow</h2>
-        <p class="subtitle">Sign in to continue</p>
+        <p class="subtitle">Log in to continue</p>
 
     <!-- FORM GROUP BEGINS -->
-        <form>
+        <form (ngSubmit)="onLogin()">
         <!-- EMAIL ID BEGINS-->
             <mat-form-field appearance="outline" class="full email">
                 <mat-label>Email</mat-label>
@@ -33,6 +33,7 @@
 
                 <button
                     mat-raised-button
+                    type="submit"
                     class="full login-btn"
                     [disabled]="email.invalid || password.invalid">
                     Login
