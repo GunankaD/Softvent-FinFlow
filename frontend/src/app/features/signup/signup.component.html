@@ -19,15 +19,57 @@
         <!-- PASSWORD BEGINS -->
             <mat-form-field appearance="outline" class="full password">
                 <mat-label>Password</mat-label>
-                <input matInput type="password" [formControl]="password" />
+                <input 
+                    matInput 
+                    [type]="hidePassword() ? 'password' : 'text'" 
+                    [formControl]="password" />
+
+                <button
+                    mat-icon-button
+                    matSuffix
+                    type="button"
+                    (click)="hidePassword.set(!hidePassword())"
+                    aria-label="Toggle password visibility">
+
+                    <mat-icon>
+                        {{ hidePassword() ? 'visibility_off' : 'visibility' }}
+                    </mat-icon>
+                </button>
+
                 @if (password.invalid) {
                     <mat-error>{{ passwordError() }}</mat-error>
                 }
             </mat-form-field>
         <!-- PASSWORD ENDS -->
 
+        <!-- CONFIRM PASSWORD BEGINS -->
+            <mat-form-field appearance="outline" class="full password">
+                <mat-label>Confirm Password</mat-label>
+                <input
+                    matInput
+                    [type]="hideConfirmPassword() ? 'password' : 'text'"
+                    [formControl]="confirmPassword" />
+                    
+                <button
+                    mat-icon-button
+                    matSuffix
+                    type="button"
+                    (click)="hideConfirmPassword.set(!hideConfirmPassword())"
+                    aria-label="Toggle password visibility">
+
+                    <mat-icon>
+                        {{ hideConfirmPassword() ? 'visibility_off' : 'visibility' }}
+                    </mat-icon>
+                </button>
+
+                @if (confirmPassword.invalid) {
+                    <mat-error>{{ confirmPasswordError() }}</mat-error>
+                }
+            </mat-form-field>
+        <!-- CONFIRM PASSWORD ENDS -->
+
+
         <!-- CREATE NEW ACCOUNT BUTTON BEGINS -->
-        
             <div
                 class="create-acc-btn-wrapper"
                 [class.invalid]="email.invalid || password.invalid">
@@ -35,7 +77,7 @@
                 <button
                     mat-raised-button
                     class="full create-acc-btn"
-                    [disabled]="email.invalid || password.invalid">
+                    [disabled]="email.invalid || password.invalid || confirmPassword.invalid">
                     Create Account
                 </button>
             </div>

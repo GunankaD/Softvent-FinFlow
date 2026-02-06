@@ -8,6 +8,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule} from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { 
   ReactiveFormsModule, 
   FormGroup, 
@@ -24,6 +25,7 @@ import {
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatIconModule,
     ReactiveFormsModule,
     RouterModule,
   ],
@@ -43,12 +45,20 @@ export class SignupComponent {
     Validators.minLength(6),
   ]);
 
+  confirmPassword = new FormControl('', [
+    Validators.required,
+  ]);
+
 
   // SIGNALS
   emailError = signal('');
   passwordError = signal('');
+  confirmPasswordError = signal('');
 
-  // SUBCRIBE TO SIGNALS
+  hidePassword = signal(true);
+  hideConfirmPassword = signal(true);
+
+  // SUBSCRIBE TO SIGNALS
   constructor() {
     merge(
       this.email.statusChanges,
@@ -63,10 +73,17 @@ export class SignupComponent {
     )
     .pipe(takeUntilDestroyed())
     .subscribe(() => this.updatePasswordError());
+
+    merge(
+      this.password.valueChanges,
+      this.confirmPassword.valueChanges
+    )
+    .pipe(takeUntilDestroyed())
+    .subscribe(() => this.updateConfirmPasswordError());
   }
 
   // UPDATE FXS
-  updateEmailError() {
+  private updateEmailError() {
     if (this.email.hasError('required')) {
       this.emailError.set('Email is required');
     } else if (this.email.hasError('email')) {
@@ -78,7 +95,7 @@ export class SignupComponent {
     }
   }
 
-  updatePasswordError() {
+  private updatePasswordError() {
     if (this.password.hasError('required')) {
       this.passwordError.set('Password is required');
     } else if (this.password.hasError('maxlength')) {
@@ -89,4 +106,19 @@ export class SignupComponent {
       this.passwordError.set('defaulting');
     }
   }
+
+  private updateConfirmPasswordError() {
+  if (this.confirmPassword.hasError('required')) {
+    this.confirmPasswordError.set('Confirm password is required');
+    return;
+  }
+
+  if (this.password.value !== this.confirmPassword.value) {
+    this.confirmPasswordError.set('Passwords do not match');
+    this.confirmPassword.setErrors({ mismatch: true });
+  } else {
+    this.confirmPassword.setErrors(null);
+    this.confirmPasswordError.set('');
+  }
+}
 }
