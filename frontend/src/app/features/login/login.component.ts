@@ -8,6 +8,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule} from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { 
   ReactiveFormsModule, 
   FormsModule,
@@ -29,6 +30,7 @@ import { AuthService } from '../../core/services/auth.service';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatIconModule,
     ReactiveFormsModule,
     FormsModule,
     RouterModule,
@@ -54,6 +56,7 @@ export class LoginComponent {
   // SIGNALS
   emailError = signal('');
   passwordError = signal('');
+  hidePassword = signal(true);
 
   // SUBSCRIBE TO SIGNALS
   constructor(

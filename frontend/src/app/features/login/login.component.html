@@ -19,7 +19,23 @@
         <!-- PASSWORD BEGINS -->
             <mat-form-field appearance="outline" class="full password">
                 <mat-label>Password</mat-label>
-                <input matInput type="password" [formControl]="password" />
+                <input 
+                    matInput 
+                    [type]="hidePassword() ? 'password' : 'text'" 
+                    [formControl]="password" />
+
+                <button
+                    mat-icon-button
+                    matSuffix
+                    type="button"
+                    (click)="hidePassword.set(!hidePassword())"
+                    aria-label="Toggle password visibility">
+
+                    <mat-icon>
+                        {{ hidePassword() ? 'visibility_off' : 'visibility' }}
+                    </mat-icon>
+                </button>
+                
                 @if (password.invalid) {
                     <mat-error>{{ passwordError() }}</mat-error>
                 }
