@@ -1,10 +1,10 @@
 <div class="login-container">
     <mat-card class="login-card">
-        <h2>FinFlow</h2>
-        <p class="subtitle">Start your journey with us</p>
+        <h1>FinFlow</h1>
+        <p class="subtitle">Start your journey with us...</p>
 
     <!-- FORM GROUP BEGINS -->
-        <form>
+        <form (ngSubmit)="onSignup()">
         <!-- EMAIL ID BEGINS-->
             <mat-form-field appearance="outline" class="full email">
                 <mat-label>Email</mat-label>
@@ -49,7 +49,7 @@
                     matInput
                     [type]="hideConfirmPassword() ? 'password' : 'text'"
                     [formControl]="confirmPassword" />
-                    
+
                 <button
                     mat-icon-button
                     matSuffix
@@ -76,6 +76,7 @@
 
                 <button
                     mat-raised-button
+                    type="submit"
                     class="full create-acc-btn"
                     [disabled]="email.invalid || password.invalid || confirmPassword.invalid">
                     Create Account
