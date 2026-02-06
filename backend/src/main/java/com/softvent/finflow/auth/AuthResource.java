@@ -88,7 +88,7 @@ public class AuthResource {
         Auth user = Auth.find("emailid", req.emailid).firstResult();
         if (user == null) {
             // security: don’t reveal email existence
-            return Response.status(Response.Status.NOT_FOUND).build(); // 404
+            return Response.status(Response.Status.OK).build(); // 200
         }
 
         PasswordReset reset = new PasswordReset();
