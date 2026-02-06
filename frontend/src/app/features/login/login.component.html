@@ -1,6 +1,6 @@
 <div class="login-container">
     <mat-card class="login-card">
-        <h2>FinFlow</h2>
+        <h1>FinFlow</h1>
         <p class="subtitle">Log in to continue</p>
 
     <!-- FORM GROUP BEGINS -->
@@ -35,7 +35,7 @@
                         {{ hidePassword() ? 'visibility_off' : 'visibility' }}
                     </mat-icon>
                 </button>
-                
+
                 @if (password.invalid) {
                     <mat-error>{{ passwordError() }}</mat-error>
                 }
