@@ -11,3 +11,13 @@ export interface SignupRequest {
 export interface AuthResponse {
   message?: string;
 }
+
+export interface ForgotPasswordRequest {
+  emailid: string;
+}
+
+export interface ResetPasswordRequest {
+  token: string;
+  newPassword: string;
+}
+
