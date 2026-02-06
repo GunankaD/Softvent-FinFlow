@@ -19,6 +19,7 @@ import {
 
 import { SignupRequest } from '../../core/models/auth.models';
 import { AuthService } from '../../core/services/auth.service';
+import { SnackbarService } from '../../core/services/snackbar.service';
 
 @Component({
   selector: 'app-signup',
@@ -66,6 +67,7 @@ export class SignupComponent {
   // SUBSCRIBE TO SIGNALS
   constructor(
     private authService: AuthService,
+    private snackbar: SnackbarService,
     private router: Router
   ) {
     merge(
@@ -146,14 +148,14 @@ export class SignupComponent {
 
     this.authService.signup(payload).subscribe({
       next: () => {
-        // this.snackbar.success('Account created successfully');
+        this.snackbar.success('Account created successfully');
         this.router.navigate(['/login']);
       },
       error: (err) => {
         if (err.status === 409) {
-          // this.snackbar.error('Account already exists');
+          this.snackbar.error('Account already exists');
         } else {
-          // this.snackbar.error('Signup failed. Please try again.');
+          this.snackbar.error('Signup failed. Please try again.');
         }
       }
     });

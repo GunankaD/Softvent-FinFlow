@@ -19,6 +19,7 @@ import {
 
 import { LoginRequest } from '../../core/models/auth.models';
 import { AuthService } from '../../core/services/auth.service';
+import { SnackbarService } from '../../core/services/snackbar.service';
 
 @Component({
   standalone: true,
@@ -61,6 +62,7 @@ export class LoginComponent {
   // SUBSCRIBE TO SIGNALS
   constructor(
     private authService: AuthService,
+    private snackbar: SnackbarService,
     private router: Router
   ) {
     merge(
@@ -115,9 +117,11 @@ export class LoginComponent {
       next: () => {
         this.router.navigate(['/'])
       },
-      error: (err) => {
+       error: (err) => {
         if (err.status === 401) {
-          this.passwordError.set('Invalid email or password');
+          this.snackbar.error('Invalid email or password');
+        } else {
+          this.snackbar.error('Login failed. Please try again.');
         }
       }
     });
