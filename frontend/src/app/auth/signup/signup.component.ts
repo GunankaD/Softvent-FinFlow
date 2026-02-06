@@ -17,9 +17,9 @@ import {
   Validators,
 } from '@angular/forms';
 
-import { SignupRequest } from '../../../core/models/auth.models';
-import { AuthService } from '../../../core/services/auth.service';
-import { SnackbarService } from '../../../core/services/snackbar.service';
+import { SignupRequest } from '../../core/models/auth.models';
+import { AuthService } from '../../core/services/auth.service';
+import { SnackbarService } from '../../core/services/snackbar.service';
 
 @Component({
   selector: 'app-signup',
