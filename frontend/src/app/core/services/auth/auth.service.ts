@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-import { environment } from '../../../environments/environment';
-import { API_ENDPOINTS } from '../constants/api-endpoints';
+import { environment } from '../../../../environments/environment';
+import { API_ENDPOINTS } from '../../constants/api-endpoints';
 import { 
   LoginRequest, 
   SignupRequest,
   ForgotPasswordRequest,
   ResetPasswordRequest
-} from '../models/auth.models';
+} from '../../models/auth.models';
 
 @Injectable({
   providedIn: 'root'
