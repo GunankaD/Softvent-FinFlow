@@ -45,14 +45,26 @@
         <!-- LOGIN BUTTON BEGINS -->
             <div
                 class="login-btn-wrapper"
-                [class.invalid]="email.invalid || password.invalid">
+                [class.invalid]="email.invalid || password.invalid"
+                [class.loading]="loading()">
 
                 <button
                     mat-raised-button
                     type="submit"
                     class="full login-btn"
-                    [disabled]="email.invalid || password.invalid">
-                    Login
+                    [disabled]="email.invalid || password.invalid || loading()">
+
+                    @if (loading()) {
+                        <mat-progress-spinner
+                            mode="indeterminate"
+                            style="--mdc-circular-progress-active-indicator-color: white"
+                            diameter="20"
+                            strokeWidth="2">
+                        </mat-progress-spinner>
+                    } @else {
+                        Login
+                    }
+
                 </button>
             </div>
         <!-- LOGIN BUTTON ENDS -->

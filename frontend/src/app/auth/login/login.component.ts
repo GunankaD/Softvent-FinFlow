@@ -9,6 +9,7 @@ import { MatFormFieldModule} from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { 
   ReactiveFormsModule, 
   FormsModule,
@@ -32,6 +33,7 @@ import { SnackbarService } from '../../core/services/snackbar/snackbar.service';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    MatProgressSpinnerModule,
     ReactiveFormsModule,
     FormsModule,
     RouterModule,
@@ -58,6 +60,7 @@ export class LoginComponent {
   emailError = signal('');
   passwordError = signal('');
   hidePassword = signal(true);
+  loading = signal(false);
 
   // SUBSCRIBE TO SIGNALS
   constructor(
@@ -106,7 +109,11 @@ export class LoginComponent {
   }
 
   onLogin() {
-    if (this.email.invalid || this.password.invalid) return;
+     if (this.email.invalid || this.password.invalid || this.loading()) {
+      return;
+    }
+
+    this.loading.set(true);
 
     const payload: LoginRequest = {
       emailid: this.email.value!,
@@ -115,11 +122,13 @@ export class LoginComponent {
 
     this.authService.login(payload).subscribe({
       next: () => {
+        this.loading.set(false);
         this.router.navigate(['/'])
       },
        error: (err) => {
+        this.loading.set(false);
         if (err.status === 401) {
-          this.snackbar.error('Invalid email or password');
+          this.snackbar.error('Invalid email or password', 6000);
         } else {
           this.snackbar.error('Login failed. Please try again.');
         }

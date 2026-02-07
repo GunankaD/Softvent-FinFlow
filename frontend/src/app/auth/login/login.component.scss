@@ -25,7 +25,7 @@ h1 {
 }
 
 .email {
-    margin-bottom: 12px;
+  margin-bottom: 12px;
 }
 
 .full {
@@ -41,20 +41,27 @@ h1 {
 }
 
 /* Cursor invalid */
-.login-btn-wrapper.invalid {
+.login-btn-wrapper.invalid, .login-btn-wrapper.loading {
   cursor: not-allowed;
 }
 
 /* Disabled button look */
 .login-btn-wrapper.invalid .login-btn {
   background-color: #0D3C71 !important; /* grey */
-  color: #6D757A!important;
-  pointer-events: none;
-  opacity:0.8;
+  color: #6D757A !important;
+  opacity: 0.8;
+}
+
+/* loading state */
+.login-btn-wrapper.loading .login-btn {
+  background-color: #1A74E3 !important; /* keep active blue */
+  color: #ffffff !important;
+  opacity: 1;
+  cursor: default;
 }
 
 /* Hover feedback */
-.login-btn-wrapper.invalid:hover {
+.login-btn-wrapper.invalid:hover, .login-btn-wrapper.loading:hover {
   opacity: 0.9;
 }
 
