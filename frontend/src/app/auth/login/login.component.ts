@@ -18,8 +18,8 @@ import {
 } from '@angular/forms';
 
 import { LoginRequest } from '../../core/models/auth.models';
-import { AuthService } from '../../core/services/auth.service';
-import { SnackbarService } from '../../core/services/snackbar.service';
+import { AuthService } from '../../core/services/auth/auth.service';
+import { SnackbarService } from '../../core/services/snackbar/snackbar.service';
 
 @Component({
   standalone: true,
@@ -44,7 +44,7 @@ export class LoginComponent {
   email = new FormControl('', [
     Validators.required,
     Validators.email,
-    Validators.maxLength(100),
+    Validators.maxLength(50),
   ]);
 
   password = new FormControl('', [

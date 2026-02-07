@@ -82,7 +82,11 @@
                     mat-raised-button
                     type="submit"
                     class="full create-acc-btn"
-                    [disabled]="email.invalid || password.invalid || confirmPassword.invalid">
+                    [disabled]="
+                        email.invalid || 
+                        password.invalid || 
+                        confirmPassword.invalid || 
+                        (password.value != confirmPassword.value)">
                     Create Account
                 </button>
             </div>

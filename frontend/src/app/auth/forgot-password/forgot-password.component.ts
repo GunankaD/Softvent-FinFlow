@@ -7,8 +7,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 
-import { AuthService } from '../../core/services/auth.service';
-import { SnackbarService } from '../../core/services/snackbar.service';
+import { AuthService } from '../../core/services/auth/auth.service';
+import { SnackbarService } from '../../core/services/snackbar/snackbar.service';
 import { ForgotPasswordRequest } from '../../core/models/auth.models';
 
 @Component({

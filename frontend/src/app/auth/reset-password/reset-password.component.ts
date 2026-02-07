@@ -8,8 +8,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
-import { AuthService } from '../../core/services/auth.service';
-import { SnackbarService } from '../../core/services/snackbar.service';
+import { AuthService } from '../../core/services/auth/auth.service';
+import { SnackbarService } from '../../core/services/snackbar/snackbar.service';
 import { ResetPasswordRequest } from '../../core/models/auth.models';
 
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -34,7 +34,7 @@ import { merge } from 'rxjs';
 })
 export class ResetPasswordComponent {
 
-  token: string | null = null;
+  private token: string | null = null;
 
   // FORM CONTROL FIELDS
   password = new FormControl('', [
@@ -110,7 +110,6 @@ export class ResetPasswordComponent {
   }
 
   onSubmit() {
-
     if (
       !this.token ||
       this.password.invalid ||

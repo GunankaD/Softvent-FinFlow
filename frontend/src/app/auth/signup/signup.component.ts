@@ -18,8 +18,8 @@ import {
 } from '@angular/forms';
 
 import { SignupRequest } from '../../core/models/auth.models';
-import { AuthService } from '../../core/services/auth.service';
-import { SnackbarService } from '../../core/services/snackbar.service';
+import { AuthService } from '../../core/services/auth/auth.service';
+import { SnackbarService } from '../../core/services/snackbar/snackbar.service';
 
 @Component({
   selector: 'app-signup',
