@@ -7,6 +7,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { AuthService } from '../../core/services/auth/auth.service';
 import { SnackbarService } from '../../core/services/snackbar/snackbar.service';
@@ -26,6 +27,7 @@ import { merge } from 'rxjs';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    MatProgressSpinnerModule,
     ReactiveFormsModule,
     FormsModule,
     RouterModule,
@@ -50,8 +52,10 @@ export class ResetPasswordComponent {
   // SIGNALS
   passwordError = signal('');
   confirmPasswordError = signal('');
+
   hidePassword = signal(true);
   hideConfirmPassword = signal(true);
+  
   loading = signal(false);
 
   constructor(
