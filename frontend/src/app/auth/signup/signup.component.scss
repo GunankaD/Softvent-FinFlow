@@ -21,7 +21,6 @@ h1 {
 .subtitle {
   margin-bottom: 24px;
   color: var(--md-sys-color-on-surface-variant);
-
 }
 
 .email, .password {
@@ -41,7 +40,7 @@ h1 {
 }
 
 /* Cursor invalid */
-.create-acc-btn-wrapper.invalid {
+.create-acc-btn-wrapper.invalid, .create-acc-btn-wrapper.loading {
   cursor: not-allowed;
 }
 
@@ -49,12 +48,19 @@ h1 {
 .create-acc-btn-wrapper.invalid .create-acc-btn {
   background-color: #0D3C71 !important; /* grey */
   color: #6D757A!important;
-  pointer-events: none;
   opacity:0.8;
 }
 
+/* loading state */
+.create-acc-btn-wrapper.loading .create-acc-btn {
+  background-color: #1A74E3 !important; /* keep active blue */
+  color: #ffffff !important;
+  opacity: 1;
+  cursor: default;
+}
+
 /* Hover feedback */
-.create-acc-btn-wrapper.invalid:hover {
+.create-acc-btn-wrapper.invalid:hover, .create-acc-btn-wrapper.loading:hover {
   opacity: 0.9;
 }
 

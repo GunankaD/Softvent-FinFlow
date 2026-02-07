@@ -73,21 +73,34 @@
             <div
                 class="create-acc-btn-wrapper"
                 [class.invalid]="
-                    email.invalid || 
-                    password.invalid || 
+                    email.invalid ||
+                    password.invalid ||
                     confirmPassword.invalid ||
-                    (password.value != confirmPassword.value)">
+                    (password.value !== confirmPassword.value)"
+                [class.loading]="loading()"
+                >
 
                 <button
                     mat-raised-button
                     type="submit"
                     class="full create-acc-btn"
                     [disabled]="
-                        email.invalid || 
-                        password.invalid || 
-                        confirmPassword.invalid || 
-                        (password.value != confirmPassword.value)">
-                    Create Account
+                        email.invalid ||
+                        password.invalid ||
+                        confirmPassword.invalid ||
+                        (password.value !== confirmPassword.value) ||
+                        loading() ">
+
+                    @if (loading()) {
+                        <mat-progress-spinner
+                            mode="indeterminate"
+                            style="--mdc-circular-progress-active-indicator-color: white"
+                            diameter="20"
+                            strokeWidth="2">
+                        </mat-progress-spinner>
+                    } @else {
+                        Create Account
+                    }
                 </button>
             </div>
         <!-- CREATE NEW ACCOUNT BUTTON ENDS -->

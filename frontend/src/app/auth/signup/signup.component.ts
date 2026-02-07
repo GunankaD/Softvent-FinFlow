@@ -9,6 +9,7 @@ import { MatFormFieldModule} from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { 
   ReactiveFormsModule,
   FormsModule, 
@@ -31,6 +32,7 @@ import { SnackbarService } from '../../core/services/snackbar/snackbar.service';
     MatInputModule,
     MatButtonModule,
     MatIconModule,
+    MatProgressSpinnerModule,
     ReactiveFormsModule,
     FormsModule,
     RouterModule,
@@ -63,6 +65,8 @@ export class SignupComponent {
 
   hidePassword = signal(true);
   hideConfirmPassword = signal(true);
+  
+  loading = signal(false);
 
   // SUBSCRIBE TO SIGNALS
   constructor(
@@ -137,10 +141,13 @@ export class SignupComponent {
       this.email.invalid ||
       this.password.invalid ||
       this.password.value != this.confirmPassword.value ||
-      this.confirmPassword.invalid 
+      this.confirmPassword.invalid ||
+      this.loading()
     ) {
       return;
     }
+
+    this.loading.set(true);
 
     const payload: SignupRequest = {
       emailid: this.email.value!,
@@ -149,10 +156,12 @@ export class SignupComponent {
 
     this.authService.signup(payload).subscribe({
       next: () => {
+        this.loading.set(false);
         this.snackbar.success('Account created successfully');
         this.router.navigate(['/login']);
       },
       error: (err) => {
+        this.loading.set(false);
         if (err.status === 409) {
           this.snackbar.error('Account already exists');
         } else {
