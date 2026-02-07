@@ -6,6 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { AuthService } from '../../core/services/auth/auth.service';
 import { SnackbarService } from '../../core/services/snackbar/snackbar.service';
@@ -21,6 +22,7 @@ import { ForgotPasswordRequest } from '../../core/models/auth.models';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatProgressSpinnerModule,
     ReactiveFormsModule,
     FormsModule,
     RouterModule,
@@ -57,10 +59,10 @@ export class ForgotPasswordComponent {
     this.authService.forgotPassword(payload).subscribe({
       next: () => {
         // SAME message always (security)
+        this.loading.set(false);
         this.snackbar.success(
           'If an account exists, a reset link has been sent to your email.', 6000
         );
-        this.loading.set(false);
         this.router.navigate(['/login']);
       },
       error: () => {
