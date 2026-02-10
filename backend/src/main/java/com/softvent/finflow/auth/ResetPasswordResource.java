@@ -2,6 +2,7 @@ package com.softvent.finflow.auth;
 
 import com.softvent.finflow.auth.dto.ForgotPasswordRequest;
 import com.softvent.finflow.auth.dto.ResetPasswordRequest;
+import com.softvent.finflow.auth.dto.ResetPasswordResponse;
 import com.softvent.finflow.auth.entity.Auth;
 import com.softvent.finflow.auth.entity.PasswordReset;
 import jakarta.inject.Inject;
@@ -81,5 +82,27 @@ public class ResetPasswordResource {
 
         return Response.status(Response.Status.OK).build(); // 200
     }
+
+    @GET
+    @Path("/reset-password/emailid/{token}")
+    public Response getEmailForReset(@PathParam("token") String token) {
+
+        if (token == null || token.isBlank()) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        PasswordReset reset =
+                PasswordReset.find("token", token).firstResult();
+
+        if (reset == null || reset.expiresAt.isBefore(java.time.LocalDateTime.now())) {
+            return Response.status(Response.Status.UNAUTHORIZED).build();
+        }
+
+        ResetPasswordResponse res = new ResetPasswordResponse();
+        res.emailid = reset.emailid;
+
+        return Response.ok(res).build(); // 200 + Data
+    }
+
 }
 
