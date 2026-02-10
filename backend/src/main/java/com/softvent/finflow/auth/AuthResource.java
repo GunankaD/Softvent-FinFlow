@@ -80,6 +80,8 @@ public class AuthResource {
     @Path("/forgot-password")
     @Transactional
     public Response forgotPassword(ForgotPasswordRequest req) {
+        // cleanup expired tokens
+        PasswordReset.delete("expiresAt < ?1", java.time.LocalDateTime.now());
 
         if (req == null || req.emailid == null) {
             return Response.status(Response.Status.BAD_REQUEST).build(); // 400
@@ -90,6 +92,9 @@ public class AuthResource {
             // security: don’t reveal email existence
             return Response.status(Response.Status.OK).build(); // 200
         }
+
+        // cleanup any previous reset tokens for this email
+        PasswordReset.delete("emailid", req.emailid);
 
         PasswordReset reset = new PasswordReset();
         reset.emailid = req.emailid;
@@ -107,7 +112,9 @@ public class AuthResource {
     @Path("/reset-password")
     @Transactional
     public Response resetPassword(ResetPasswordRequest req) {
-
+        // cleanup expired tokens
+        PasswordReset.delete("expiresAt < ?1", java.time.LocalDateTime.now());
+        
         if (req == null || req.token == null || req.newPassword == null) {
             return Response.status(Response.Status.BAD_REQUEST).build(); // 400
         }
