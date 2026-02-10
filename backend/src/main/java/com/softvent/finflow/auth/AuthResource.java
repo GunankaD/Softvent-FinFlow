@@ -2,8 +2,6 @@ package com.softvent.finflow.auth;
 
 import com.softvent.finflow.auth.dto.*;
 import com.softvent.finflow.auth.entity.Auth;
-import com.softvent.finflow.auth.entity.PasswordReset;
-import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
