@@ -1,7 +1,9 @@
+// ANGULAR
 import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
 import { FormControl, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 
+// MATERIAL UI
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -9,10 +11,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
+// SERVICES
 import { AuthService } from '../../core/services/auth/auth.service';
 import { SnackbarService } from '../../core/services/snackbar/snackbar.service';
-import { ResetPasswordRequest } from '../../core/models/auth.models';
 
+// DTOS
+import { ResetPasswordRequest } from '../../core/models/auth.models';
+import { ResetPasswordEmailResponse } from '../../core/models/auth.models';
+
+// RxJS
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import { merge } from 'rxjs';
 
@@ -39,6 +46,15 @@ export class ResetPasswordComponent {
   private token: string | null = null;
 
   // FORM CONTROL FIELDS
+  email = new FormControl(
+    { value: '', disabled: true },
+    [
+      Validators.required,
+      Validators.email,
+      Validators.maxLength(50),
+    ]
+  );
+
   password = new FormControl('', [
     Validators.required,
     Validators.minLength(6),
@@ -64,6 +80,8 @@ export class ResetPasswordComponent {
     private snackbar: SnackbarService,
     private router: Router
   ) {
+
+    // Extract token from URL
     this.token = this.route.snapshot.queryParamMap.get('token');
 
     if (!this.token) {
@@ -71,6 +89,20 @@ export class ResetPasswordComponent {
       this.router.navigate(['/login']);
     }
 
+    // Fetch email belonging to this token to display in frontend
+    this.authService.getEmailForToken(this.token!)
+    .pipe(takeUntilDestroyed())
+    .subscribe({
+      next: (res: ResetPasswordEmailResponse) => {
+        this.email.setValue(res.emailid);
+      },
+      error: () => {
+        this.snackbar.error('Reset link expired or invalid', 5000);
+        this.router.navigate(['/login']);
+      }
+    });
+    
+    // Listen to Signals
     merge(
       this.password.statusChanges,
       this.password.valueChanges
