@@ -1,61 +1,92 @@
 .app-header {
-  height: 64px;
-  padding: 0 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #ffffff;
-  border-bottom: 1px solid #e5e7eb;
+  padding: 12px 20px;
+  background-color: var(--bg-secondary);
+  border-bottom: 1px solid var(--border-color);
+  gap: 20px;
+  min-height: 64px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .left {
   display: flex;
   align-items: center;
   gap: 16px;
+  flex: 0 0 auto;
 
   .hamburger {
     background: none;
     border: none;
     font-size: 20px;
     cursor: pointer;
-    color: #111827;
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: var(--bg-tertiary);
+      border-radius: 4px;
+      padding: 4px;
+    }
   }
 
   .logo {
     font-size: 18px;
     font-weight: 600;
-    color: #111827;
+    color: var(--text-primary);
+    white-space: nowrap;
   }
 }
 
 .center {
   display: flex;
-  gap: 24px;
+  gap: 16px;
+  align-items: center;
+  flex: 1;
+  justify-content: center;
 
   a {
+    color: var(--text-secondary);
     text-decoration: none;
-    font-size: 14px;
-    color: #374151;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+
+    &:hover {
+      color: var(--text-primary);
+      background-color: var(--bg-tertiary);
+    }
 
     &.active {
-      font-weight: 500;
-      color: #2563eb;
-      border-bottom: 2px solid #2563eb;
-      padding-bottom: 2px;
+      color: var(--accent-color);
+      border-bottom: 3px solid var(--accent-color);
+      padding-bottom: 5px;
     }
   }
 }
 
 .right {
+  flex: 0 0 auto;
+
   .profile-icon {
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background-color: #f3f4f6;
+    background-color: var(--bg-tertiary);
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
     font-size: 16px;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background-color: var(--border-color);
+    }
   }
 }
+
+

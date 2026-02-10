@@ -1,9 +1,25 @@
 .home {
-  height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 16px;
-  background-color: rgb(247, 198, 205);
+  background-color: var(--bg-primary);
+  padding: 40px 20px;
+  min-height: calc(100vh - 64px);
+
+  h1 {
+    color: var(--accent-color);
+    font-size: 48px;
+    margin: 0;
+    font-weight: 700;
+  }
+
+  p {
+    color: var(--text-secondary);
+    font-size: 18px;
+    margin: 0 0 24px 0;
+  }
 }
+
+
