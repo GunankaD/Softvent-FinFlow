@@ -21,3 +21,6 @@ export interface ResetPasswordRequest {
   newPassword: string;
 }
 
+export interface ResetPasswordEmailResponse{
+  emailid: string;
+}

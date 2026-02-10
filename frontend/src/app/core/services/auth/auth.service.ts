@@ -8,7 +8,8 @@ import {
   LoginRequest, 
   SignupRequest,
   ForgotPasswordRequest,
-  ResetPasswordRequest
+  ResetPasswordRequest,
+  ResetPasswordEmailResponse
 } from '../../models/auth.models';
 
 @Injectable({
@@ -49,6 +50,13 @@ export class AuthService {
     return this.http.post<void>(
       `${this.baseUrl}${API_ENDPOINTS.AUTH.RESET_PASSWORD}`,
       request
+    );
+  }
+
+  // request emailid for a specific reset password token
+  getEmailForToken(token: string): Observable<ResetPasswordEmailResponse> {
+    return this.http.get<ResetPasswordEmailResponse>(
+      `${this.baseUrl}${API_ENDPOINTS.AUTH.EMAIL_FOR_TOKEN}/${token}`
     );
   }
 }
