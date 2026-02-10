@@ -1,4 +1,4 @@
-package com.softvent.finflow.auth;
+package com.softvent.finflow.auth.dto;
 
 public class ChangePasswordRequest {
     public String emailid;

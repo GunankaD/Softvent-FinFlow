@@ -1,5 +1,8 @@
 package com.softvent.finflow.auth;
 
+import com.softvent.finflow.auth.dto.*;
+import com.softvent.finflow.auth.entity.Auth;
+import com.softvent.finflow.auth.entity.PasswordReset;
 import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
@@ -14,9 +17,6 @@ import java.util.List;
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class AuthResource {
-
-    @Inject
-    EmailService emailService;
 
     @GET
     public List<Auth> getAll() {
@@ -75,65 +75,6 @@ public class AuthResource {
 
         return Response.ok().build(); // 200
     }
-
-    @POST
-    @Path("/forgot-password")
-    @Transactional
-    public Response forgotPassword(ForgotPasswordRequest req) {
-        // cleanup expired tokens
-        PasswordReset.delete("expiresAt < ?1", java.time.LocalDateTime.now());
-
-        if (req == null || req.emailid == null) {
-            return Response.status(Response.Status.BAD_REQUEST).build(); // 400
-        }
-
-        Auth user = Auth.find("emailid", req.emailid).firstResult();
-        if (user == null) {
-            // security: don’t reveal email existence
-            return Response.status(Response.Status.OK).build(); // 200
-        }
-
-        // cleanup any previous reset tokens for this email
-        PasswordReset.delete("emailid", req.emailid);
-
-        PasswordReset reset = new PasswordReset();
-        reset.emailid = req.emailid;
-        reset.token = java.util.UUID.randomUUID().toString();
-        reset.expiresAt = java.time.LocalDateTime.now().plusMinutes(15);
-
-        reset.persist();
-
-        emailService.sendResetPasswordEmail(req.emailid, reset.token);
-
-        return Response.status(Response.Status.OK).build(); // 200
-    }
-
-    @POST
-    @Path("/reset-password")
-    @Transactional
-    public Response resetPassword(ResetPasswordRequest req) {
-        // cleanup expired tokens
-        PasswordReset.delete("expiresAt < ?1", java.time.LocalDateTime.now());
-        
-        if (req == null || req.token == null || req.newPassword == null) {
-            return Response.status(Response.Status.BAD_REQUEST).build(); // 400
-        }
-
-        PasswordReset reset =
-                PasswordReset.find("token", req.token).firstResult();
-
-        if (reset == null || reset.expiresAt.isBefore(java.time.LocalDateTime.now())) {
-            return Response.status(Response.Status.UNAUTHORIZED).build(); // 409
-        }
-
-        Auth user = Auth.find("emailid", reset.emailid).firstResult();
-        user.pwdHash = BCrypt.hashpw(req.newPassword, BCrypt.gensalt());
-
-        reset.delete(); // invalidate token
-
-        return Response.status(Response.Status.OK).build(); // 200
-    }
-
 
     /*
      * DEVELOPMENT PURPOSE FUNCTIONS

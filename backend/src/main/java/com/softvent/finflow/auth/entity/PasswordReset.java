@@ -1,4 +1,4 @@
-package com.softvent.finflow.auth;
+package com.softvent.finflow.auth.entity;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
