@@ -1,0 +1,61 @@
+.app-header {
+  height: 64px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #ffffff;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+
+  .hamburger {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: #111827;
+  }
+
+  .logo {
+    font-size: 18px;
+    font-weight: 600;
+    color: #111827;
+  }
+}
+
+.center {
+  display: flex;
+  gap: 24px;
+
+  a {
+    text-decoration: none;
+    font-size: 14px;
+    color: #374151;
+
+    &.active {
+      font-weight: 500;
+      color: #2563eb;
+      border-bottom: 2px solid #2563eb;
+      padding-bottom: 2px;
+    }
+  }
+}
+
+.right {
+  .profile-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #f3f4f6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+  }
+}
