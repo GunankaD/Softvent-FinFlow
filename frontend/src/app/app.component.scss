@@ -1,6 +1,17 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+}
+
 .app-content {
-  margin-top: 64px; // header height
+  flex: 1;
   padding: 24px;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  overflow-y: auto;
 }
 
 .backdrop {
@@ -12,3 +23,5 @@
   background: rgba(0, 0, 0, 0.3);
   z-index: 900;
 }
+
+
