@@ -1,6 +1,6 @@
 .footer {
-  background-color: #1976d2;
-  color: white;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
   padding: 40px 20px 20px;
   margin-top: 60px;
 }
@@ -18,12 +18,14 @@
     margin: 0 0 15px 0;
     font-size: 16px;
     font-weight: 500;
+    color: var(--text-primary);
   }
 
   p {
     margin: 0;
     font-size: 14px;
     opacity: 0.9;
+    color: var(--text-secondary);
   }
 
   ul {
@@ -35,7 +37,7 @@
       margin-bottom: 8px;
 
       a {
-        color: white;
+        color: var(--text-primary);
         text-decoration: none;
         font-size: 14px;
         opacity: 0.9;
@@ -53,9 +55,10 @@
 .footer-bottom {
   text-align: center;
   padding-top: 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  border-top: 1px solid var(--border-color);
   font-size: 12px;
   opacity: 0.8;
+  color: var(--text-primary);
 
   p {
     margin: 0;

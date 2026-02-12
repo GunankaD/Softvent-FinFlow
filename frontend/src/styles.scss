@@ -2,10 +2,10 @@
 
 @include mat.core();
 
-/* Define M3 light theme */
+/* Define M3 dark theme */
 $theme: mat.define-theme((
   color: (
-    theme-type: light,
+    theme-type: dark,
     primary: mat.$blue-palette,
     tertiary: mat.$orange-palette,
   ),
@@ -19,14 +19,14 @@ $theme: mat.define-theme((
   @include mat.all-component-themes($theme);
 }
 
-/* Global Light Theme Variables */
+/* Global Dark Theme Variables */
 :root {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f5f5f5;
-  --bg-tertiary: #eeeeee;
-  --text-primary: #212121;
-  --text-secondary: #666666;
-  --border-color: #e0e0e0;
+  --bg-primary: #0D1117;
+  --bg-secondary: #121D2F;
+  --bg-tertiary: #1c2536;
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.7);
+  --border-color: rgba(255, 255, 255, 0.1);
   --accent-color: #2196f3;
 }
 
@@ -63,7 +63,7 @@ body {
   border-radius: 4px;
 
   &:hover {
-    background: #d0d0d0;
+    background: rgba(255, 255, 255, 0.2);
   }
 }
 
