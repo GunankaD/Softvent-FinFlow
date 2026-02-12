@@ -1,92 +1,40 @@
 .app-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 20px;
-  background-color: var(--bg-secondary);
-  border-bottom: 1px solid var(--border-color);
-  gap: 20px;
+  padding: 0 20px;
   min-height: 64px;
+  border-bottom: 1px solid var(--border-color);
+  background-color: var(--bg-secondary);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .left {
   display: flex;
   align-items: center;
-  gap: 16px;
-  flex: 0 0 auto;
-
-  .hamburger {
-    background: none;
-    border: none;
-    font-size: 20px;
-    cursor: pointer;
-    color: var(--text-primary);
-    transition: all 0.3s ease;
-
-    &:hover {
-      background-color: var(--bg-tertiary);
-      border-radius: 4px;
-      padding: 4px;
-    }
-  }
+  gap: 12px;
 
   .logo {
     font-size: 18px;
-    font-weight: 600;
+    font-weight: 500;
     color: var(--text-primary);
-    white-space: nowrap;
   }
 }
 
-.center {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  flex: 1;
-  justify-content: center;
-
-  a {
-    color: var(--text-secondary);
-    text-decoration: none;
-    font-weight: 500;
-    padding: 8px 16px;
-    border-radius: 4px;
-    transition: all 0.3s ease;
-    white-space: nowrap;
-
-    &:hover {
-      color: var(--text-primary);
-      background-color: var(--bg-tertiary);
-    }
-
-    &.active {
-      color: var(--text-primary);
-      border-bottom: 3px solid var(--text-primary);
-      padding-bottom: 5px;
-    }
-  }
+.spacer {
+  flex: 1 1 auto;
 }
 
 .right {
-  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
 
-  .profile-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background-color: var(--bg-tertiary);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 16px;
-    transition: all 0.3s ease;
-    color: var(--text-primary);
+  .active {
+    border-bottom: 2px solid currentColor;
+    font-weight: 500;
+  }
 
-    &:hover {
-      background-color: rgba(255, 255, 255, 0.15);
-    }
+  .mat-mdc-button {
+    border-radius: 0   !important;
+    height: 40px;
   }
 }
 
