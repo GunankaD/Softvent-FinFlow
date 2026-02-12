@@ -1,6 +1,9 @@
 <app-header (toggleSidebar)="toggleSidebar()"></app-header>
 
-<app-sidebar [isOpen]="sidebarOpen"></app-sidebar>
+<app-sidebar 
+  [isOpen]="sidebarOpen"
+  (linkClicked)="closeSidebar()">
+</app-sidebar>
 
 <div
   class="backdrop"
