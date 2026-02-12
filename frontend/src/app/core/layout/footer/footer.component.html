@@ -1,31 +1,44 @@
 <footer class="footer">
+<!-- TOP FOOTER BEGINS -->
   <div class="footer-content">
+
+  <!-- LEFT SECTION BEGINS -->
     <div class="footer-section">
       <h4>Softvent FinFlow</h4>
       <p>Financial management made simple</p>
     </div>
+  <!-- LEFT SECTION ENDS -->
 
+  <!-- MIDDLE SECTION BEGINS -->
     <div class="footer-section">
       <h4>Links</h4>
       <ul>
-        <li><a href="/">Home</a></li>
-        <li><a href="/customers">Customers</a></li>
-        <li><a href="/about">About Us</a></li>
-        <li><a href="/contact">Contact</a></li>
+        <li><a routerLink="/" routerLinkActive="active">Home</a></li>
+        <li><a routerLink="/customers" routerLinkActive="active">Customers</a></li>
+        <li><a routerLink="/about" routerLinkActive="active">About Us</a></li>
+        <li><a routerLink="/contact" routerLinkActive="active">Contact</a></li>
       </ul>
     </div>
+  <!-- MIDDLE SECTION ENDS -->
 
+  <!-- RIGHT SECTION BEGINS -->
     <div class="footer-section">
       <h4>Support</h4>
       <ul>
-        <li><a href="#">Privacy Policy</a></li>
-        <li><a href="#">Terms of Service</a></li>
-        <li><a href="#">Contact Support</a></li>
+        <li><a routerLink="/privacy" routerLinkActive="active">Privacy Policy</a></li>
+        <li><a routerLink="/terms" routerLinkActive="active">Terms of Service</a></li>
+        <li><a routerLink="/support" routerLinkActive="active">Contact Support</a></li>
       </ul>
     </div>
+  <!-- RIGHT SECTION ENDS -->
+    
   </div>
+<!-- TOP FOOTER ENDS -->
 
+<!-- BOTTOM FOOTER BEGINS -->
   <div class="footer-bottom">
     <p>&copy; {{ currentYear }} Softvent FinFlow. All rights reserved.</p>
   </div>
+<!-- BOTTOM FOOTER ENDS -->
+
 </footer>
