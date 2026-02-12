@@ -3,8 +3,11 @@
   display: flex;
   justify-content: center;
   align-items: center;
-//   background: var(--md-sys-color-background);
-  background: #0C1014; /* black background */
+  background: var(--bg-primary);
+}
+
+input, textarea {
+  caret-color: var(--text-primary) !important;
 }
 
 .login-card {
@@ -12,6 +15,9 @@
   padding: 32px 28px;
   border-radius: 16px;
   text-align: center;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color) !important;
+  box-shadow: none !important;
 }
 
 h1 {
@@ -20,8 +26,7 @@ h1 {
 
 .subtitle {
   margin-bottom: 24px;
-  color: var(--md-sys-color-on-surface-variant);
-
+  color: var(--text-secondary);
 }
 
 .email {
@@ -36,8 +41,8 @@ h1 {
   margin-top: 12px;
   height: 44px;
   font-weight: 500;
-  background-color: #1A74E3 !important;
-  color: #ffffff !important;
+  background-color: var(--button-blue) !important;
+  color: var(--text-primary) !important;
 }
 
 /* Cursor invalid */
@@ -47,15 +52,15 @@ h1 {
 
 /* Disabled button look */
 .login-btn-wrapper.invalid .login-btn {
-  background-color: #0D3C71 !important; /* grey */
-  color: #6D757A !important;
+  background-color: var(--button-dark-blue) !important; /* grey */
+  color: var(--text-disabled) !important;
   opacity: 0.8;
 }
 
 /* loading state */
 .login-btn-wrapper.loading .login-btn {
-  background-color: #1A74E3 !important; /* keep active blue */
-  color: #ffffff !important;
+  background-color: var(--button-blue) !important; /* keep active blue */
+  color: var(--text-primary) !important;
   opacity: 1;
   cursor: default;
 }
@@ -65,18 +70,25 @@ h1 {
   opacity: 0.9;
 }
 
+.forgot-pwd-btn{
+  margin-top: 12px;
+  height: 44px;
+  font-weight: 400;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary) !important;
+
+  /* Kill ripple overlay color */
+  --mat-text-button-state-layer-color: transparent;
+}
+
 .create-acc-btn{
   margin-top: 12px;
   height: 44px;
   font-weight: 500;
-  background-color: #152127;
-  color: #ffffff !important; 
-}
+  background-color: var(--bg-secondary);
+  color: var(--text-blue) !important;
 
-.forgot-pwd-btn{
-  margin-top: 12px;
-  height: 44px;
-  font-weight: 500;
-  background-color: #ffffff;
-  color: #000000 !important; 
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--button-blue) !important;
 }

@@ -2,7 +2,8 @@
 
 @include mat.core();
 
-/* Define M3 dark theme */
+/*
+// Define M3 dark theme 
 $theme: mat.define-theme((
   color: (
     theme-type: dark,
@@ -14,20 +15,43 @@ $theme: mat.define-theme((
   ),
 ));
 
-/* M3 THEMES MUST BE IN A SELECTOR */
+// M3 THEMES MUST BE IN A SELECTOR
 :root {
   @include mat.all-component-themes($theme);
 }
+*/
 
 /* Global Dark Theme Variables */
 :root {
-  --bg-primary: #0D1117;
-  --bg-secondary: #121D2F;
-  --bg-tertiary: #1c2536;
+  /* Backgrounds */
+  --bg-secondary: #0D1117;
+  --bg-primary: #010409;
+  --bg-tertiary: #121D2F;
+
+  /* Text */
   --text-primary: #ffffff;
   --text-secondary: rgba(255, 255, 255, 0.7);
+  --text-disabled: #6D757A;
+  --text-black: #000000;
+  --text-blue:  #1F6FEB;
+
+  /* UI */
   --border-color: rgba(255, 255, 255, 0.1);
-  --accent-color: #2196f3;
+  --accent-color: #1F6FEB;
+  --button-blue: #1F6FEB;
+  --button-dark-blue: #0D3C71;
+
+  /* GLOBAL MDC OVERRIDES */
+  --mdc-theme-primary: var(--accent-color);
+
+  /* Outlined field */
+  --mdc-outlined-text-field-focus-outline-color: var(--text-primary);
+
+  --mdc-outlined-text-field-label-text-color: var(--text-secondary);
+  --mdc-outlined-text-field-focus-label-text-color: var(--text-primary);
+
+  /* Caret */
+  --mdc-text-field-caret-color: var(--accent-color);
 }
 
 /* Global styles */
@@ -66,5 +90,3 @@ body {
     background: rgba(255, 255, 255, 0.2);
   }
 }
-
-

@@ -1,15 +1,21 @@
+// ANGULAR
 import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
 import { FormControl, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 
+// MATERIAL UI
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
 
+// SERVICES
 import { AuthService } from '../../core/services/auth/auth.service';
 import { SnackbarService } from '../../core/services/snackbar/snackbar.service';
+
+// DTOs
 import { ForgotPasswordRequest } from '../../core/models/auth.models';
 
 @Component({
@@ -26,6 +32,7 @@ import { ForgotPasswordRequest } from '../../core/models/auth.models';
     ReactiveFormsModule,
     FormsModule,
     RouterModule,
+    MatIconModule,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

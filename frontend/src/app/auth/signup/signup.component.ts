@@ -1,9 +1,12 @@
+// ANGULAR
 import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import { RouterModule, Router } from '@angular/router';
+
+// RxJS
 import { merge } from 'rxjs';
 
-// Material UI
+// MATERIAL UI
 import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule} from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -18,9 +21,12 @@ import {
   Validators,
 } from '@angular/forms';
 
-import { SignupRequest } from '../../core/models/auth.models';
+// SERVICES
 import { AuthService } from '../../core/services/auth/auth.service';
 import { SnackbarService } from '../../core/services/snackbar/snackbar.service';
+
+// DTOs
+import { SignupRequest } from '../../core/models/auth.models';
 
 @Component({
   selector: 'app-signup',
