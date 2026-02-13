@@ -54,13 +54,13 @@ public class CustomerResource {
 
     // AVAILABILITY FUNCTIONS
     @GET
-    @Path("availability/ccode")
+    @Path("/availability/ccode")
     public Response checkCcode(@QueryParam("ccode") String ccode) {
         return Response.ok(customerService.checkCcodeAvailability(ccode)).build();
     }
 
     @GET
-    @Path("availability/email")
+    @Path("/availability/email")
     public Response checkEmail(@QueryParam("email") String email) {
         return Response.ok(customerService.checkEmailAvailability(email)).build();
     }
