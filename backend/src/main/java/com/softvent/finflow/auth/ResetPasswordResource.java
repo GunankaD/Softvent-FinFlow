@@ -88,14 +88,14 @@ public class ResetPasswordResource {
     public Response getEmailForReset(@PathParam("token") String token) {
 
         if (token == null || token.isBlank()) {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response.status(Response.Status.BAD_REQUEST).build(); // 400
         }
 
         PasswordReset reset =
                 PasswordReset.find("token", token).firstResult();
 
         if (reset == null || reset.expiresAt.isBefore(java.time.LocalDateTime.now())) {
-            return Response.status(Response.Status.UNAUTHORIZED).build();
+            return Response.status(Response.Status.UNAUTHORIZED).build(); // 401
         }
 
         ResetPasswordResponse res = new ResetPasswordResponse();
