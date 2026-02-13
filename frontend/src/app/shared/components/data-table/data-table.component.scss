@@ -2,21 +2,49 @@
   display: block;
 }
 
-// TABLE ACTION BUTTONS
+/* TABLE ACTION BAR */
 .table-actions {
   display: flex;
   justify-content: flex-end;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 0px;
+  margin-top: -32px;
+  margin-right: 6px;
 }
 
-.refresh-btn {
-  color: var(--text-secondary);
+/* GROUP */
+.search-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px; 
 }
+
+/* REFRESH */
+.refresh-btn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  color: var(--text-secondary);
+
+  .mat-icon {
+    font-size: 18px;
+  }
+}
+
+/* FORM FIELDS */
+.search-select {
+  min-width: 140px;
+}
+
+.search-input {
+  width: 200px;
+}
+
 
 // PROGRESS BAR
 mat-progress-bar {
   margin-bottom: 0px;
+  --mdc-linear-progress-active-indicator-color: var(--text-primary);
 }
 
 // TABLE CSS

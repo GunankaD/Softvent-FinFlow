@@ -2,16 +2,60 @@
 
   <!-- TABLE ACTION ROW BEGINS -->
   <div class="table-actions">
-    <button
-      mat-icon-button
-      type="button"
-      (click)="onRefresh()"
-      matTooltip="Reload data"
-      class="refresh-btn">
 
-      <mat-icon>refresh</mat-icon>
+    <div class="search-controls">
 
-    </button>
+      <!-- REFRESH BUTTON -->
+      <button
+        mat-icon-button
+        type="button"
+        (click)="onRefresh()"
+        matTooltip="Reload data">
+        <mat-icon>refresh</mat-icon>
+      </button>
+
+      <!-- SELECT FIELD -->
+      <mat-form-field appearance="outline" class="search-select compact">
+        <mat-select
+          [(ngModel)]="selectedColumn"
+          (selectionChange)="applyFilter()">
+
+          <mat-option value="__all">All Columns</mat-option>
+
+          <mat-option
+            *ngFor="let column of columns"
+            [value]="column.key">
+            {{ column.label }}
+          </mat-option>
+
+        </mat-select>
+      </mat-form-field>
+
+      <!-- SEARCHING FIELD -->
+      <mat-form-field appearance="outline" class="search-input compact">
+          <mat-icon matPrefix>search</mat-icon>
+
+          <input
+            matInput
+            placeholder="Search..."
+            [(ngModel)]="searchValue"
+            (input)="applyFilter()" />
+
+          <button
+            *ngIf="searchValue"
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="clearSearch()"
+            class="clear-btn">
+
+            <mat-icon>close</mat-icon>
+
+          </button>
+      </mat-form-field>
+
+    </div>
+
   </div>
 
 
