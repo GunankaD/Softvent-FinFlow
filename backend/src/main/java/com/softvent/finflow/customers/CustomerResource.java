@@ -33,9 +33,16 @@ public class CustomerResource {
 
     // GET CUSTOMER INFO FUNCTIONS
     @GET
-    @Path("/{id}")
+    @Path("/id/{id}")
     public Response getCustomerById(@PathParam("id") Long id) {
         CustomerDetailResponse response = customerService.getCustomerById(id);
+        return Response.ok(response).build();
+    }
+
+    @GET
+    @Path("/ccode/{ccode}")
+    public Response getCustomerByCcode(@PathParam("ccode") String ccode) {
+        CustomerDetailResponse response = customerService.getCustomerByCcode(ccode);
         return Response.ok(response).build();
     }
 
