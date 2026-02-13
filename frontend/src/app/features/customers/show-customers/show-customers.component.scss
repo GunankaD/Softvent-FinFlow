@@ -1,0 +1,37 @@
+.customers-table-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 40px 20px;
+
+  h1 {
+    margin-bottom: 30px;
+    font-weight: 600;
+    color: var(--text-primary);
+  }
+}
+
+.loader-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 60px;
+}
+
+.customers-table {
+  width: 100%;
+  background: var(--bg-secondary);
+  border-radius: 16px;
+  overflow: hidden;
+
+  th {
+    font-weight: 600;
+    color: var(--text-secondary);
+  }
+
+  td {
+    color: var(--text-primary);
+  }
+
+  tr:hover td {
+    background: rgba(255, 255, 255, 0.02);
+  }
+}
