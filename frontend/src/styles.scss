@@ -91,3 +91,62 @@ body {
     background: rgba(255, 255, 255, 0.2);
   }
 }
+
+/* ============================= */
+/* MATERIAL PAGINATOR OVERRIDES  */
+/* ============================= */
+
+body .mat-mdc-paginator {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+}
+
+body .mat-mdc-paginator-range-label {
+  color: var(--text-secondary) !important;
+}
+
+body .mat-mdc-paginator .mat-mdc-icon-button {
+  color: var(--text-primary) !important;
+}
+
+
+/* ============================= */
+/* PAGINATOR SELECT PANEL THEME  */
+/* ============================= */
+
+/* Dropdown panel background */
+body .mat-mdc-select-panel {
+  background-color: var(--bg-tertiary) !important;
+  max-height: 400px !important;
+}
+
+/* All options default text */
+body .mat-mdc-option {
+  color: var(--text-primary) !important;
+}
+
+/* Hover state */
+body .mat-mdc-option:hover {
+  background-color: var(--bg-primary) !important;
+}
+
+/* Selected option */
+body .mat-mdc-option.mdc-list-item--selected {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Selected + hover (optional refinement) */
+body .mat-mdc-option.mdc-list-item--selected:hover {
+  background-color: var(--bg-primary) !important;
+}
+
+/* Paginator select arrow (closed + open state) */
+body .mat-mdc-paginator .mat-mdc-select-arrow {
+  color: var(--text-primary) !important;
+}
+
+/* When select is focused / panel open */
+body .mat-mdc-select.mat-mdc-select-focused .mat-mdc-select-arrow {
+  color: var(--text-primary) !important;
+}
