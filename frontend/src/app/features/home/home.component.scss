@@ -1,25 +1,16 @@
-.home {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 16px;
-  background-color: var(--bg-primary);
-  padding: 40px 20px;
-  min-height: calc(100vh - 64px);
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
 
   h1 {
-    color: var(--accent-color);
-    font-size: 48px;
-    margin: 0;
-    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 20px;
   }
 
   p {
     color: var(--text-secondary);
-    font-size: 18px;
-    margin: 0 0 24px 0;
   }
 }
+
 
 
