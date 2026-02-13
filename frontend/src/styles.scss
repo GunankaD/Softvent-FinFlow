@@ -141,12 +141,77 @@ body .mat-mdc-option.mdc-list-item--selected:hover {
   background-color: var(--bg-primary) !important;
 }
 
-/* Paginator select arrow (closed + open state) */
-body .mat-mdc-paginator .mat-mdc-select-arrow {
+/* Drop down arrow */
+.mat-mdc-select-arrow {
   color: var(--text-primary) !important;
 }
 
-/* When select is focused / panel open */
-body .mat-mdc-select.mat-mdc-select-focused .mat-mdc-select-arrow {
-  color: var(--text-primary) !important;
+:root {
+  .compact {
+    width: 160px;
+
+    .mdc-text-field {
+      height: 32px !important;
+      padding: 0 8px !important;
+    }
+
+    .mat-mdc-form-field-infix {
+      min-height: 32px !important;
+      padding: 0 !important;
+    }
+
+    .mat-mdc-form-field-subscript-wrapper {
+      display: none !important; // removes extra bottom spacing
+    }
+
+    input,
+    .mat-mdc-select-trigger {
+      height: 32px !important;
+      line-height: 32px !important;
+      font-size: 12px !important;
+    }
+    .mat-mdc-form-field-flex {
+      align-items: center !important;
+    }
+
+    .mat-mdc-form-field-icon-prefix {
+      align-self: center !important;
+      display: flex !important;
+      align-items: center !important;
+      height: 32px !important;
+      margin-top: 0 !important;
+      margin-left: -8px !important;
+      margin-right: -8px !important;
+    }
+    
+    .mat-mdc-form-field-icon-suffix{
+      align-self: center !important;
+      display: flex !important;
+      align-items: center !important;
+      height: 32px !important;
+      margin-top: 0 !important;
+      margin-left: -4px !important;
+      margin-right: -4px !important;
+    }
+
+    .mat-mdc-form-field-icon-prefix .mat-icon,
+    .mat-mdc-form-field-icon-suffix .mat-icon {
+      font-size: 18px !important;
+      line-height: 32px !important;
+      margin-bottom: 8px !important;
+    }
+
+    .clear-btn {
+      width: 32px !important;
+      height: 32px !important;
+      padding: 0 !important;
+    }
+  }
+}
+
+// Caret Theme
+input,
+textarea,
+.mat-mdc-input-element {
+  caret-color: var(--text-primary) !important;
 }
