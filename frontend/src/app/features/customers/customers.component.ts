@@ -1,12 +1,30 @@
+// ANGULAR
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+
+// MATERIAL UI
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-customers',
   standalone: true,
-  imports: [CommonModule],
   templateUrl: './customers.component.html',
-  styleUrl: './customers.component.scss'
+  styleUrl: './customers.component.scss',
+  imports: [
+    CommonModule,
+    MatIconModule
+  ]
 })
 export class CustomersComponent {
+
+  constructor(private readonly router: Router) {}
+
+  public onAddCustomer(): void {
+    this.router.navigate(['/customers/add']);
+  }
+
+  public onViewCustomers(): void {
+    this.router.navigate(['/customers/list']);
+  }
 }

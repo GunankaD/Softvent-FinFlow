@@ -1,4 +1,21 @@
-<div class="container">
+<div class="customers-container">
   <h1>Customers</h1>
-  <p>Manage your customers here.</p>
+
+  <div class="cards-wrapper">
+    <div class="action-card" (click)="onAddCustomer()">
+      <div class="card-icon">
+        <mat-icon>person_add</mat-icon>
+      </div>
+      <h2>Add New Customer</h2>
+      <p>Create and register a new customer in the system.</p>
+    </div>
+
+    <div class="action-card" (click)="onViewCustomers()">
+      <div class="card-icon">
+        <mat-icon>groups</mat-icon>
+      </div>
+      <h2>View All Customers</h2>
+      <p>Display all customers in a structured table view.</p>
+    </div>
+  </div>
 </div>
