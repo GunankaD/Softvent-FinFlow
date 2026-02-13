@@ -1,24 +1,20 @@
 // ANGULAR
 import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
-// MATERIAL UI
-import { MatTableModule } from '@angular/material/table';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
-
-// SERVICES & DTOs
+import { SnackbarService } from '../../../core/services/snackbar/snackbar.service'
 import { CustomerService } from '../../../core/services/customer/customer.service';
 import { CustomerSummaryResponse } from '../../../core/models/customer.models';
+import { DataTableComponent } from '../../../shared/components/data-table/data-table.component'
 
 @Component({
   selector: 'app-show-customers',
   standalone: true,
   imports: [
     CommonModule,
-    MatTableModule,
-    MatProgressSpinnerModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    DataTableComponent,
   ],
   templateUrl: './show-customers.component.html',
   styleUrls: ['./show-customers.component.scss']
@@ -27,21 +23,23 @@ export class ShowCustomersComponent implements OnInit {
 
   // DEPENDENCIES
   private readonly customerService = inject(CustomerService);
-  private readonly snackBar = inject(MatSnackBar);
+  private readonly snackbarService = inject(SnackbarService);
 
   // SIGNALS
   readonly loading = signal(false);
-  readonly customers = signal<CustomerSummaryResponse[]>([]);
 
-  readonly displayedColumns: string[] = [
-    'ccode',
-    'cname',
-    'city',
-    'state',
-    'mobileNumber',
-    'emailId',
-    'createdAt'
+  // TABLE
+  readonly customers = signal<CustomerSummaryResponse[]>([]);
+  readonly columns = [
+    { key: 'ccode', label: 'CCode' },
+    { key: 'cname', label: 'Customer Name' },
+    { key: 'city', label: 'City' },
+    { key: 'state', label: 'State' },
+    { key: 'mobileNumber', label: 'Mobile Number' },
+    { key: 'emailId', label: 'Email Address' },
+    { key: 'createdAt', label: 'Created On' }
   ];
+
 
   // Lifecycle Hook
   ngOnInit(): void {
@@ -58,12 +56,10 @@ export class ShowCustomersComponent implements OnInit {
         this.loading.set(false);
       },
       error: (err) => {
-        this.snackBar.open(
+        this.snackbarService.error(
           err?.error?.message ?? 'Failed to load customers',
-          'Close',
-          { duration: 4000 }
+          4000
         );
-        this.loading.set(false);
       }
     });
   }

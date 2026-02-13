@@ -1,65 +1,13 @@
-<div class="customers-table-container">
+<div class="container">
+  <h1 class="title">Customers</h1>
+  <p class="subtitle">View and manage all registered customers</p>
 
-  <h1>All Customers</h1>
-
-  @if (loading()) {
-    <div class="loader-wrapper">
-      <mat-spinner diameter="40"></mat-spinner>
-    </div>
-  }
-
-  @if (!loading()) {
-    <table mat-table [dataSource]="customers()" class="customers-table">
-
-      <!-- CCODE -->
-      <ng-container matColumnDef="ccode">
-        <th mat-header-cell *matHeaderCellDef> CCode </th>
-        <td mat-cell *matCellDef="let row"> {{ row.ccode }} </td>
-      </ng-container>
-
-      <!-- NAME -->
-      <ng-container matColumnDef="cname">
-        <th mat-header-cell *matHeaderCellDef> Name </th>
-        <td mat-cell *matCellDef="let row"> {{ row.cname }} </td>
-      </ng-container>
-
-      <!-- CITY -->
-      <ng-container matColumnDef="city">
-        <th mat-header-cell *matHeaderCellDef> City </th>
-        <td mat-cell *matCellDef="let row"> {{ row.city }} </td>
-      </ng-container>
-
-      <!-- STATE -->
-      <ng-container matColumnDef="state">
-        <th mat-header-cell *matHeaderCellDef> State </th>
-        <td mat-cell *matCellDef="let row"> {{ row.state }} </td>
-      </ng-container>
-
-      <!-- MOBILE -->
-      <ng-container matColumnDef="mobileNumber">
-        <th mat-header-cell *matHeaderCellDef> Mobile </th>
-        <td mat-cell *matCellDef="let row"> {{ row.mobileNumber }} </td>
-      </ng-container>
-
-      <!-- EMAIL -->
-      <ng-container matColumnDef="emailId">
-        <th mat-header-cell *matHeaderCellDef> Email </th>
-        <td mat-cell *matCellDef="let row"> {{ row.emailId }} </td>
-      </ng-container>
-
-      <!-- CREATED -->
-      <ng-container matColumnDef="createdAt">
-        <th mat-header-cell *matHeaderCellDef> Created </th>
-        <td mat-cell *matCellDef="let row">
-          {{ row.createdAt | date:'medium' }}
-        </td>
-      </ng-container>
-
-      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-
-    </table>
-  }
-
+  <div>
+    <app-data-table
+      [columns]="columns"
+      [data]="customers()"
+      [loading]="loading()"
+      [pageSize]="10">
+    </app-data-table>
+  </div>
 </div>
-
