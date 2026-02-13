@@ -57,14 +57,7 @@ public class CustomerService {
     }
 
     // GET CUSTOMER DETAILS
-    public List<CustomerSummaryResponse> getAllCustomers() {
-        return Customer.<Customer>listAll()
-                .stream()
-                .map(this::mapToSummaryResponse)
-                .toList();
-    }
     public CustomerDetailResponse getCustomerById(Long id) {
-
         Customer customer = Customer.findById(id);
 
         if (customer == null) {
@@ -76,7 +69,26 @@ public class CustomerService {
 
         return mapToDetailResponse(customer);
     }
-
+    public CustomerDetailResponse getCustomerByCcode(String ccode){
+        if (ccode == null || ccode.isBlank()) {
+            throw new BusinessException("Invalid customer code", 400); // BAD_REQUEST
+        }
+        Customer customer = Customer.<Customer>find("ccode", ccode)
+                .firstResultOptional()
+                .orElseThrow(() ->
+                        new BusinessException(
+                            "Customer not found",
+                            Response.Status.NOT_FOUND.getStatusCode() // 404
+                        )
+                );
+        return mapToDetailResponse(customer);
+    }
+    public List<CustomerSummaryResponse> getAllCustomers() {
+        return Customer.<Customer>listAll()
+                .stream()
+                .map(this::mapToSummaryResponse)
+                .toList();
+    }
 
     // AVAILABILITY CHECKERS
     public AvailabilityResponse checkCcodeAvailability(String ccode) {
