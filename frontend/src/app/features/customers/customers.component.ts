@@ -1,7 +1,7 @@
 // ANGULAR
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 // MATERIAL UI
 import { MatIconModule } from '@angular/material/icon';
@@ -13,7 +13,8 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './customers.component.scss',
   imports: [
     CommonModule,
-    MatIconModule
+    MatIconModule,
+    RouterModule
   ]
 })
 export class CustomersComponent {
@@ -21,10 +22,10 @@ export class CustomersComponent {
   constructor(private readonly router: Router) {}
 
   public onAddCustomer(): void {
-    this.router.navigate(['/customers/add']);
+    this.router.navigate(['/customers/add-customers']);
   }
 
   public onViewCustomers(): void {
-    this.router.navigate(['/customers/list']);
+    this.router.navigate(['/customers/show-customers']);
   }
 }
