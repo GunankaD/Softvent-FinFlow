@@ -23,6 +23,9 @@
     gap: 8px;
 
     a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
       text-decoration: none;
       font-size: 14px;
       color: var(--text-secondary);
@@ -31,11 +34,14 @@
       transition: all 0.3s ease;
       border-left: 3px solid transparent;
 
+      mat-icon {
+        font-size: 20px;
+      }
+
       &.active {
         background-color: var(--bg-tertiary);
         color: var(--text-primary);
         font-weight: 500;
-        border-left-color: var(--text-primary);
       }
 
       &:hover {
@@ -43,13 +49,43 @@
         color: var(--text-primary);
       }
     }
+
+    .submenu {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-left: 32px;
+      margin-top: -4px;
+
+      a {
+        font-size: 13px;
+        padding: 6px 8px;
+        border-left: none;
+
+        &.active {
+          background-color: transparent;
+          color: var(--text-primary);
+          font-weight: 500;
+        }
+
+        &:hover {
+          background-color: transparent;
+        }
+      }
+    }
+
+    /* Arrow alignment */
+    .arrow {
+      margin-left: auto;
+      font-size: 18px;
+    }
   }
 }
+
+
 
 @media (max-width: 768px) {
   .sidebar {
     width: 200px;
   }
 }
-
-
