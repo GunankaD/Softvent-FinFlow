@@ -1,18 +1,23 @@
+<!-- HEADER -->
 <app-header (toggleSidebar)="toggleSidebar()"></app-header>
 
+<!-- SIDEBAR -->
 <app-sidebar 
   [isOpen]="sidebarOpen"
   (linkClicked)="closeSidebar()">
 </app-sidebar>
 
+<!-- BACKDROP WHEN SIDEBAR IS OPEN -->
 <div
   class="backdrop"
   *ngIf="sidebarOpen"
   (click)="closeSidebar()">
 </div>
 
+<!-- MAIN CONTENT -->
 <main class="app-content">
   <router-outlet></router-outlet>
 </main>
 
+<!-- FOOTER -->
 <app-footer></app-footer>
