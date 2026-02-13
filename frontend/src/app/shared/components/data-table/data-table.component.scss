@@ -1,0 +1,44 @@
+:host {
+  display: block;
+}
+
+.customers-table {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--bg-primary);
+
+  /* HEADER */
+  .mat-mdc-header-row {
+    background-color: var(--bg-primary);
+  }
+
+  .mat-mdc-header-cell {
+    font-weight: 100;
+    color: var(--text-secondary);
+  }
+
+  /* ROW TEXT */
+  .mat-mdc-cell {
+    color: var(--text-primary);
+    border-bottom: none;
+  }
+
+  /* ZEBRA STRIPING */
+  .mat-mdc-row:nth-child(even) {
+    background-color: var(--bg-primary);
+  }
+
+  .mat-mdc-row:nth-child(odd) {
+    background-color: var(--bg-secondary);
+  }
+
+  /* HOVER */
+  .mat-mdc-row:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+  }
+}
+
+mat-progress-bar {
+  margin-bottom: 0px;
+}
