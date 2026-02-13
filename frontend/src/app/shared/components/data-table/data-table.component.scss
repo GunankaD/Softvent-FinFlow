@@ -2,10 +2,15 @@
   display: block;
 }
 
+.table-wrapper {
+  max-height: 572px; // exact 1 header + 10 cells (1 cell height = 52 pixels)
+  overflow-y: auto;
+  position: relative;
+}
+
 .customers-table {
   width: 100%;
   border-radius: 8px;
-  overflow: hidden;
   background: var(--bg-primary);
 
   /* HEADER */
@@ -14,8 +19,13 @@
   }
 
   .mat-mdc-header-cell {
+    position: sticky;
+    top: 0;
+    z-index: 10;
     font-weight: 100;
+    background-color: var(--bg-primary);
     color: var(--text-secondary);
+    border-bottom:none;
   }
 
   /* ROW TEXT */
@@ -35,7 +45,7 @@
 
   /* HOVER */
   .mat-mdc-row:hover {
-    background-color: rgba(255, 255, 255, 0.04);
+    background-color: var(--bg-tertiary);
   }
 }
 

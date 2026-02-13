@@ -5,29 +5,52 @@
     mode="indeterminate">
   </mat-progress-bar>
 
-  <table 
-    mat-table 
-    [dataSource]="visibleData"
-    class="customers-table">
+  <div class="table-wrapper">
+    <table mat-table
+            matSort
+            [dataSource]="dataSource"
+            class="customers-table">
 
-    <ng-container 
+      <!-- ROW NUMBER COLUMN -->
+      <ng-container matColumnDef="__rowNumber">
+        <th mat-header-cell *matHeaderCellDef>
+          #
+        </th>
+        <td mat-cell *matCellDef="let row; let i = index">
+          {{ getRowNumber(i) }}
+        </td>
+      </ng-container>
+
+      <!-- DYNAMIC DATA COLUMNS -->
+      <ng-container
         *ngFor="let column of columns"
         [matColumnDef]="column.key">
 
-      <th mat-header-cell *matHeaderCellDef>
-        {{ column.label }}
-      </th>
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>
+          {{ column.label }}
+        </th>
 
-      <td mat-cell *matCellDef="let row">
-        {{ row[column.key] }}
-      </td>
+        <td mat-cell *matCellDef="let row">
+          {{ row[column.key] }}
+        </td>
 
-    </ng-container>
+      </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="columnKeys"></tr>
-    <tr mat-row *matRowDef="let row; columns: columnKeys;"></tr>
+      <tr mat-header-row
+          *matHeaderRowDef="columnKeys">
+      </tr>
 
-  </table>
+      <tr mat-row
+          *matRowDef="let row; columns: columnKeys">
+      </tr>
+
+    </table>
+  </div>
+
+  <mat-paginator
+    [pageSize]="25"
+    [pageSizeOptions]="[10, 25, 50, 100]"
+    showFirstLastButtons>
+  </mat-paginator>
 
 </div>
-
