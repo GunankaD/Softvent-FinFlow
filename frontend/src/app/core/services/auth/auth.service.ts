@@ -1,9 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
+// APIs
 import { environment } from '../../../../environments/environment';
 import { API_ENDPOINTS } from '../../constants/api-endpoints';
+
+// DTOs
 import { 
   LoginRequest, 
   SignupRequest,
@@ -17,9 +20,8 @@ import {
 })
 export class AuthService {
 
+  private readonly http = inject(HttpClient);
   private readonly baseUrl = environment.apiBaseUrl;
-
-  constructor(private http: HttpClient) {}
 
   // login service
   login(request: LoginRequest): Observable<void> {
