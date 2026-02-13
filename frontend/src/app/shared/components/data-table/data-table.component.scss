@@ -2,8 +2,27 @@
   display: block;
 }
 
+// TABLE ACTION BUTTONS
+.table-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.refresh-btn {
+  color: var(--text-secondary);
+}
+
+// PROGRESS BAR
+mat-progress-bar {
+  margin-bottom: 0px;
+}
+
+// TABLE CSS
 .table-wrapper {
   max-height: 572px; // exact 1 header + 10 cells (1 cell height = 52 pixels)
+  min-height: 310px;
   overflow-y: auto;
   position: relative;
 }
@@ -49,6 +68,13 @@
   }
 }
 
-mat-progress-bar {
-  margin-bottom: 0px;
+.no-data-row {
+  height: 310px;
+
+  td {
+    text-align: center;
+    vertical-align: middle;
+    color: var(--text-secondary);
+    font-size: 14px;
+  }
 }

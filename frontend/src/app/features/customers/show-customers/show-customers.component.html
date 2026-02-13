@@ -6,7 +6,8 @@
     <app-data-table
       [columns]="columns"
       [data]="customers()"
-      [loading]="loading()">
+      [loading]="loading()"
+      (refresh)="loadCustomers()">
     </app-data-table>
   </div>
 </div>

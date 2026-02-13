@@ -1,5 +1,5 @@
 // ANGULAR
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output,EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, ViewChild } from '@angular/core';
 
@@ -10,7 +10,9 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort, MatSortModule } from '@angular/material/sort';
-
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   selector: 'app-data-table',
@@ -21,7 +23,10 @@ import { MatSort, MatSortModule } from '@angular/material/sort';
     MatProgressSpinnerModule,
     MatProgressBarModule,
     MatPaginatorModule,
-    MatSortModule
+    MatSortModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTooltipModule,
   ],
   templateUrl: './data-table.component.html',
   styleUrls: ['./data-table.component.scss']
@@ -32,6 +37,8 @@ export class DataTableComponent implements AfterViewInit{
   @Input({ required: true }) data!: any[];
   @Input({ required: true }) loading!: boolean;
 
+  @Output() refresh = new EventEmitter<void>();
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
@@ -40,10 +47,24 @@ export class DataTableComponent implements AfterViewInit{
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+
+    // sorting functionality for dates
+    this.dataSource.sortingDataAccessor = (item, property) => {
+    if (property === 'createdAt') {
+      return new Date(item.createdAt).getTime();
+    }
+    return item[property];
+  };
   }
 
   ngOnChanges(): void {
     this.dataSource.data = this.data ?? [];
+  }
+
+  onRefresh(): void {
+    this.dataSource.filter = '';
+    this.paginator?.firstPage();
+    this.refresh.emit();
   }
 
   get columnKeys(): string[] {

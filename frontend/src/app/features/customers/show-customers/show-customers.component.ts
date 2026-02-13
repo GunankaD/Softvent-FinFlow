@@ -1,12 +1,20 @@
 // ANGULAR
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { 
+  Component, 
+  OnInit, 
+  inject, 
+  signal,  
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
+// SERVICES & COMPONENTS
 import { SnackbarService } from '../../../core/services/snackbar/snackbar.service'
 import { CustomerService } from '../../../core/services/customer/customer.service';
-import { CustomerSummaryResponse } from '../../../core/models/customer.models';
 import { DataTableComponent } from '../../../shared/components/data-table/data-table.component'
+
+// DTOs
+import { CustomerSummaryResponse } from '../../../core/models/customer.models';
 
 @Component({
   selector: 'app-show-customers',
@@ -46,7 +54,7 @@ export class ShowCustomersComponent implements OnInit {
     this.loadCustomers();
   }
   
-  private loadCustomers(): void {
+  loadCustomers(): void {
 
     this.loading.set(true);
 
