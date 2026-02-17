@@ -39,8 +39,12 @@ $theme: mat.define-theme((
   --border-color: rgba(255, 255, 255, 0.1);
   --border-white: #ffffff;
   --accent-color: #1F6FEB;
+
+  /* BUTTON */
   --button-blue: #1F6FEB;
   --button-dark-blue: #0D3C71;
+  --button-green: #29903B;
+  --button-dark-green: #164b1f;
 
   /* GLOBAL MDC OVERRIDES */
   --mdc-theme-primary: var(--accent-color);

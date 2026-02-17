@@ -1,0 +1,184 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+//   padding: 24px;
+
+  .title {
+    color: var(--text-primary);
+    margin-bottom: 20px;
+  }
+
+  .subtitle {
+    color: var(--text-secondary);
+    margin-bottom: 30px;
+  }
+}
+
+.mat-stepper-horizontal,
+.mat-stepper-vertical {
+  background-color: var(--bg-primary) !important;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+.bank-section {
+  margin-top: 24px;
+}
+
+.summary-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.summary-section {
+  border: 1px solid var(--border-color, #2a2a2a);
+  padding: 16px;
+  border-radius: 8px;
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+/* STEP ACTION CONTAINERS */
+/* Base */
+.step-action-bar {
+  display: flex;
+  width: 100%;
+}
+
+/* Stepper 1 */
+.step-action-bar--step-1 {
+  justify-content: flex-end;
+}
+
+/* Stepper 2 */
+.step-action-bar--step-2 {
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Stepper 3 */
+.step-action-bar--step-3 {
+  margin-top: 32px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.right-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* INDIVIDUAL BUTTONS */
+/* Previous Step */
+.go-back-btn {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Delete (outline placeholder) */
+.delete-btn {
+  border: 1px solid red;
+  color: red;
+}
+
+/*
+ * CREATE BUTTON
+ */
+.create-btn {
+  min-width: 180px;
+  background-color: var(--button-green) !important;
+  color: var(--text-primary) !important;
+
+  display: inline-flex ;
+  align-items: center ;
+  justify-content: center ;
+}
+
+/* Disabled button look */
+.create-btn-wrapper.invalid .create-btn {
+  background-color: var(--button-dark-green) !important;
+  color: var(--text-disabled) !important;
+  opacity: 0.8;
+}
+
+/* Loading state */
+.create-btn-wrapper.loading .create-btn {
+  background-color: var(--button-green) !important;
+  color: var(--text-primary) !important;
+  opacity: 1;
+  cursor: default;
+}
+
+/*
+ * NEXT BUTTON
+ */
+.next-btn {
+  background-color: var(--button-blue) !important;
+  color: var(--text-primary) !important;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Disabled look */
+.next-btn-wrapper.invalid .next-btn {
+  background-color: var(--button-dark-blue) !important;
+  color: var(--text-disabled) !important;
+  opacity: 0.8;
+}
+
+/*
+ * SHARED BUTTON CSS
+ */
+
+/* Cursor invalid */
+.create-btn-wrapper.invalid,
+.create-btn-wrapper.loading,
+.next-btn-wrapper.invalid {
+  cursor: not-allowed;
+}
+
+/* Hover feedback */
+.next-btn-wrapper.invalid:hover,
+.create-btn-wrapper.invalid:hover,
+.create-btn-wrapper.loading:hover {
+  opacity: 0.9;
+}
+
+.create-btn-wrapper.invalid .create-btn .outline-icon,
+.create-btn-wrapper.invalid .create-btn mat-icon,
+.next-btn-wrapper.invalid .next-btn .outline-icon,
+.next-btn-wrapper.invalid .next-btn mat-icon {
+  color: var(--text-disabled) !important;
+}
+
+
+/* Material filled circle */
+.outline-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 300,
+    'GRAD' 0,
+    'opsz' 24;
+
+  color: white;
+}
+
+::ng-deep .mat-horizontal-content-container {
+  padding-top: 24px !important;
+}

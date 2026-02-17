@@ -1,1 +1,325 @@
-<p>add-customer works!</p>
+<div class="container">
+
+  <h1 class="title">Add Customer</h1>
+  <p class="subtitle">Create and register a new customer</p>
+
+  <mat-horizontal-stepper >
+
+    <!-- STEP 1: BUSINESS DETAILS -->
+    <mat-step [stepControl]="businessDetailsGroup">
+      <form [formGroup]="businessDetailsGroup">
+
+        <ng-template matStepLabel>Business Details</ng-template>
+
+        <div class="form-grid">
+
+          <!-- Customer Code -->
+          <mat-form-field appearance="outline">
+            <mat-label>Customer Code</mat-label>
+            <input matInput formControlName="ccode" />
+            <mat-error *ngIf="customerForm.get('businessDetails.ccode')?.hasError('required')">
+              Customer code is required
+            </mat-error>
+            <mat-error *ngIf="customerForm.get('businessDetails.ccode')?.hasError('ccodeTaken')">
+              Customer code already exists
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Customer Name -->
+          <mat-form-field appearance="outline">
+            <mat-label>Customer Name</mat-label>
+            <input matInput formControlName="cname" />
+            <mat-error *ngIf="customerForm.get('businessDetails.cname')?.hasError('required')">
+              Customer name is required
+            </mat-error>
+          </mat-form-field>
+
+          <!-- Country Code -->
+          <mat-form-field appearance="outline">
+            <mat-label>Country Code</mat-label>
+            <input matInput formControlName="countryCode" />
+          </mat-form-field>
+
+          <!-- Mobile -->
+          <mat-form-field appearance="outline">
+            <mat-label>Mobile Number</mat-label>
+            <input matInput formControlName="mobileNumber" />
+          </mat-form-field>
+
+          <!-- Email -->
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="emailId" />
+            <mat-error *ngIf="customerForm.get('businessDetails.emailId')?.hasError('email')">
+              Invalid email format
+            </mat-error>
+            <mat-error *ngIf="customerForm.get('businessDetails.emailId')?.hasError('emailTaken')">
+              Email already exists
+            </mat-error>
+          </mat-form-field>
+
+          <!-- GST -->
+          <mat-form-field appearance="outline">
+            <mat-label>GST Number</mat-label>
+            <input matInput formControlName="gstNo" />
+          </mat-form-field>
+
+          <!-- PAN -->
+          <mat-form-field appearance="outline">
+            <mat-label>PAN Number</mat-label>
+            <input matInput formControlName="panNo" />
+          </mat-form-field>
+
+        </div>
+
+        <!-- STEP ACTION BUTTONS -->
+        <div class="step-action-bar step-action-bar--step-1">
+            <div
+            class="next-btn-wrapper"
+            [class.invalid]="businessDetailsGroup.invalid">
+
+            <button
+                mat-raised-button
+                matStepperNext
+                type="button"
+                class="full next-btn"
+                [disabled]="businessDetailsGroup.invalid">
+
+                Next
+
+                <mat-icon fontSet="material-symbols-outlined" iconPositionEnd class="outline-icon">
+                arrow_circle_right
+                </mat-icon>
+
+            </button>
+            </div>
+        </div>
+
+      </form>
+    </mat-step>
+
+
+    <!-- STEP 2: ADDRESS + BANK -->
+    <mat-step [stepControl]="addressDetailsGroup">
+      <form [formGroup]="addressDetailsGroup">
+
+        <ng-template matStepLabel>Address & Bank</ng-template>
+
+        <div class="form-grid">
+
+          <!-- Address -->
+          <mat-form-field appearance="outline">
+            <mat-label>Company Address</mat-label>
+            <textarea matInput formControlName="address"></textarea>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>City</mat-label>
+            <input matInput formControlName="city" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>State</mat-label>
+            <input matInput formControlName="state" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Country</mat-label>
+            <input matInput formControlName="country" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Pincode</mat-label>
+            <input matInput formControlName="pincode" />
+          </mat-form-field>
+
+        </div>
+
+      </form>
+
+      <!-- BANK GROUP -->
+      <form [formGroup]="bankDetailsGroup">
+
+        <div class="form-grid bank-section">
+
+          <mat-form-field appearance="outline">
+            <mat-label>Bank Name</mat-label>
+            <input matInput formControlName="bankName" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Branch Name</mat-label>
+            <input matInput formControlName="branchName" />
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Account Number</mat-label>
+            <input matInput formControlName="accountNo" />
+          </mat-form-field>
+
+        </div>
+
+        <div class="step-action-bar step-action-bar--step-2">
+
+            <!-- Previous Step -->
+            <button
+                mat-button
+                matStepperPrevious
+                class="go-back-btn">
+
+                <mat-icon fontSet="material-symbols-outlined" class="outline-icon">
+                    arrow_circle_left
+                </mat-icon>
+                Previous Step
+            </button>
+
+            <!-- Next -->
+            <div
+            class="next-btn-wrapper"
+            [class.invalid]="addressDetailsGroup.invalid || bankDetailsGroup.invalid">
+
+            <button
+                mat-raised-button
+                matStepperNext
+                type="button"
+                class="full next-btn"
+                [disabled]="addressDetailsGroup.invalid || bankDetailsGroup.invalid">
+
+                Next
+
+                <mat-icon fontSet="material-symbols-outlined" iconPositionEnd class="outline-icon">
+                arrow_circle_right
+                </mat-icon>
+
+            </button>
+            </div>
+
+        </div>
+
+
+      </form>
+
+    </mat-step>
+
+
+    <!-- STEP 3: REVIEW -->
+    <mat-step>
+
+    <ng-template matStepLabel>Review</ng-template>
+
+    <div class="summary-container">
+
+        <!-- Business -->
+        <div class="summary-section">
+        <h3>Business Details</h3>
+
+        <div class="summary-grid">
+            <div><strong>Code:</strong> {{ customerForm.value.businessDetails.ccode }}</div>
+            <div><strong>Name:</strong> {{ customerForm.value.businessDetails.cname }}</div>
+            <div><strong>Mobile:</strong>
+            {{ customerForm.value.businessDetails.countryCode }}
+            {{ customerForm.value.businessDetails.mobileNumber }}
+            </div>
+            <div><strong>Email:</strong> {{ customerForm.value.businessDetails.emailId }}</div>
+            <div><strong>GST:</strong> {{ customerForm.value.businessDetails.gstNo }}</div>
+            <div><strong>PAN:</strong> {{ customerForm.value.businessDetails.panNo }}</div>
+        </div>
+        </div>
+
+        <!-- Address -->
+        <div class="summary-section">
+        <h3>Address</h3>
+
+        <div class="summary-grid">
+            <div><strong>Address:</strong> {{ customerForm.value.addressDetails.address }}</div>
+            <div><strong>City:</strong> {{ customerForm.value.addressDetails.city }}</div>
+            <div><strong>State:</strong> {{ customerForm.value.addressDetails.state }}</div>
+            <div><strong>Country:</strong> {{ customerForm.value.addressDetails.country }}</div>
+            <div><strong>Pincode:</strong> {{ customerForm.value.addressDetails.pincode }}</div>
+        </div>
+        </div>
+
+        <!-- Bank -->
+        <div class="summary-section">
+        <h3>Bank Details</h3>
+
+        <div class="summary-grid">
+            <div><strong>Bank:</strong> {{ customerForm.value.bankDetails.bankName }}</div>
+            <div><strong>Branch:</strong> {{ customerForm.value.bankDetails.branchName }}</div>
+            <div><strong>Account:</strong> {{ customerForm.value.bankDetails.accountNo }}</div>
+        </div>
+        </div>
+
+    </div>
+
+    <!-- STEP ACTION BUTTONS -->
+    <div class="step-action-bar step-action-bar--step-3">
+
+        <!-- LEFT: PREVIOUS STEP -->
+        <button
+            mat-button
+            matStepperPrevious
+            class="go-back-btn">
+
+            <mat-icon fontSet="material-symbols-outlined" class="outline-icon">
+                arrow_circle_left
+            </mat-icon>
+            Previous Step
+        </button>
+
+        <!-- RIGHT SIDE GROUP -->
+        <div class="right-actions">
+
+            <!-- DELETE -->
+            <button
+            mat-stroked-button
+            class="delete-btn"
+            (click)="onCancel()">
+
+            <mat-icon>delete</mat-icon>
+            Delete
+            </button>
+
+            <!-- CREATE CUSTOMER -->
+            <div
+            class="create-btn-wrapper"
+            [class.invalid]="customerForm.invalid"
+            [class.loading]="isSubmitting()">
+
+            <button
+                mat-raised-button
+                class="create-btn"
+                (click)="onSubmit()"
+                [disabled]="customerForm.invalid || isSubmitting()">
+
+                <mat-progress-spinner
+                    *ngIf="isSubmitting()"
+                    mode="indeterminate"
+                    style="--mdc-circular-progress-active-indicator-color: white"
+                    diameter="20"
+                    strokeWidth="2">
+                </mat-progress-spinner>
+
+                <mat-icon
+                    *ngIf="!isSubmitting()"
+                    fontSet="material-symbols-outlined"
+                    class="outline-icon">
+                    add_circle
+                </mat-icon>
+
+                <span *ngIf="!isSubmitting()">Create Customer</span>
+
+            </button>
+            </div>
+
+        </div>
+    </div>
+
+
+    </mat-step>
+
+
+  </mat-horizontal-stepper>
+
+</div>
+
