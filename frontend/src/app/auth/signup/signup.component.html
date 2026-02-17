@@ -31,7 +31,7 @@
                     (click)="hidePassword.set(!hidePassword())"
                     aria-label="Toggle password visibility">
 
-                    <mat-icon>
+                    <mat-icon fontSet="material-symbols-outlined" class="outline-icon">
                         {{ hidePassword() ? 'visibility_off' : 'visibility' }}
                     </mat-icon>
                 </button>
@@ -57,7 +57,7 @@
                     (click)="hideConfirmPassword.set(!hideConfirmPassword())"
                     aria-label="Toggle password visibility">
 
-                    <mat-icon>
+                    <mat-icon fontSet="material-symbols-outlined" class="outline-icon">
                         {{ hideConfirmPassword() ? 'visibility_off' : 'visibility' }}
                     </mat-icon>
                 </button>
@@ -110,7 +110,9 @@
                 mat-button
                 class="full go-back-btn"
                 routerLink="/login">
-                <mat-icon>arrow_back</mat-icon>
+                <mat-icon fontSet="material-symbols-outlined" class="outline-icon">
+                    arrow_circle_left
+                </mat-icon>
                 Back to Login
             </button>
         <!-- LOGIN BUTTON ENDS -->
