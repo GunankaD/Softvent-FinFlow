@@ -17,6 +17,8 @@ import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @Component({
   selector: 'app-data-table',
@@ -35,6 +37,8 @@ import { MatInputModule } from '@angular/material/input';
     MatFormFieldModule,
     MatSelectModule,
     MatInputModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
   ],
   templateUrl: './data-table.component.html',
   styleUrls: ['./data-table.component.scss']
@@ -49,20 +53,28 @@ export class DataTableComponent implements AfterViewInit{
   // OUTPUTS
   @Output() refresh = new EventEmitter<void>();
 
-  // VIEW CHILD
+  // VIEW CHILD (creating references to the objects in html)
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  // table
+  // Table
   readonly dataSource = new MatTableDataSource<any>();
+
+  // Action row variables
   selectedColumn: string = '__all';
   searchValue: string = '';
+  fromDate: Date | null = null;
+  toDate: Date | null = null;
 
+
+  /*
+   * Runs after the view (HTML + @ViewChild refs like paginator, sort) is initialized.
+   */
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
 
-    // sorting functionality for dates
+    // sorting functionality for 'Created On'
     this.dataSource.sortingDataAccessor = (item, property) => {
       if (property === 'createdAt') {
         return new Date(item.createdAt).getTime();
@@ -70,48 +82,110 @@ export class DataTableComponent implements AfterViewInit{
       return item[property];
     };
 
-    // filtering functionality
+    // filtering functionality for 'All Columns' & 'Created On'
     this.dataSource.filterPredicate = (data: any, filter: string): boolean => {
       const parsed = JSON.parse(filter);
-      const value = parsed.value.toLowerCase();
 
-      if (!value) return true;
+      // TEXT FILTERING
+      if (parsed.type === 'text') {
+        const value = parsed.value.toLowerCase();
+        if (!value) return true;
 
-      if (parsed.column === '__all') {
-        return this.columns.some(col =>
-          String(data[col.key] ?? '')
-            .toLowerCase()
-            .includes(value)
+        if (parsed.column === '__all') {
+          return this.columns
+            .filter(col => col.key !== 'createdAt') // exclude date column
+            .some(col =>
+              String(data[col.key] ?? '')
+                .toLowerCase()
+                .includes(value)
+            );
+        }
+
+        return String(data[parsed.column] ?? '')
+          .toLowerCase()
+          .includes(value);
+      }
+
+      // DATE RANGE FILTERING
+      if (parsed.type === 'date') {
+        const rowTime = new Date(data.createdAt).getTime();
+        const from = parsed.from ? new Date(parsed.from).getTime() : null;
+        const to = parsed.to ? new Date(parsed.to).getTime() : null;
+
+        return (
+          (!from || rowTime >= from) &&
+          (!to || rowTime <= to)
         );
       }
 
-      return String(data[parsed.column] ?? '')
-        .toLowerCase()
-        .includes(value);
+      return true;
     };
+
   }
 
   applyFilter(): void {
-    const filterObject = {
-      column: this.selectedColumn,
-      value: this.searchValue.trim()
-    };
+    // DATE RANGE MODE
+    if (this.selectedColumn === 'createdAt') {
 
-    this.dataSource.filter = JSON.stringify(filterObject);
-    this.paginator?.firstPage();
+      const filterObject = {
+        type: 'date',
+        from: this.fromDate,
+        to: this.toDate
+      };
 
-    setTimeout(() => {
-      this.paginator?.firstPage();
-    });
+      this.dataSource.filter = JSON.stringify(filterObject);
+    }
+
+    // TEXT MODE
+    else {
+
+      const filterObject = {
+        type: 'text',
+        column: this.selectedColumn,
+        value: this.searchValue.trim()
+      };
+
+      this.dataSource.filter = JSON.stringify(filterObject);
+    }
+
+    // Force recalculation safely
+    if (this.dataSource.paginator) {
+      this.dataSource._updateChangeSubscription(); // important
+      this.paginator.firstPage();
+    }
   }
 
+  /*
+   * For the X button inside Search input
+   */
   clearSearch(): void {
     this.searchValue = '';
     this.applyFilter();
   }
 
+  clearDateRange(): void {
+    this.fromDate = null;
+    this.toDate = null;
+    this.applyFilter();
+  }
+
+  /*
+   * When we select the filter column
+   */
+  onColumnChange(): void {
+    this.searchValue = '';
+    this.fromDate = null;
+    this.toDate = null;
+
+    this.applyFilter();
+  }
+
+  /*
+   * Runs if there are @Input() values (first time + every change).
+   */ 
   ngOnChanges(): void {
     this.dataSource.data = this.data ?? [];
+
     // Rebind paginator + sort after data change
     if (this.paginator) {
       this.dataSource.paginator = this.paginator;

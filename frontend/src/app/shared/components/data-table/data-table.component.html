@@ -1,11 +1,11 @@
 <div class="customers-table-container">
 
-  <!-- TABLE ACTION ROW BEGINS -->
+  <!-- 1. TABLE ACTION ROW BEGINS -->
   <div class="table-actions">
 
     <div class="search-controls">
 
-      <!-- REFRESH BUTTON -->
+      <!-- 1. REFRESH BUTTON -->
       <button
         mat-icon-button
         type="button"
@@ -14,11 +14,11 @@
         <mat-icon>refresh</mat-icon>
       </button>
 
-      <!-- SELECT FIELD -->
+      <!-- 2. SELECT FIELD -->
       <mat-form-field appearance="outline" class="search-select compact">
         <mat-select
           [(ngModel)]="selectedColumn"
-          (selectionChange)="applyFilter()">
+          (selectionChange)="onColumnChange()">
 
           <mat-option value="__all">All Columns</mat-option>
 
@@ -31,8 +31,55 @@
         </mat-select>
       </mat-form-field>
 
-      <!-- SEARCHING FIELD -->
-      <mat-form-field appearance="outline" class="search-input compact">
+      <!-- 3. SEARCHING FIELD -->
+      @if (selectedColumn === 'createdAt') {
+
+        <!-- DATE RANGE FIELD -->
+        <div class="date-range-group">
+
+          <!-- 1. FROM DATE -->
+          <mat-form-field appearance="outline" class="compact">
+            <input
+              matInput
+              [matDatepicker]="fromPicker"
+              placeholder="From"
+              [(ngModel)]="fromDate"
+              [max]="toDate"
+              (dateChange)="applyFilter()">
+            <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
+            <mat-datepicker #fromPicker></mat-datepicker>
+          </mat-form-field>
+
+          <!-- 2. TO DATE -->
+          <mat-form-field appearance="outline" class="compact">
+            <input
+              matInput
+              [matDatepicker]="toPicker"
+              placeholder="To"
+              [(ngModel)]="toDate"
+              [min]="fromDate"
+              (dateChange)="applyFilter()">
+            <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
+            <mat-datepicker #toPicker></mat-datepicker>
+          </mat-form-field>
+
+           <!-- 3. CLEAR RANGE BUTTON -->
+          <button
+            mat-icon-button
+            type="button"
+            (click)="clearDateRange()"
+            [disabled]="!fromDate && !toDate"
+            class="clear-range-btn">
+
+            <mat-icon>close</mat-icon>
+
+          </button>
+        </div>
+
+      } 
+      @else {
+        <!-- TEXT FIELD -->
+        <mat-form-field appearance="outline" class="search-input compact">
           <mat-icon matPrefix>search</mat-icon>
 
           <input
@@ -52,20 +99,21 @@
             <mat-icon>close</mat-icon>
 
           </button>
-      </mat-form-field>
+        </mat-form-field>
+
+      }
 
     </div>
 
   </div>
 
-
-  <!-- PROGRESS BAR BEGINS -->
+  <!-- 2. PROGRESS BAR BEGINS -->
   <mat-progress-bar
     *ngIf="loading"
     mode="indeterminate">
   </mat-progress-bar>
 
-  <!-- TABLE BEGINS -->
+  <!-- 3. TABLE BEGINS -->
   <div class="table-wrapper">
     <table mat-table
             matSort
@@ -120,6 +168,7 @@
     </table>
   </div>
 
+  <!-- 4. PAGINATOR -->
   <mat-paginator
     [pageSize]="25"
     [pageSizeOptions]="[10, 25, 50, 100]"
