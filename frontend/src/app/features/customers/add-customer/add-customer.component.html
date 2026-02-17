@@ -76,14 +76,14 @@
         <div class="step-action-bar step-action-bar--step-1">
             <div
             class="next-btn-wrapper"
-            [class.invalid]="businessDetailsGroup.invalid">
+            [class.invalid]="businessDetailsGroup.invalid || businessDetailsGroup.pending">
 
             <button
                 mat-raised-button
                 matStepperNext
                 type="button"
                 class="full next-btn"
-                [disabled]="businessDetailsGroup.invalid">
+                [disabled]="businessDetailsGroup.invalid || businessDetailsGroup.pending">
 
                 Next
 
@@ -176,14 +176,24 @@
             <!-- Next -->
             <div
             class="next-btn-wrapper"
-            [class.invalid]="addressDetailsGroup.invalid || bankDetailsGroup.invalid">
+            [class.invalid]="
+                addressDetailsGroup.invalid ||
+                bankDetailsGroup.invalid ||
+                addressDetailsGroup.pending ||
+                bankDetailsGroup.pending
+            ">
 
             <button
                 mat-raised-button
                 matStepperNext
                 type="button"
                 class="full next-btn"
-                [disabled]="addressDetailsGroup.invalid || bankDetailsGroup.invalid">
+                [disabled]="
+                    addressDetailsGroup.invalid ||
+                    bankDetailsGroup.invalid ||
+                    addressDetailsGroup.pending ||
+                    bankDetailsGroup.pending
+                ">
 
                 Next
 
@@ -322,4 +332,3 @@
   </mat-horizontal-stepper>
 
 </div>
-
