@@ -187,11 +187,11 @@ export class AddCustomerComponent implements OnDestroy {
     this.customerService.create(payload).subscribe({
       next: () => {
         this.isSubmitting.set(false);
-        this.snackbar.success('Customer created successfully');
+        this.snackbar.success('Customer created successfully', 6000);
         this.router.navigate(['/customers']);
       },
       error: () => {
-        this.snackbar.error('Failed to create customer');
+        this.snackbar.error('Failed to create customer', 6000);
         this.isSubmitting.set(false);
       }
     });

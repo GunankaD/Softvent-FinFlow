@@ -179,6 +179,49 @@
   color: white;
 }
 
+/*
+ * MATERIAL STEPPER CSS OVERRIDES
+ */
 ::ng-deep .mat-horizontal-content-container {
   padding-top: 24px !important;
+}
+
+/* Default step icon */
+::ng-deep .mat-step-header .mat-step-icon {
+  background-color: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Active/selected step icon */
+::ng-deep .mat-step-header .mat-step-icon-selected {
+  background-color: var(--button-blue) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Completed step icon */
+::ng-deep .mat-step-header .mat-step-icon-state-done,
+::ng-deep .mat-step-header .mat-step-icon-state-edit {
+  background-color: var(--button-green) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Default label */
+::ng-deep .mat-step-header .mat-step-label {
+  color: var(--text-secondary) !important;
+}
+
+/* Active label */
+::ng-deep .mat-step-header .mat-step-label-active {
+  color: var(--text-primary) !important;
+}
+
+/* Selected label */
+::ng-deep .mat-step-header .mat-step-label-selected {
+  color: var(--text-primary) !important;
+}
+
+/* Focus background */
+::ng-deep .mat-step-header.cdk-program-focused,
+::ng-deep .mat-step-header.cdk-keyboard-focused {
+  background: transparent !important;
 }

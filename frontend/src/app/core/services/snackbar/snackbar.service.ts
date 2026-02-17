@@ -9,16 +9,16 @@ export class SnackbarService {
   error(message: string, duration = 3000) {
     this.snackBar.open(message, 'Close', {
       duration,
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom',
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
     });
   }
 
   success(message: string, duration = 3000) {
     this.snackBar.open(message, 'OK', {
       duration,
-      horizontalPosition: 'center',
-      verticalPosition: 'bottom',
+      horizontalPosition: 'right',
+      verticalPosition: 'top',
     });
   }
 }
