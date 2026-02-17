@@ -22,7 +22,7 @@ export class CustomersComponent {
   constructor(private readonly router: Router) {}
 
   public onAddCustomer(): void {
-    this.router.navigate(['/customers/add-customers']);
+    this.router.navigate(['/customers/add-customer']);
   }
 
   public onViewCustomers(): void {
