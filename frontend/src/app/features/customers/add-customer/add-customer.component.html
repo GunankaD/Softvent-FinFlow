@@ -6,7 +6,7 @@
   <mat-horizontal-stepper>
 
     <!-- STEP 1: BUSINESS DETAILS -->
-    <mat-step [stepControl]="businessDetailsGroup">
+    <mat-step [stepControl]="businessDetailsGroup" [editable]="!isSubmitting()">
       <form [formGroup]="businessDetailsGroup">
 
         <ng-template matStepLabel>Business Details</ng-template>
@@ -113,7 +113,7 @@
 
 
     <!-- STEP 2: ADDRESS + BANK -->
-    <mat-step [stepControl]="addressDetailsGroup">
+    <mat-step [stepControl]="addressDetailsGroup" [editable]="!isSubmitting()">
       <!-- TOP ADDRESS GROUP GRID -->
       <form [formGroup]="addressDetailsGroup">
 
@@ -228,7 +228,7 @@
 
 
     <!-- STEP 3: REVIEW -->
-    <mat-step>
+    <mat-step [editable]="!isSubmitting()">
 
     <ng-template matStepLabel>Review</ng-template>
 
@@ -285,7 +285,8 @@
         <button
             mat-button
             matStepperPrevious
-            class="go-back-btn">
+            class="go-back-btn"
+            [disabled]="isSubmitting()">
 
             <mat-icon fontSet="material-symbols-outlined" class="outline-icon">
                 arrow_circle_left
@@ -300,7 +301,8 @@
             <button
             mat-stroked-button
             class="delete-btn"
-            (click)="onCancel()">
+            (click)="onCancel()"
+            [disabled]="isSubmitting()">
 
             <mat-icon>delete</mat-icon>
             Delete

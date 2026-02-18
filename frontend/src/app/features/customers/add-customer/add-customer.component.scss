@@ -163,6 +163,11 @@
   color: var(--text-disabled) !important;
 }
 
+/* PREVIOUS + DELETE disabled look */
+.go-back-btn:disabled,
+.delete-btn:disabled {
+  opacity: 0.5 !important;
+}
 
 /* Material filled circle */
 .outline-icon {
