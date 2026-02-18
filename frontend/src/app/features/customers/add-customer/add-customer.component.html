@@ -62,12 +62,24 @@
           <mat-form-field appearance="outline">
             <mat-label>GST Number</mat-label>
             <input matInput formControlName="gstNo" />
+            <mat-error *ngIf="customerForm.get('businessDetails.gstNo')?.hasError('required')">
+              GST Number is required
+            </mat-error>
+            <mat-error *ngIf="customerForm.get('businessDetails.gstNo')?.hasError('pattern')">
+              Invalid GST format
+            </mat-error>
           </mat-form-field>
 
           <!-- PAN -->
           <mat-form-field appearance="outline">
             <mat-label>PAN Number</mat-label>
             <input matInput formControlName="panNo" />
+            <mat-error *ngIf="customerForm.get('businessDetails.panNo')?.hasError('required')">
+              PAN Number is required
+            </mat-error>
+            <mat-error *ngIf="customerForm.get('businessDetails.panNo')?.hasError('pattern')">
+              Invalid PAN format
+            </mat-error>
           </mat-form-field>
 
         </div>
