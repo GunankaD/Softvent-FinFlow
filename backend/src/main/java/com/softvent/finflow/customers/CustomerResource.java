@@ -3,6 +3,7 @@ package com.softvent.finflow.customers;
 import com.softvent.finflow.customers.dto.CustomerCreateRequest;
 import com.softvent.finflow.customers.dto.CustomerSummaryResponse;
 import com.softvent.finflow.customers.dto.CustomerDetailResponse;
+import com.softvent.finflow.customers.dto.CustomerUpdateRequest;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
@@ -50,6 +51,22 @@ public class CustomerResource {
     public Response getAllCustomers() {
         List<CustomerSummaryResponse> customers = customerService.getAllCustomers();
         return Response.ok(customers).build();
+    }
+
+    // UPDATE CUSTOMER INFO
+    @PUT
+    @Path("/ccode/{ccode}")
+    public Response updateCustomer(@PathParam("ccode") String ccode, @Valid CustomerUpdateRequest request) {
+        CustomerDetailResponse response = customerService.updateCustomer(ccode, request);
+        return Response.ok(response).build(); // 200 SUCCESS
+    }
+
+    // DELETE CUSTOMER
+    @DELETE
+    @Path("/ccode/{ccode}")
+    public Response deleteCustomer(@PathParam("ccode") String ccode) {
+        customerService.deleteCustomer(ccode);
+        return Response.status(Response.Status.NO_CONTENT).build(); // 204
     }
 
     // AVAILABILITY FUNCTIONS

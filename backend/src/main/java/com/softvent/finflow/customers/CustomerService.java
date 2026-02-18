@@ -6,6 +6,7 @@ import com.softvent.finflow.customers.entity.Customer;
 
 import com.softvent.finflow.customers.dto.CustomerCreateRequest;
 import com.softvent.finflow.customers.dto.CustomerSummaryResponse;
+import com.softvent.finflow.customers.dto.CustomerUpdateRequest;
 import com.softvent.finflow.common.BusinessException;
 import jakarta.ws.rs.core.Response;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -89,6 +90,61 @@ public class CustomerService {
                 .map(this::mapToSummaryResponse)
                 .toList();
     }
+
+    // UPDATE CUSTOMER DETAILS
+    @Transactional
+    public CustomerDetailResponse updateCustomer(String ccode, CustomerUpdateRequest request) {
+
+        if (ccode == null || ccode.isBlank()) {
+            throw new BusinessException("Invalid customer code", 400);
+        }
+
+        Customer customer = Customer.<Customer>find("ccode", ccode)
+                .firstResultOptional()
+                .orElseThrow(() ->
+                        new BusinessException(
+                                "Customer not found",
+                                Response.Status.NOT_FOUND.getStatusCode()
+                        )
+                );
+
+        customer.cname = request.cname;
+        customer.address = request.address;
+        customer.city = request.city;
+        customer.state = request.state;
+        customer.country = request.country;
+        customer.pincode = request.pincode;
+        customer.mobileNumber = request.mobileNumber;
+        customer.emailId = request.emailId;
+        customer.gstNo = request.gstNo;
+        customer.panNo = request.panNo;
+        customer.bankName = request.bankName;
+        customer.branchName = request.branchName;
+        customer.accountNo = request.accountNo;
+
+        return mapToDetailResponse(customer);
+    }
+
+    // DELETE CUSTOMER
+    @Transactional
+    public void deleteCustomer(String ccode) {
+
+        if (ccode == null || ccode.isBlank()) {
+            throw new BusinessException("Invalid customer code", 400);
+        }
+
+        Customer customer = Customer.<Customer>find("ccode", ccode)
+                .firstResultOptional()
+                .orElseThrow(() ->
+                        new BusinessException(
+                                "Customer not found",
+                                Response.Status.NOT_FOUND.getStatusCode()
+                        )
+                );
+
+        customer.delete();
+    }
+
 
     // AVAILABILITY CHECKERS
     public AvailabilityResponse checkCcodeAvailability(String ccode) {
