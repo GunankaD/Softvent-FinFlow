@@ -3,7 +3,7 @@
   <h1 class="title">Add Customer</h1>
   <p class="subtitle">Create and register a new customer</p>
 
-  <mat-horizontal-stepper linear>
+  <mat-horizontal-stepper>
 
     <!-- STEP 1: BUSINESS DETAILS -->
     <mat-step [stepControl]="businessDetailsGroup">
@@ -11,6 +11,7 @@
 
         <ng-template matStepLabel>Business Details</ng-template>
 
+        <!-- TOP INPUT GRID -->
         <div class="form-grid">
 
           <!-- Customer Code -->
@@ -84,7 +85,7 @@
 
         </div>
 
-        <!-- STEP ACTION BUTTONS -->
+        <!-- BOTTOM STEP ACTION BUTTONS -->
         <div class="step-action-bar step-action-bar--step-1">
             <div
             class="next-btn-wrapper"
@@ -113,6 +114,7 @@
 
     <!-- STEP 2: ADDRESS + BANK -->
     <mat-step [stepControl]="addressDetailsGroup">
+      <!-- TOP ADDRESS GROUP GRID -->
       <form [formGroup]="addressDetailsGroup">
 
         <ng-template matStepLabel>Address & Bank</ng-template>
@@ -149,7 +151,7 @@
 
       </form>
 
-      <!-- BANK GROUP -->
+      <!-- MIDDLE BANK GROUP GRID -->
       <form [formGroup]="bankDetailsGroup">
 
         <div class="form-grid bank-section">
@@ -170,7 +172,8 @@
           </mat-form-field>
 
         </div>
-
+        
+        <!-- BOTTOM STEP ACTION BAR BUTTONS -->
         <div class="step-action-bar step-action-bar--step-2">
 
             <!-- Previous Step -->
@@ -229,6 +232,7 @@
 
     <ng-template matStepLabel>Review</ng-template>
 
+    <!-- TOP SUMMARY DETAILS -->
     <div class="summary-container">
 
         <!-- Business -->
@@ -274,7 +278,7 @@
 
     </div>
 
-    <!-- STEP ACTION BUTTONS -->
+    <!-- BOTTOM STEP ACTION BUTTONS -->
     <div class="step-action-bar step-action-bar--step-3">
 
         <!-- LEFT: PREVIOUS STEP -->
@@ -336,7 +340,6 @@
 
         </div>
     </div>
-
 
     </mat-step>
 
