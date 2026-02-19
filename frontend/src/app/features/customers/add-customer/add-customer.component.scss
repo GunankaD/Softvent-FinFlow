@@ -1,7 +1,6 @@
 .container {
   max-width: 1200px;
   margin: 0 auto;
-//   padding: 24px;
 
   .title {
     color: var(--text-primary);
@@ -12,11 +11,6 @@
     color: var(--text-secondary);
     margin-bottom: 30px;
   }
-}
-
-.mat-stepper-horizontal,
-.mat-stepper-vertical {
-  background-color: var(--bg-primary) !important;
 }
 
 .form-grid {
@@ -85,7 +79,7 @@
   color: var(--text-primary) !important;
 }
 
-/* Delete (outline placeholder) */
+/* Delete */
 .delete-btn {
   border: 1px solid red;
   color: red;
@@ -187,8 +181,12 @@
 /*
  * MATERIAL STEPPER CSS OVERRIDES
  */
+ .mat-stepper-horizontal {
+  background-color: var(--bg-primary) !important;
+}
+
 ::ng-deep .mat-horizontal-content-container {
-  padding-top: 24px !important;
+  padding: 24px 0px 24px 0px !important; 
 }
 
 /* Default step icon */
