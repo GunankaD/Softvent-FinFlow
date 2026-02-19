@@ -3,10 +3,7 @@ import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/materia
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 
-export interface ConfirmDialogData {
-  title: string;
-  message: string;
-}
+import { ConfirmButtonColor, ConfirmDialogData } from '../../../core/models/confirm-dialog.model';
 
 @Component({
   selector: 'app-confirm-dialog',
@@ -19,6 +16,10 @@ export class ConfirmDialogComponent {
 
   private readonly dialogRef = inject(MatDialogRef<ConfirmDialogComponent>);
   readonly data = inject<ConfirmDialogData>(MAT_DIALOG_DATA);
+
+  protected get confirmBtnClass(): string {
+    return `confirm-btn-${this.data.confirmColor ?? 'blue'}`;
+  }
 
   onCancel(): void {
     this.dialogRef.close(false);
