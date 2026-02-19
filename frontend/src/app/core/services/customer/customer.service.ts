@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, delay, of } from 'rxjs';
 
 // APIs
 import { environment } from '../../../../environments/environment';
@@ -11,7 +11,8 @@ import {
   CustomerCreateRequest,
   CustomerSummaryResponse,
   CustomerDetailResponse,
-  AvailabilityResponse
+  AvailabilityResponse,
+  CustomerUpdateRequest
 } from '../../models/customer.models'
 
 @Injectable({
@@ -22,7 +23,7 @@ export class CustomerService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = environment.apiBaseUrl;
 
-  // GET all customers: Less details
+  // GET CUSTOMERS
   getAll(): Observable<CustomerSummaryResponse[]> {
     return this.http.get<CustomerSummaryResponse[]>(`${this.baseUrl}${API_ENDPOINTS.CUSTOMERS.BASE}`);
   }
@@ -34,12 +35,28 @@ export class CustomerService {
     );
   }
 
-  // POST create customer service
+  // POST CUSTOMERS
   create(request: CustomerCreateRequest): Observable<CustomerSummaryResponse> {
     return this.http.post<CustomerSummaryResponse>(`${this.baseUrl}${API_ENDPOINTS.CUSTOMERS.BASE}`, request);
   }
 
-  // GET ccode availability
+  // PUT CUSTOMERS
+  updateByCode(ccode: string, request: CustomerUpdateRequest): Observable<CustomerDetailResponse> {
+    return this.http.put<CustomerDetailResponse>(
+      `${this.baseUrl}${API_ENDPOINTS.CUSTOMERS.BY_CCODE(ccode)}`,
+      request
+    );
+  }
+
+  // DELETE CUSTOMERS
+  deleteByCode(ccode: string): Observable<void> {
+    return this.http.delete<void>(
+      `${this.baseUrl}${API_ENDPOINTS.CUSTOMERS.BY_CCODE(ccode)}`
+    );
+  }
+
+
+  // AVAILABILITY GETTERS
   checkCcodeAvailability(ccode: string): Observable<AvailabilityResponse> {
     const params = new HttpParams().set('ccode', ccode);
 

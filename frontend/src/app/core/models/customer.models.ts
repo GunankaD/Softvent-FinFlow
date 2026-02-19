@@ -48,3 +48,19 @@ export interface CustomerDetailResponse {
 export interface AvailabilityResponse {
   available: boolean;
 }
+
+export interface CustomerUpdateRequest {
+  cname: string;
+  address: string;
+  city: string;
+  state: string;
+  country: string;
+  pincode: string;
+  mobileNumber: string;
+  emailId: string;
+  gstNo: string;
+  panNo: string;
+  bankName: string;
+  branchName: string;
+  accountNo: string;
+}

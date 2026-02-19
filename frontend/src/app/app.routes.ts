@@ -26,6 +26,12 @@ export const routes: Routes = [
     // CUSTOMERS
     {path: 'customers', component: CustomersComponent},
     {path: 'customers/show-customers', component: ShowCustomersComponent},
-    {path: 'customers/add-customer', component: AddCustomerComponent}
+    {path: 'customers/add-customer', component: AddCustomerComponent},
+    {path: 'customers/:ccode',
+        loadComponent: () =>
+            import('./features/customers/customer-details/customer-details.component')
+            .then(m => m.CustomerDetailsComponent)
+    }
+,
 ];
 
