@@ -219,3 +219,9 @@ textarea,
 .mat-mdc-input-element {
   caret-color: var(--text-primary) !important;
 }
+
+.custom-dialog-panel .mat-mdc-dialog-container {
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+}
