@@ -45,6 +45,7 @@ $theme: mat.define-theme((
   --button-dark-blue: #0D3C71;
   --button-green: #29903B;
   --button-dark-green: #164b1f;
+  --button-red: #880808;
 
   /* GLOBAL MDC OVERRIDES */
   --mdc-theme-primary: var(--accent-color);
@@ -224,4 +225,21 @@ textarea,
   background: var(--bg-secondary);
   border-radius: 12px;
   border: 1px solid var(--border-color);
+}
+
+.snackbar-error {
+  background-color: var(--button-red) !important;
+  color: white !important;
+}
+
+.snackbar-success {
+  background-color: var(--button-green) !important;
+  color: white !important;
+}
+.cdk-overlay-container {
+  z-index: 10000 !important;
+}
+.cdk-overlay-container .mat-mdc-snack-bar-container {
+  margin-top: 78px !important;
+  margin-right: 16px !important;
 }
