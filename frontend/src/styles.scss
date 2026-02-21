@@ -27,7 +27,6 @@ $theme: mat.define-theme((
   /* Backgrounds */
   --bg-primary: #010409;
   --bg-secondary: #0D1117;
-  --bg-primary: #010409;
   --bg-tertiary: #121D2F;
 
   /* Text */
@@ -247,4 +246,28 @@ textarea,
 .cdk-overlay-container .mat-mdc-snack-bar-container {
   margin-top: 78px !important;
   margin-right: 16px !important;
+}
+
+// =====================
+// AG GRID
+// =====================
+.ag-theme-quartz-dark {
+
+  /* Header */
+  --ag-header-background-color: var(--bg-primary);
+  --ag-header-foreground-color: #ffffff;
+  --ag-header-column-separator-display: none;
+
+  /* Rows */
+  --ag-row-hover-color: var(--bg-tertiary);
+
+  /* Borders */
+  --ag-border-color: rgba(255, 255, 255, 0.08);
+}
+.ag-theme-quartz-dark .ag-row-odd {
+  background-color: var(--bg-primary) !important;
+}
+
+.ag-theme-quartz-dark .ag-row-even {
+  background-color: var(--bg-secondary) !important;
 }
