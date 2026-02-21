@@ -1,9 +1,12 @@
 import { Component, inject } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
+
+// MATERIAL UI
+import { MAT_DIALOG_DATA, MatDialogRef, MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 
-import { ConfirmButtonColor, ConfirmDialogData } from '../../../core/models/confirm-dialog.model';
+// DTO
+import { ConfirmDialogData } from '../models/confirm-dialog.model';
 
 @Component({
   selector: 'app-confirm-dialog',
