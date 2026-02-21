@@ -1,13 +1,27 @@
 <div class="container">
   <h1 class="title">Customers</h1>
   <p class="subtitle">View and manage all registered customers</p>
-
+  <!-- MATERIAL TABLE (OLD) -->
+  <!--  
   <div>
     <app-data-table
       [columns]="columns"
       [data]="customers()"
       [loading]="loading()"
-      (refresh)="loadCustomers()">
+      (refresh)="loadCustomers()"
+      (view)="onRowClick($event)">
     </app-data-table>
+  </div>
+  -->
+
+  <!-- AG GRID (NEW) -->
+  <div>
+    <app-grid-table
+      [columns]="columns"
+      [data]="customers()"
+      [loading]="loading()"
+      (refresh)="loadCustomers()"
+      (view)="onRowClick($event)">
+    </app-grid-table>
   </div>
 </div>
