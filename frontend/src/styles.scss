@@ -1,4 +1,5 @@
 @use '@angular/material' as mat;
+@import "ag-grid-community/styles/ag-theme-quartz.css";
 
 @include mat.core();
 
@@ -24,6 +25,7 @@ $theme: mat.define-theme((
 /* Global Dark Theme Variables */
 :root {
   /* Backgrounds */
+  --bg-primary: #010409;
   --bg-secondary: #0D1117;
   --bg-primary: #010409;
   --bg-tertiary: #121D2F;
@@ -151,6 +153,7 @@ body .mat-mdc-option.mdc-list-item--selected:hover {
   color: var(--text-primary) !important;
 }
 
+// INPUTS
 :root {
   .compact {
     width: 160px;
@@ -221,12 +224,14 @@ textarea,
   caret-color: var(--text-primary) !important;
 }
 
+// MAT DIALOG
 .custom-dialog-panel .mat-mdc-dialog-container {
   background: var(--bg-secondary);
   border-radius: 12px;
   border: 1px solid var(--border-color);
 }
 
+// MAT SNACKBAR
 .snackbar-error {
   background-color: var(--button-red) !important;
   color: white !important;
