@@ -1,0 +1,101 @@
+.grid-wrapper {
+  width: 100%;
+  height: 600px;
+}
+
+.ag-grid {
+  width: 100%;
+  height: 100%;
+}
+
+/* TABLE ACTION BAR */
+.table-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 0px;
+  margin-top: -16px;
+  margin-right: 6px;
+  gap: 12px; 
+}
+
+/* REFRESH */
+.refresh-btn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  color: var(--text-secondary);
+
+  .mat-icon {
+    font-size: 18px;
+  }
+}
+
+/* FORM FIELDS */
+.search-select {
+  min-width: 140px;
+}
+
+.search-input {
+  width: 200px;
+}
+
+.date-range-group {
+  display: flex;
+  gap: 8px;
+}
+
+.date-range-group .mat-mdc-form-field {
+  width: 150px;
+}
+
+.clear-range-btn {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid var(--border-color);
+  border-radius: 25%;
+  transition: border-color 0.2s ease;
+
+  &:not(:disabled) {
+    border-color: var(--primary);
+  }
+
+  &:disabled {
+    border-color: var(--border-color);
+    opacity: 0.6;
+  }
+
+  .mat-icon {
+    font-size: 20px;
+    line-height: 1;
+    height: 20px;
+    width: 20px;
+  }
+}
+
+// PROGRESS BAR
+mat-progress-bar {
+  margin-bottom: 0px;
+  --mdc-linear-progress-active-indicator-color: var(--text-primary);
+}
+
+.progress-bar-wrapper {
+  height: 4px;
+}
+
+// EYE ICON
+::ng-deep .ag-theme-quartz-dark .eye-cell .material-icons {
+  padding: 6px;
+  border-radius: 50%;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+}
