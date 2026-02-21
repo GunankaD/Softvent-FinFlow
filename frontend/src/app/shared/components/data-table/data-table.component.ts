@@ -20,6 +20,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 
+// DTOs
+import { TableColumn } from '../models/table-column.model';
+
 @Component({
   selector: 'app-data-table',
   standalone: true,
@@ -46,12 +49,13 @@ import { MatNativeDateModule } from '@angular/material/core';
 export class DataTableComponent implements AfterViewInit{
 
   // INPUTS
-  @Input({ required: true }) columns!: { key: string; label: string }[];
+  @Input({ required: true }) columns!: TableColumn[];
   @Input({ required: true }) data!: any[];
   @Input({ required: true }) loading!: boolean;
 
   // OUTPUTS
   @Output() refresh = new EventEmitter<void>();
+  @Output() view = new EventEmitter<any>();
 
   // VIEW CHILD (creating references to the objects in html)
   @ViewChild(MatPaginator) paginator!: MatPaginator;
