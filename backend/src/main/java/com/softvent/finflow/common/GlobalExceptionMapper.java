@@ -20,7 +20,9 @@ public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
                     be.getMessage(),
                     List.of(be.getMessage())
             );
-            return Response.status(be.getStatus()).entity(error).build();
+            return Response.status(be.getStatus())
+                    .entity(error)
+                    .build();
         }
 
         if (exception instanceof ConstraintViolationException cve) {
@@ -31,7 +33,7 @@ public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
                     .collect(Collectors.toList());
 
             ApiError error = new ApiError(
-                    400,
+                    Response.Status.BAD_REQUEST.getStatusCode(), // 400
                     "Validation Failed",
                     errors
             );
@@ -42,12 +44,12 @@ public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
         }
 
         ApiError error = new ApiError(
-                500,
+                Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), // 500
                 "Internal Server Error",
-                List.of(exception.getMessage())
+                List.of("Unexpected error occurred")
         );
 
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR) // 500
                 .entity(error)
                 .build();
     }
