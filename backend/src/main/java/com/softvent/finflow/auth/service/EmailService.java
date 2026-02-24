@@ -1,4 +1,4 @@
-package com.softvent.finflow.auth;
+package com.softvent.finflow.auth.service;
 
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
