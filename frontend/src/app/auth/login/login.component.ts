@@ -129,7 +129,8 @@ export class LoginComponent {
     this.authService.login(payload).subscribe({
       next: () => {
         this.loading.set(false);
-        this.router.navigate(['/'])
+        this.router.navigate(['/']);
+        this.snackbar.success('Login Successful!', 6000);
       },
        error: (err) => {
         this.loading.set(false);

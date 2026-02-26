@@ -19,6 +19,6 @@ export class HomeComponent {
 
   ngOnInit(){
     console.log("hello");
-    this.snackbar.success('TEST SNACKBAR :>', 6000)
+    // this.snackbar.success('TEST SNACKBAR :>', 6000);
   }
 }
