@@ -28,13 +28,6 @@ public class AuthResource {
     }
 
     @POST
-    @Path("/signup")
-    public Response signup(SignupRequest req) {
-        authService.signup(req);
-        return Response.status(Response.Status.CREATED).build(); // 201
-    }
-
-    @POST
     @Path("/signup/init")
     public Response signupInit(SignupInitRequest req) {
         signUpEmailVerificationService.initiateSignup(req);

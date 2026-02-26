@@ -16,28 +16,6 @@ import java.time.Instant;
 public class AuthService {
 
     @Transactional
-    public void signup(SignupRequest req) {
-
-        if (req == null || req.email == null || req.password == null) {
-            throw new BusinessException("Invalid signup request", 400); // BAD_REQUEST
-        }
-
-        boolean exists = Auth.find("email", req.email)
-                .firstResultOptional()
-                .isPresent();
-
-        if (exists) {
-            throw new BusinessException("Email already exists", 409); // CONFLICT
-        }
-
-        Auth user = new Auth();
-        user.email = req.email;
-        user.pwdHash = BCrypt.hashpw(req.password, BCrypt.gensalt());
-
-        user.persist();
-    }
-
-    @Transactional
     public void login(LoginRequest req) {
 
         if (req == null || req.email == null || req.password == null) {
