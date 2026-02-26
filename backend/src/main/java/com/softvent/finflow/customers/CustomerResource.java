@@ -77,9 +77,9 @@ public class CustomerResource {
     }
 
     @GET
-    @Path("/availability/email")
-    public Response checkEmail(@QueryParam("email") String email) {
-        return Response.ok(customerService.checkEmailAvailability(email)).build();
+    @Path("/availability/emailid")
+    public Response checkEmailId(@QueryParam("emailid") String emailid) {
+        return Response.ok(customerService.checkEmailAvailability(emailid)).build();
     }
 
 }

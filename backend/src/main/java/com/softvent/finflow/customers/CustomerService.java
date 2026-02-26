@@ -12,7 +12,6 @@ import jakarta.ws.rs.core.Response;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @ApplicationScoped
@@ -27,7 +26,7 @@ public class CustomerService {
                     Response.Status.CONFLICT.getStatusCode()); // 409
         }
 
-        if (Customer.find("emailId", request.emailId).firstResultOptional().isPresent()) {
+        if (Customer.find("emailid", request.emailid).firstResultOptional().isPresent()) {
             throw new BusinessException(
                     "Email already exists",
                     Response.Status.CONFLICT.getStatusCode()); // 409
@@ -44,13 +43,12 @@ public class CustomerService {
         customer.country = request.country;
         customer.pincode = request.pincode;
         customer.mobileNumber = request.mobileNumber;
-        customer.emailId = request.emailId;
+        customer.emailid = request.emailid;
         customer.gstNo = request.gstNo;
         customer.panNo = request.panNo;
         customer.bankName = request.bankName;
         customer.branchName = request.branchName;
         customer.accountNo = request.accountNo;
-        customer.createdAt = LocalDateTime.now();
 
         customer.persist();
 
@@ -115,7 +113,7 @@ public class CustomerService {
         customer.country = request.country;
         customer.pincode = request.pincode;
         customer.mobileNumber = request.mobileNumber;
-        customer.emailId = request.emailId;
+        customer.emailid = request.emailid;
         customer.gstNo = request.gstNo;
         customer.panNo = request.panNo;
         customer.bankName = request.bankName;
@@ -154,8 +152,8 @@ public class CustomerService {
 
         return new AvailabilityResponse(!exists);
     }
-    public AvailabilityResponse checkEmailAvailability(String email) {
-        boolean exists = Customer.find("emailId", email)
+    public AvailabilityResponse checkEmailAvailability(String emailid) {
+        boolean exists = Customer.find("emailid", emailid)
                 .firstResultOptional()
                 .isPresent();
 
@@ -173,7 +171,7 @@ public class CustomerService {
         dto.city = customer.city;
         dto.state = customer.state;
         dto.mobileNumber = customer.mobileNumber;
-        dto.emailId = customer.emailId;
+        dto.emailid = customer.emailid;
         dto.createdAt = customer.createdAt;
 
         return dto;
@@ -191,7 +189,7 @@ public class CustomerService {
         dto.country = customer.country;
         dto.pincode = customer.pincode;
         dto.mobileNumber = customer.mobileNumber;
-        dto.emailId = customer.emailId;
+        dto.emailid = customer.emailid;
         dto.gstNo = customer.gstNo;
         dto.panNo = customer.panNo;
         dto.bankName = customer.bankName;
