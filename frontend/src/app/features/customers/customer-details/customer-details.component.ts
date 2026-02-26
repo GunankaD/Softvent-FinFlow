@@ -69,7 +69,7 @@ export class CustomerDetailsComponent implements OnInit {
       country: ['', Validators.required],
       pincode: ['', Validators.required],
       mobileNumber: ['', Validators.required],
-      emailId: ['', [Validators.required, Validators.email]],
+      emailid: ['', [Validators.required, Validators.email]],
       gstNo: ['', Validators.required],
       panNo: ['', Validators.required],
       bankName: ['', Validators.required],

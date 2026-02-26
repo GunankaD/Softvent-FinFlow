@@ -12,6 +12,6 @@ export const API_ENDPOINTS = {
     BY_ID: (id: number) => `/customers/id/${id}`, // dev only
     BY_CCODE: (ccode: string) => `/customers/ccode/${ccode}`,
     AVAILABILITY_CCODE: '/customers/availability/ccode',
-    AVAILABILITY_EMAIL: '/customers/availability/email'
+    AVAILABILITY_EMAIL: '/customers/availability/emailid'
   }
 } as const;
