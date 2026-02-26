@@ -92,7 +92,7 @@ h2 {
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .otp-box {
@@ -117,4 +117,22 @@ h2 {
 
 .otp-container.error .otp-box:focus {
   border: 1px solid #ff4d4f;
+}
+
+.resend-btn {
+  font-size: 13px;
+  height: 44px;
+  background-color: var(--bg-secondary) !important;
+  transition: color 0.2s ease;
+  
+  /* Kill ripple overlay color */
+  --mat-text-button-state-layer-color: transparent;
+}
+
+.resend-btn.timer {
+  color: var(--text-secondary) !important;
+}
+
+.resend-btn.active {
+  color: var(--accent-color) !important;
 }

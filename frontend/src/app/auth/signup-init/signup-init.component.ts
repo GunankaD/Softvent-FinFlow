@@ -47,8 +47,16 @@ export class SignupInitComponent {
   // SIGNALS - STEP CONTROL
   otpSent = signal(false);
   loading = signal(false);
+
   otpInvalid = signal(false);
   emailError = signal('');
+
+  private otpResendInterval: number = 30;
+  private intervalId: any;
+
+  resendTimer = signal(this.otpResendInterval);
+  canResend = signal(false);
+  resendLoading = signal(false);
 
   // EMAIL CONTROL
   email = new FormControl('', [
@@ -94,10 +102,27 @@ export class SignupInitComponent {
     return this.otpControls.map(c => c.value).join('');
   }
 
+  private startResendTimer() {
+    this.canResend.set(false);
+    this.resendTimer.set(this.otpResendInterval);
+
+    this.intervalId = setInterval(() => {
+      const current = this.resendTimer();
+
+      if (current <= 1) {
+        clearInterval(this.intervalId);
+        this.canResend.set(true);
+      } else {
+        this.resendTimer.set(current - 1);
+      }
+    }, 1000);
+  }
+
   onSendOtp() {
     if (this.email.invalid || this.loading()) return;
 
     this.loading.set(true);
+    this.startResendTimer();
 
     const payload: SignupInitRequest = {
       email: this.email.value!,
@@ -162,10 +187,31 @@ export class SignupInitComponent {
     });
   }
 
+  onResendOtp() {
+    if (!this.canResend() || this.resendLoading()) return;
+
+    this.resendLoading.set(true);
+
+    this.authService.signupInit({
+      email: this.email.value!,
+    }).subscribe({
+      next: () => {
+        this.resendLoading.set(false);
+        this.snackbar.success('New OTP sent.');
+        this.startResendTimer();
+      },
+      error: () => {
+        this.resendLoading.set(false);
+        this.snackbar.error('Failed to resend OTP.');
+      }
+    });
+  }
+
   onOtpInput(event: any, index: number) {
-    this.otpInvalid.set(false);
     const input = event.target as HTMLInputElement;
     const value = input.value;
+
+    this.otpInvalid.set(false);
 
     if (!/^[0-9]$/.test(value)) {
       input.value = '';

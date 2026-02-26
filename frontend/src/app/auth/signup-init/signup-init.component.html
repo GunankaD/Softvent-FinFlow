@@ -70,6 +70,37 @@
                 />
             }
         </div>
+        
+        <div class="resend-wrapper">
+
+            <button
+                mat-button
+                disableRipple
+                class="resend-btn full"
+                [class.timer]="!canResend()"
+                [class.active]="canResend()"
+                (click)="onResendOtp()"
+                [disabled]="!canResend() || resendLoading()">
+
+                @if (resendLoading()) {
+                <mat-progress-spinner
+                    mode="indeterminate"
+                    diameter="16"
+                    strokeWidth="2"
+                    style="--mdc-circular-progress-active-indicator-color: var(--button-blue)">
+                </mat-progress-spinner>
+                } @else {
+
+                    @if (!canResend()) {
+                        Resend OTP in {{ resendTimer() }}s
+                    } @else {
+                        Resend OTP
+                    }
+                }
+
+            </button>
+
+        </div>
 
         <div
           class="send-email-btn-wrapper"
