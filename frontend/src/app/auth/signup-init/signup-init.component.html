@@ -1,1 +1,107 @@
-<p>signup-init works!</p>
+<div class="login-container">
+  <mat-card class="login-card">
+
+    @if (!otpSent()) {
+
+      <h2>Create Account</h2>
+      <p class="subtitle">
+        Enter your email & we’ll send you a verification OTP
+      </p>
+
+      <form (ngSubmit)="onSendOtp()">
+
+        <mat-form-field appearance="outline" class="full email">
+          <mat-label>Email</mat-label>
+          <input matInput [formControl]="email" />
+
+          @if (email.invalid) {
+            <mat-error>{{ emailError() }}</mat-error>
+          }
+        </mat-form-field>
+
+        <div
+          class="send-email-btn-wrapper"
+          [class.invalid]="email.invalid"
+          [class.loading]="loading()">
+
+          <button
+            mat-raised-button
+            type="submit"
+            class="full send-email-btn"
+            [disabled]="email.invalid || loading()">
+
+            @if (loading()) {
+              <mat-progress-spinner
+                mode="indeterminate"
+                diameter="20"
+                strokeWidth="2"
+                style="--mdc-circular-progress-active-indicator-color: white">
+              </mat-progress-spinner>
+            } @else {
+              Send OTP
+            }
+
+          </button>
+        </div>
+
+      </form>
+
+    } @else {
+
+      <h2>Verify OTP</h2>
+      <p class="subtitle">
+        Enter the 6-digit OTP sent to your email
+      </p>
+
+      <form (ngSubmit)="onVerifyOtp()">
+
+        <mat-form-field appearance="outline" class="full email">
+          <mat-label>OTP</mat-label>
+          <input matInput [formControl]="otp" maxlength="6" />
+
+          @if (otp.invalid && otp.touched) {
+            <mat-error>Enter a valid 6 digit OTP</mat-error>
+          }
+        </mat-form-field>
+
+        <div
+          class="send-email-btn-wrapper"
+          [class.invalid]="otp.invalid"
+          [class.loading]="loading()">
+
+          <button
+            mat-raised-button
+            type="submit"
+            class="full send-email-btn"
+            [disabled]="otp.invalid || loading()">
+
+            @if (loading()) {
+              <mat-progress-spinner
+                mode="indeterminate"
+                diameter="20"
+                strokeWidth="2"
+                style="--mdc-circular-progress-active-indicator-color: white">
+              </mat-progress-spinner>
+            } @else {
+              Verify
+            }
+
+          </button>
+        </div>
+
+      </form>
+
+    }
+
+    <button
+      mat-button
+      class="full go-back-btn"
+      routerLink="/login">
+      <mat-icon fontSet="material-symbols-outlined" class="outline-icon">
+        arrow_circle_left
+      </mat-icon>
+      Back to Login
+    </button>
+
+  </mat-card>
+</div>
