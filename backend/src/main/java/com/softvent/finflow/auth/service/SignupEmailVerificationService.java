@@ -14,7 +14,7 @@ import java.time.Instant;
 import java.util.UUID;
 
 @ApplicationScoped
-public class SignUpEmailVerificationService {
+public class SignupEmailVerificationService {
 
     @Inject
     EmailService emailService;
@@ -22,7 +22,7 @@ public class SignUpEmailVerificationService {
     private static final int OTP_EXPIRY_MINUTES = 15;
 
     @Transactional
-    public void initiateSignup(SignUpInitRequest req) {
+    public void initiateSignup(SignupInitRequest req) {
 
         if (req == null || req.email == null || req.email.isBlank()) {
             throw new BusinessException("Invalid email", 400);
@@ -54,7 +54,7 @@ public class SignUpEmailVerificationService {
     }
 
     @Transactional
-    public SignUpVerifyResponse verifyOtp(SignUpVerifyRequest req) {
+    public SignupVerifyResponse verifyOtp(SignupVerifyRequest req) {
 
         if (req == null || req.email == null || req.otp == null) {
             throw new BusinessException("Invalid verification request", 400);
@@ -78,14 +78,14 @@ public class SignUpEmailVerificationService {
         verification.verified = true;
         verification.verificationToken = UUID.randomUUID().toString();
 
-        SignUpVerifyResponse response = new SignUpVerifyResponse();
+        SignupVerifyResponse response = new SignupVerifyResponse();
         response.verificationToken = verification.verificationToken;
 
         return response;
     }
 
     @Transactional
-    public void completeSignup(SignUpCompleteRequest req) {
+    public void completeSignup(SignupCompleteRequest req) {
 
         if (req == null || req.verificationToken == null || req.password == null) {
             throw new BusinessException("Invalid signup request", 400);

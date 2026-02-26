@@ -1,49 +1,56 @@
 softvent_finflow=# \d
-                     List of relations
- Schema |            Name            |   Type   |  Owner
---------+----------------------------+----------+----------
- public | auth                       | table    | postgres
- public | auth_uid_seq               | sequence | postgres
- public | customers                  | table    | postgres
- public | customers_cid_seq          | sequence | postgres
- public | items                      | table    | postgres
- public | items_iid_seq              | sequence | postgres
- public | outstanding_summary        | table    | postgres
- public | transaction_items          | table    | postgres
- public | transaction_items_tiid_seq | sequence | postgres
- public | transactions               | table    | postgres
- public | transactions_tid_seq       | sequence | postgres
+                        List of relations
+ Schema |               Name               |   Type   |  Owner
+--------+----------------------------------+----------+----------
+ public | auth                             | table    | postgres
+ public | auth_uid_seq                     | sequence | postgres
+ public | customers                        | table    | postgres
+ public | customers_cid_seq                | sequence | postgres
+ public | items                            | table    | postgres
+ public | items_iid_seq                    | sequence | postgres
+ public | outstanding_summary              | table    | postgres
+ public | password_reset                   | table    | postgres
+ public | password_reset_id_seq            | sequence | postgres
+ public | signup_email_verification        | table    | postgres
+ public | signup_email_verification_id_seq | sequence | postgres
+ public | transaction_items                | table    | postgres
+ public | transaction_items_tiid_seq       | sequence | postgres
+ public | transactions                     | table    | postgres
+ public | transactions_tid_seq             | sequence | postgres
 
 
-                                     Table "public.auth"
-  Column  |          Type          | Collation | Nullable |              Default
-----------+------------------------+-----------+----------+-----------------------------------
- uid      | bigint                 |           | not null | nextval('auth_uid_seq'::regclass)
- emailid  | character varying(50)  |           | not null |
- pwd_hash | character varying(100) |           | not null |
+                                           Table "public.auth"
+      Column       |           Type           | Collation | Nullable |              Default
+-------------------+--------------------------+-----------+----------+-----------------------------------
+ uid               | bigint                   |           | not null | nextval('auth_uid_seq'::regclass)
+ email             | character varying(50)    |           | not null |
+ pwd_hash          | character varying(100)   |           | not null |
+ created_at        | timestamp with time zone |           | not null | now()
+ updated_at        | timestamp with time zone |           |          |
+ last_logged_in_at | timestamp with time zone |           |          |
 Indexes:
-    "auth_pkey" PRIMARY KEY, btree (uid)
     "auth_pkey" PRIMARY KEY, btree (uid)
 
                                           Table "public.customers"
-    Column     |            Type             | Collation | Nullable |                Default
----------------+-----------------------------+-----------+----------+----------------------------------------
- cid           | bigint                      |           | not null | nextval('customers_cid_seq'::regclass)
- ccode         | character varying(20)       |           | not null |
- cname         | character varying(100)      |           | not null |
- address       | text                        |           | not null |
- city          | character varying(50)       |           | not null |
- state         | character varying(50)       |           | not null |
- country       | character varying(50)       |           | not null |
- pincode       | character varying(10)       |           | not null |
- mobile_number | character varying(15)       |           | not null |
- email_id      | character varying(100)      |           | not null |
- gst_no        | character varying(15)       |           | not null |
- pan_no        | character varying(10)       |           | not null |
- bank_name     | character varying(100)      |           | not null |
- branch_name   | character varying(100)      |           | not null |
- account_no    | character varying(20)       |           | not null |
- created_at    | timestamp without time zone |           | not null | CURRENT_TIMESTAMP
+     Column      |           Type           | Collation | Nullable |                Default
+-----------------+--------------------------+-----------+----------+----------------------------------------
+ cid             | bigint                   |           | not null | nextval('customers_cid_seq'::regclass)
+ ccode           | character varying(20)    |           | not null |
+ cname           | character varying(100)   |           | not null |
+ address         | text                     |           | not null |
+ city            | character varying(50)    |           | not null |
+ state           | character varying(50)    |           | not null |
+ country         | character varying(50)    |           | not null |
+ pincode         | character varying(10)    |           | not null |
+ mobile_number   | character varying(15)    |           | not null |
+ email           | character varying(100)   |           | not null |
+ gst_no          | character varying(15)    |           | not null |
+ pan_no          | character varying(10)    |           | not null |
+ bank_name       | character varying(100)   |           | not null |
+ branch_name     | character varying(100)   |           | not null |
+ account_no      | character varying(20)    |           | not null |
+ created_at      | timestamp with time zone |           | not null | CURRENT_TIMESTAMP
+ last_updated_at | timestamp with time zone |           |          |
 Indexes:
     "customers_pkey" PRIMARY KEY, btree (cid)
     "customers_ccode_key" UNIQUE CONSTRAINT, btree (ccode)
@@ -108,13 +115,28 @@ Indexes:
     "outstanding_summary_pkey" PRIMARY KEY, btree (cid)
 
 
-                                        Table "public.password_reset"
-   Column   |            Type             | Collation | Nullable |                  Default
-------------+-----------------------------+-----------+----------+--------------------------------------------
- id         | bigint                      |           | not null | nextval('password_reset_id_seq'::regclass)
- emailid    | character varying(50)       |           | not null |
- token      | character varying(255)      |           | not null |
- expires_at | timestamp without time zone |           | not null |
+                                       Table "public.password_reset"
+   Column   |           Type           | Collation | Nullable |                  Default
+------------+--------------------------+-----------+----------+--------------------------------------------
+ id         | bigint                   |           | not null | nextval('password_reset_id_seq'::regclass)
+ email      | character varying(50)    |           | not null |
+ token      | character varying(255)   |           | not null |
+ expires_at | timestamp with time zone |           | not null |
+ created_at | timestamp with time zone |           | not null | now()
 Indexes:
     "password_reset_pkey" PRIMARY KEY, btree (id)
     "password_reset_token_key" UNIQUE CONSTRAINT, btree (token)
+
+                                           Table "public.signup_email_verification"
+       Column       |           Type           | Collation | Nullable |                        Default
+--------------------+--------------------------+-----------+----------+-------------------------------------------------------
+ id                 | bigint                   |           | not null | nextval('signup_email_verification_id_seq'::regclass)
+ email              | character varying(50)    |           | not null |
+ otp_hash           | character varying(100)   |           | not null |
+ expires_at         | timestamp with time zone |           | not null |
+ verified           | boolean                  |           | not null | false
+ verification_token | character varying(100)   |           |          |
+ created_at         | timestamp with time zone |           | not null | now()
+Indexes:
+    "signup_email_verification_pkey" PRIMARY KEY, btree (id)
+    "idx_signup_email_verification_email" btree (email)

@@ -1,5 +1,5 @@
 package com.softvent.finflow.auth.dto.signup;
 
-public class SignUpInitRequest {
+public class SignupInitRequest {
     public String email;
 }

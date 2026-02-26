@@ -1,6 +1,5 @@
 package com.softvent.finflow.auth.dto.signup;
 
-public class SignUpCompleteRequest {
+public class SignupVerifyResponse {
     public String verificationToken;
-    public String password;
 }
