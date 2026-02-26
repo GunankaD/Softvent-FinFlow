@@ -8,11 +8,7 @@
         <!-- EMAIL ID BEGINS-->
             <mat-form-field appearance="outline" class="full email">
                 <mat-label>Email</mat-label>
-                <input matInput [formControl]="email" />
-
-                @if (email.invalid) {
-                    <mat-error>{{ emailError() }}</mat-error>
-                }
+                <input matInput [formControl]="email" [disabled]="true"/>
             </mat-form-field>
         <!-- EMAIL ID ENDS -->
         

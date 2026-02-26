@@ -1,6 +1,6 @@
 // ANGULAR
 import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
-import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterModule, Router } from '@angular/router';
 
 // RxJS
@@ -26,7 +26,7 @@ import { AuthService } from '../../core/services/auth/auth.service';
 import { SnackbarService } from '../../core/services/snackbar/snackbar.service';
 
 // DTOs
-import { SignupRequest } from '../../core/models/auth.models';
+import { SignupCompleteRequest } from '../../core/models/auth.models';
 
 @Component({
   selector: 'app-signup',
@@ -46,12 +46,8 @@ import { SignupRequest } from '../../core/models/auth.models';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SignupComponent {
- // FORM CONTROL FIELDS
-  email = new FormControl('', [
-    Validators.required,
-    Validators.email,
-    Validators.maxLength(100),
-  ]);
+ // FORM CONTROL FIELDS 
+  email = new FormControl({ value: '', disabled: true });
 
   password = new FormControl('', [
     Validators.required,
@@ -65,7 +61,6 @@ export class SignupComponent {
 
 
   // SIGNALS
-  emailError = signal('');
   passwordError = signal('');
   confirmPasswordError = signal('');
 
@@ -74,18 +69,30 @@ export class SignupComponent {
   
   loading = signal(false);
 
+  private verificationToken!: string;
+
   // SUBSCRIBE TO SIGNALS
   constructor(
     private authService: AuthService,
     private snackbar: SnackbarService,
     private router: Router
   ) {
-    merge(
-      this.email.statusChanges,
-      this.email.valueChanges
-    )
-    .pipe(takeUntilDestroyed())
-    .subscribe(() => this.updateEmailError());
+    
+    const nav = this.router.getCurrentNavigation();
+    const state =
+      nav?.extras.state ||
+      history.state;
+
+    if (!state?.email || !state?.token) {
+      this.snackbar.error('OTP verification required');
+      this.router.navigate(['/signup-init']);
+      return;
+    }
+
+    this.verificationToken = state.token;
+
+    this.email.setValue(state.email);
+    this.email.disable();
 
     merge(
       this.password.statusChanges,
@@ -102,19 +109,7 @@ export class SignupComponent {
     .subscribe(() => this.updateConfirmPasswordError());
   }
 
-  // UPDATE FXS
-  private updateEmailError() {
-    if (this.email.hasError('required')) {
-      this.emailError.set('Email is required');
-    } else if (this.email.hasError('email')) {
-      this.emailError.set('Invalid email format');
-    } else if (this.email.hasError('maxlength')) {
-      this.emailError.set('Email too long');
-    } else {
-      this.emailError.set('defaulting');
-    }
-  }
-
+  // UPDATE FUNCTION
   private updatePasswordError() {
     if (this.password.hasError('required')) {
       this.passwordError.set('Password is required');
@@ -155,12 +150,12 @@ export class SignupComponent {
 
     this.loading.set(true);
 
-    const payload: SignupRequest = {
-      email: this.email.value!,
+    const payload: SignupCompleteRequest = {
+      verificationToken: this.verificationToken,
       password: this.password.value!,
     };
 
-    this.authService.signup(payload).subscribe({
+    this.authService.signupComplete(payload).subscribe({
       next: () => {
         this.loading.set(false);
         this.snackbar.success('Account created successfully');
