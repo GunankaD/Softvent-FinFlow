@@ -1,6 +1,6 @@
 package com.softvent.finflow.customers.dto;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public class CustomerSummaryResponse {
 
@@ -10,6 +10,6 @@ public class CustomerSummaryResponse {
     public String city;
     public String state;
     public String mobileNumber;
-    public String emailId;
-    public LocalDateTime createdAt;
+    public String emailid;
+    public Instant createdAt;
 }

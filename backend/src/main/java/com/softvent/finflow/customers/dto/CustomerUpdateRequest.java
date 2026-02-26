@@ -34,7 +34,7 @@ public class CustomerUpdateRequest {
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid email format")
     @Size(max = 100)
-    public String emailId;
+    public String emailid;
 
     @NotBlank(message = "GST is required")
     @Size(max = 15)

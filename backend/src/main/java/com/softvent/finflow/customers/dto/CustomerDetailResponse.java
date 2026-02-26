@@ -1,6 +1,6 @@
 package com.softvent.finflow.customers.dto;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public class CustomerDetailResponse {
 
@@ -13,12 +13,12 @@ public class CustomerDetailResponse {
     public String country;
     public String pincode;
     public String mobileNumber;
-    public String emailId;
+    public String emailid;
     public String gstNo;
     public String panNo;
     public String bankName;
     public String branchName;
     public String accountNo;
-    public LocalDateTime createdAt;
+    public Instant createdAt;
 }
 
