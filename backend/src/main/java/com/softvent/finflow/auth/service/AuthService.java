@@ -71,7 +71,7 @@ public class AuthService {
     }
 
     @Transactional
-    public void deleteByEmailId(String email) {
+    public void deleteByEmail(String email) {
 
         if (email == null || email.isBlank()) {
             throw new BusinessException("Invalid email", 400);

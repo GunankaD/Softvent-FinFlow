@@ -49,7 +49,7 @@ export class ShowCustomersComponent implements OnInit {
   { key: 'city',         label: 'City',          flex: 1,   minWidth: 130 },
   { key: 'state',        label: 'State',         flex: 1,   minWidth: 120 },
   { key: 'mobileNumber', label: 'Mobile Number', flex: 1.5, minWidth: 140 },
-  { key: 'emailid',      label: 'Email Address', flex: 2,   minWidth: 170 },
+  { key: 'email',        label: 'Email Address', flex: 2,   minWidth: 170 },
   { key: 'createdAt',    label: 'Created On',    flex: 2,   minWidth: 180 },
   { key: 'eyeIcon',      label: 'View',          flex: 0.5, minWidth: 80  }
 ];

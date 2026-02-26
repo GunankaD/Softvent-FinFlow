@@ -156,7 +156,7 @@ export class SignupComponent {
     this.loading.set(true);
 
     const payload: SignupRequest = {
-      emailid: this.email.value!,
+      email: this.email.value!,
       password: this.password.value!,
     };
 

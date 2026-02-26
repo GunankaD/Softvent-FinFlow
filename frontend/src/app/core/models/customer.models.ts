@@ -7,7 +7,7 @@ export interface CustomerCreateRequest {
   country: string;
   pincode: string;
   mobileNumber: string;
-  emailid: string;
+  email: string;
   gstNo: string;
   panNo: string;
   bankName: string;
@@ -22,7 +22,7 @@ export interface CustomerSummaryResponse {
   city: string;
   state: string;
   mobileNumber: string;
-  emailid: string;
+  email: string;
   createdAt: string; // ISO string from backend
 }
 
@@ -36,7 +36,7 @@ export interface CustomerDetailResponse {
   country: string;
   pincode: string;
   mobileNumber: string;
-  emailid: string;
+  email: string;
   gstNo: string;
   panNo: string;
   bankName: string;
@@ -57,7 +57,7 @@ export interface CustomerUpdateRequest {
   country: string;
   pincode: string;
   mobileNumber: string;
-  emailid: string;
+  email: string;
   gstNo: string;
   panNo: string;
   bankName: string;

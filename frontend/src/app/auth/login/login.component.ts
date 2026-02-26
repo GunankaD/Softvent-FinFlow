@@ -122,7 +122,7 @@ export class LoginComponent {
     this.loading.set(true);
 
     const payload: LoginRequest = {
-      emailid: this.email.value!,
+      email: this.email.value!,
       password: this.password.value!,
     };
 

@@ -94,7 +94,7 @@ export class ResetPasswordComponent {
     .pipe(takeUntilDestroyed())
     .subscribe({
       next: (res: ResetPasswordEmailResponse) => {
-        this.email.setValue(res.emailid);
+        this.email.setValue(res.email);
       },
       error: () => {
         this.snackbar.error('Reset link expired or invalid', 5000);

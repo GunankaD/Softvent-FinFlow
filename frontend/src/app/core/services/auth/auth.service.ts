@@ -55,7 +55,7 @@ export class AuthService {
     );
   }
 
-  // request emailid for a specific reset password token
+  // request email for a specific reset password token
   getEmailForToken(token: string): Observable<ResetPasswordEmailResponse> {
     return this.http.get<ResetPasswordEmailResponse>(
       `${this.baseUrl}${API_ENDPOINTS.AUTH.EMAIL_FOR_TOKEN}/${token}`

@@ -73,7 +73,7 @@ export class AddCustomerComponent implements OnDestroy {
         Validators.pattern(/^\d{6,14}$/)
       ]],
 
-      emailid: this.fb.control(
+      email: this.fb.control(
         '',
         {
           validators: [
@@ -177,7 +177,7 @@ export class AddCustomerComponent implements OnDestroy {
       pincode: addressDetails.pincode,
       mobileNumber: businessDetails.mobileNumber,
       // mobileNumber: businessDetails.countryCode + businessDetails.mobileNumber,
-      emailid: businessDetails.emailid,
+      email: businessDetails.email,
       gstNo: businessDetails.gstNo,
       panNo: businessDetails.panNo,
       bankName: bankDetails.bankName,

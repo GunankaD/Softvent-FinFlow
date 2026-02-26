@@ -60,7 +60,7 @@ export class ForgotPasswordComponent {
     this.loading.set(true);
 
     const payload: ForgotPasswordRequest = {
-      emailid: this.email.value!,
+      email: this.email.value!,
     };
 
     this.authService.forgotPassword(payload).subscribe({

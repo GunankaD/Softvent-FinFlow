@@ -60,10 +60,10 @@
           <!-- Email -->
           <mat-form-field appearance="outline">
             <mat-label>Email</mat-label>
-            <input matInput formControlName="emailid" />
+            <input matInput formControlName="email" />
             <mat-error
               *ngIf="
-                customerForm.get('businessDetails.emailid')?.hasError('email')
+                customerForm.get('businessDetails.email')?.hasError('email')
               "
             >
               Invalid email format
@@ -71,7 +71,7 @@
             <mat-error
               *ngIf="
                 customerForm
-                  .get('businessDetails.emailid')
+                  .get('businessDetails.email')
                   ?.hasError('emailTaken')
               "
             >
@@ -279,7 +279,7 @@
             </div>
             <div>
               <strong>Email:</strong>
-              {{ customerForm.value.businessDetails.emailid }}
+              {{ customerForm.value.businessDetails.email }}
             </div>
             <div>
               <strong>GST:</strong>

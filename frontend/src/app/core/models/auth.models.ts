@@ -1,10 +1,10 @@
 export interface LoginRequest {
-  emailid: string;
+  email: string;
   password: string;
 }
 
 export interface SignupRequest {
-  emailid: string;
+  email: string;
   password: string;
 }
 
@@ -13,7 +13,7 @@ export interface AuthResponse {
 }
 
 export interface ForgotPasswordRequest {
-  emailid: string;
+  email: string;
 }
 
 export interface ResetPasswordRequest {
@@ -22,5 +22,5 @@ export interface ResetPasswordRequest {
 }
 
 export interface ResetPasswordEmailResponse{
-  emailid: string;
+  email: string;
 }
