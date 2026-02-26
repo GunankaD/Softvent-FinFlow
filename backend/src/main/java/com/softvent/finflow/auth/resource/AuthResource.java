@@ -1,9 +1,11 @@
 package com.softvent.finflow.auth.resource;
 
 import com.softvent.finflow.auth.dto.*;
+import com.softvent.finflow.auth.dto.signup.*;
 import com.softvent.finflow.auth.dto.reset.password.ChangePasswordRequest;
 import com.softvent.finflow.auth.entity.Auth;
 import com.softvent.finflow.auth.service.AuthService;
+import com.softvent.finflow.auth.service.SignUpEmailVerificationService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -17,6 +19,8 @@ public class AuthResource {
 
     @Inject
     AuthService authService;
+    @Inject
+    SignUpEmailVerificationService signUpEmailVerificationService;
 
     @GET
     public List<Auth> getAll() {
@@ -27,6 +31,29 @@ public class AuthResource {
     @Path("/signup")
     public Response signup(SignupRequest req) {
         authService.signup(req);
+        return Response.status(Response.Status.CREATED).build(); // 201
+    }
+
+    @POST
+    @Path("/signup/init")
+    public Response signupInit(SignUpInitRequest req) {
+        signUpEmailVerificationService.initiateSignup(req);
+        return Response.ok().build(); // 200
+    }
+
+    @POST
+    @Path("/signup/verify")
+    public Response signupVerify(SignUpVerifyRequest req) {
+        SignUpVerifyResponse response =
+                signUpEmailVerificationService.verifyOtp(req);
+
+        return Response.ok(response).build(); // 200 + token
+    }
+
+    @POST
+    @Path("/signup/complete")
+    public Response signupComplete(SignUpCompleteRequest req) {
+        signUpEmailVerificationService.completeSignup(req);
         return Response.status(Response.Status.CREATED).build(); // 201
     }
 

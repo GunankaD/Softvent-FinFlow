@@ -25,4 +25,16 @@ public class EmailService {
                 )
         );
     }
+
+    public void sendSignUpOtpEmail(String to, String otp) {
+
+        mailer.send(
+                Mail.withText(
+                        to,
+                        "FinFlow - Verify your email",
+                        "Your OTP is: " + otp +
+                                "\n\nThis OTP expires in 15 minutes."
+                )
+        );
+    }
 }
