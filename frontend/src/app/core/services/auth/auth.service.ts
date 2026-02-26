@@ -9,7 +9,10 @@ import { API_ENDPOINTS } from '../../constants/api-endpoints';
 // DTOs
 import { 
   LoginRequest, 
-  SignupRequest,
+  SignupInitRequest,
+  SignupVerifyRequest,
+  SignupVerifyResponse,
+  SignupCompleteRequest,
   ForgotPasswordRequest,
   ResetPasswordRequest,
   ResetPasswordEmailResponse
@@ -32,9 +35,23 @@ export class AuthService {
   }
 
   // signup service
-  signup(request: SignupRequest): Observable<void> {
+  signupInit(request: SignupInitRequest): Observable<void> {
     return this.http.post<void>(
-      `${this.baseUrl}${API_ENDPOINTS.AUTH.SIGNUP}`,
+      `${this.baseUrl}${API_ENDPOINTS.AUTH.SIGNUP_INIT}`,
+      request
+    );
+  }
+
+  signupVerify(request: SignupVerifyRequest): Observable<SignupVerifyResponse> {
+    return this.http.post<SignupVerifyResponse>(
+      `${this.baseUrl}${API_ENDPOINTS.AUTH.SIGNUP_VERIFY}`,
+      request
+    );
+  }
+
+  signupComplete(request: SignupCompleteRequest): Observable<void> {
+    return this.http.post<void>(
+      `${this.baseUrl}${API_ENDPOINTS.AUTH.SIGNUP_COMPLETE}`,
       request
     );
   }
