@@ -18,7 +18,7 @@ import java.time.Instant;
  country         | character varying(50)    |           | not null |
  pincode         | character varying(10)    |           | not null |
  mobile_number   | character varying(15)    |           | not null |
- emailid         | character varying(100)   |           | not null |
+ email           | character varying(100)   |           | not null |
  gst_no          | character varying(15)    |           | not null |
  pan_no          | character varying(10)    |           | not null |
  bank_name       | character varying(100)   |           | not null |
@@ -63,8 +63,8 @@ public class Customer extends PanacheEntityBase {
     @Column(name = "mobile_number", nullable = false, length = 15)
     public String mobileNumber;
 
-    @Column(name = "emailid", nullable = false, length = 100)
-    public String emailid;
+    @Column(name = "email", nullable = false, length = 100)
+    public String email;
 
     @Column(name = "gst_no", nullable = false, length = 15)
     public String gstNo;

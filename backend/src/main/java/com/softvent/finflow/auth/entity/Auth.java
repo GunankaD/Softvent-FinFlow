@@ -9,7 +9,7 @@ import java.time.Instant;
       Column       |           Type           | Collation | Nullable |              Default
 -------------------+--------------------------+-----------+----------+-----------------------------------
  uid               | bigint                   |           | not null | nextval('auth_uid_seq'::regclass)
- emailid           | character varying(50)    |           | not null |
+ email             | character varying(50)    |           | not null |
  pwd_hash          | character varying(100)   |           | not null |
  created_at        | timestamp with time zone |           | not null | now()
  updated_at        | timestamp with time zone |           |          |
@@ -28,7 +28,7 @@ public class Auth extends PanacheEntityBase {
     public Long uid;         // maps to uid BIGSERIAL
 
     @Column(nullable = false, length = 50)
-    public String emailid;   // maps to emailid VARCHAR(50)
+    public String email;   // maps to email VARCHAR(50)
 
     @Column(name = "pwd_hash", nullable = false, length = 100)
     public String pwdHash;   // maps to pwd_hash VARCHAR(100)

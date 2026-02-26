@@ -10,7 +10,7 @@ import java.time.Instant;
    Column   |           Type           | Collation | Nullable |                  Default
 ------------+--------------------------+-----------+----------+--------------------------------------------
  id         | bigint                   |           | not null | nextval('password_reset_id_seq'::regclass)
- emailid    | character varying(50)    |           | not null |
+ email      | character varying(50)    |           | not null |
  token      | character varying(255)   |           | not null |
  expires_at | timestamp with time zone |           | not null |
  created_at | timestamp with time zone |           | not null | now()
@@ -28,7 +28,7 @@ public class PasswordReset extends PanacheEntityBase {
     public Long id;         // maps to id BIGSERIAL
 
     @Column(nullable = false, length = 50)
-    public String emailid;
+    public String email;
 
     @Column(nullable = false, length = 255, unique = true)
     public String token;

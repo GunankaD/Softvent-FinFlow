@@ -38,7 +38,7 @@ public class CustomerCreateRequest {
     @NotBlank(message = "Email is required")
     @Email(message = "Invalid email format")
     @Size(max = 100, message = "Email must not exceed 100 characters")
-    public String emailid;
+    public String email;
 
     @NotBlank(message = "GST number is required")
     @Size(max = 15, message = "GST number must not exceed 15 characters")

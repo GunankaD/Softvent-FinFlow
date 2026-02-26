@@ -18,11 +18,11 @@ public class AuthService {
     @Transactional
     public void signup(SignupRequest req) {
 
-        if (req == null || req.emailid == null || req.password == null) {
+        if (req == null || req.email == null || req.password == null) {
             throw new BusinessException("Invalid signup request", 400); // BAD_REQUEST
         }
 
-        boolean exists = Auth.find("emailid", req.emailid)
+        boolean exists = Auth.find("email", req.email)
                 .firstResultOptional()
                 .isPresent();
 
@@ -31,7 +31,7 @@ public class AuthService {
         }
 
         Auth user = new Auth();
-        user.emailid = req.emailid;
+        user.email = req.email;
         user.pwdHash = BCrypt.hashpw(req.password, BCrypt.gensalt());
 
         user.persist();
@@ -40,11 +40,11 @@ public class AuthService {
     @Transactional
     public void login(LoginRequest req) {
 
-        if (req == null || req.emailid == null || req.password == null) {
+        if (req == null || req.email == null || req.password == null) {
             throw new BusinessException("Invalid login request", 400); // BAD_REQUEST
         }
 
-        Auth user = Auth.find("emailid", req.emailid).firstResult();
+        Auth user = Auth.find("email", req.email).firstResult();
 
         if (user == null || !BCrypt.checkpw(req.password, user.pwdHash)) {
             throw new BusinessException("Invalid credentials", 401); // UNAUTHORIZED
@@ -56,11 +56,11 @@ public class AuthService {
     @Transactional
     public void changePassword(ChangePasswordRequest req) {
 
-        if (req == null || req.emailid == null || req.newPassword == null) {
+        if (req == null || req.email == null || req.newPassword == null) {
             throw new BusinessException("Invalid change password request", 400);
         }
 
-        Auth user = Auth.find("emailid", req.emailid)
+        Auth user = Auth.find("email", req.email)
                 .firstResult();
 
         if (user == null) {
@@ -71,13 +71,13 @@ public class AuthService {
     }
 
     @Transactional
-    public void deleteByEmailId(String emailid) {
+    public void deleteByEmailId(String email) {
 
-        if (emailid == null || emailid.isBlank()) {
+        if (email == null || email.isBlank()) {
             throw new BusinessException("Invalid email", 400);
         }
 
-        long deleted = Auth.delete("emailid", emailid);
+        long deleted = Auth.delete("email", email);
 
         if (deleted == 0) {
             throw new BusinessException("User not found", 404);

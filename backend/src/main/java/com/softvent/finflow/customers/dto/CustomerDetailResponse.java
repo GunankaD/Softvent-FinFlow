@@ -13,7 +13,7 @@ public class CustomerDetailResponse {
     public String country;
     public String pincode;
     public String mobileNumber;
-    public String emailid;
+    public String email;
     public String gstNo;
     public String panNo;
     public String bankName;

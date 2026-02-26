@@ -1,5 +1,5 @@
 package com.softvent.finflow.auth.dto.reset.password;
 
 public class ResetPasswordResponse {
-    public String emailid;
+    public String email;
 }

@@ -46,9 +46,9 @@ public class AuthResource {
     }
 
     @DELETE
-    @Path("/delete/{emailid}")
-    public Response deleteByEmailId(@PathParam("emailid") String emailid) {
-        authService.deleteByEmailId(emailid);
+    @Path("/delete/{email}")
+    public Response deleteByEmailId(@PathParam("email") String email) {
+        authService.deleteByEmailId(email);
         return Response.noContent().build();
     }
 

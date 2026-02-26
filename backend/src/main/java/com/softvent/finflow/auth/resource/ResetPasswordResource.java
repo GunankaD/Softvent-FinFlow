@@ -31,7 +31,7 @@ public class ResetPasswordResource {
     }
 
     @GET
-    @Path("/reset-password/emailid/{token}")
+    @Path("/reset-password/email/{token}")
     public Response getEmailForReset(@PathParam("token") String token) {
         return Response.ok(
                 resetPasswordService.getEmailForToken(token)

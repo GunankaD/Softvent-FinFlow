@@ -26,7 +26,7 @@ public class CustomerService {
                     Response.Status.CONFLICT.getStatusCode()); // 409
         }
 
-        if (Customer.find("emailid", request.emailid).firstResultOptional().isPresent()) {
+        if (Customer.find("email", request.email).firstResultOptional().isPresent()) {
             throw new BusinessException(
                     "Email already exists",
                     Response.Status.CONFLICT.getStatusCode()); // 409
@@ -43,7 +43,7 @@ public class CustomerService {
         customer.country = request.country;
         customer.pincode = request.pincode;
         customer.mobileNumber = request.mobileNumber;
-        customer.emailid = request.emailid;
+        customer.email = request.email;
         customer.gstNo = request.gstNo;
         customer.panNo = request.panNo;
         customer.bankName = request.bankName;
@@ -113,7 +113,7 @@ public class CustomerService {
         customer.country = request.country;
         customer.pincode = request.pincode;
         customer.mobileNumber = request.mobileNumber;
-        customer.emailid = request.emailid;
+        customer.email = request.email;
         customer.gstNo = request.gstNo;
         customer.panNo = request.panNo;
         customer.bankName = request.bankName;
@@ -152,8 +152,8 @@ public class CustomerService {
 
         return new AvailabilityResponse(!exists);
     }
-    public AvailabilityResponse checkEmailAvailability(String emailid) {
-        boolean exists = Customer.find("emailid", emailid)
+    public AvailabilityResponse checkEmailAvailability(String email) {
+        boolean exists = Customer.find("email", email)
                 .firstResultOptional()
                 .isPresent();
 
@@ -171,7 +171,7 @@ public class CustomerService {
         dto.city = customer.city;
         dto.state = customer.state;
         dto.mobileNumber = customer.mobileNumber;
-        dto.emailid = customer.emailid;
+        dto.email = customer.email;
         dto.createdAt = customer.createdAt;
 
         return dto;
@@ -189,7 +189,7 @@ public class CustomerService {
         dto.country = customer.country;
         dto.pincode = customer.pincode;
         dto.mobileNumber = customer.mobileNumber;
-        dto.emailid = customer.emailid;
+        dto.email = customer.email;
         dto.gstNo = customer.gstNo;
         dto.panNo = customer.panNo;
         dto.bankName = customer.bankName;

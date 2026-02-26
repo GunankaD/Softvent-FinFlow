@@ -26,30 +26,30 @@ public class ResetPasswordService {
     @Transactional
     public void forgotPassword(ForgotPasswordRequest req) {
 
-        if (req == null || req.emailid == null) {
+        if (req == null || req.email == null) {
             throw new BusinessException("Invalid request", 400); // BAD_REQUEST
         }
 
         // cleanup expired tokens
         PasswordReset.delete("expiresAt < ?1", Instant.now());
 
-        Auth user = Auth.find("emailid", req.emailid).firstResult();
+        Auth user = Auth.find("email", req.email).firstResult();
 
         if (user == null) {
             return; // security: do not reveal existence
         }
 
         // remove previous tokens
-        PasswordReset.delete("emailid", req.emailid);
+        PasswordReset.delete("email", req.email);
 
         PasswordReset reset = new PasswordReset();
-        reset.emailid = req.emailid;
+        reset.email = req.email;
         reset.token = UUID.randomUUID().toString();
         reset.expiresAt = Instant.now().plus(15, ChronoUnit.MINUTES);
 
         reset.persist();
 
-        emailService.sendResetPasswordEmail(req.emailid, reset.token);
+        emailService.sendResetPasswordEmail(req.email, reset.token);
     }
 
     @Transactional
@@ -68,7 +68,7 @@ public class ResetPasswordService {
             throw new BusinessException("Invalid or expired token", 401);
         }
 
-        Auth user = Auth.find("emailid", reset.emailid).firstResult();
+        Auth user = Auth.find("email", reset.email).firstResult();
 
         if (user == null) {
             throw new BusinessException("User not found", 404);
@@ -94,7 +94,7 @@ public class ResetPasswordService {
         }
 
         ResetPasswordResponse res = new ResetPasswordResponse();
-        res.emailid = reset.emailid;
+        res.email = reset.email;
 
         return res;
     }
