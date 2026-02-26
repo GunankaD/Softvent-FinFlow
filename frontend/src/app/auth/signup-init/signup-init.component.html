@@ -66,6 +66,7 @@
                 [id]="'otp-' + $index"
                 (input)="onOtpInput($event, $index)"
                 (keydown)="onOtpBackspace($event, $index)"
+                (paste)="onOtpPaste($event)"
                 />
             }
         </div>

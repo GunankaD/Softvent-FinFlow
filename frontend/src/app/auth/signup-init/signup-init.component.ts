@@ -185,6 +185,21 @@ export class SignupInitComponent {
     }
   }
 
+  onOtpPaste(event: ClipboardEvent) {
+    event.preventDefault();
+
+    const pasted = event.clipboardData?.getData('text') || '';
+
+    if (!/^[0-9]{6}$/.test(pasted)) return;
+
+    pasted.split('').forEach((digit, i) => {
+      this.otpControls[i].setValue(digit);
+    });
+
+    const last = document.getElementById('otp-5');
+    last?.focus();
+  }
+
   get isOtpInvalid(): boolean {
     return this.otpControls.some(c => c.invalid);
   }
