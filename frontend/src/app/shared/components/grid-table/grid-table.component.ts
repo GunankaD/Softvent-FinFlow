@@ -178,6 +178,7 @@ export class GridTableComponent {
     // DATE RANGE MODE
     if (this.selectedColumn === 'createdAt') {
       this.gridApi.onFilterChanged();
+      this.gridApi.paginationGoToFirstPage();
       return;
     }
 
