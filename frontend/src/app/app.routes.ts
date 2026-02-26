@@ -10,6 +10,7 @@ import { AddCustomerComponent } from './features/customers/add-customer/add-cust
 // AUTH ROUTES
 import { LoginComponent } from './auth/login/login.component';
 import { SignupComponent } from './auth/signup/signup.component'
+import { SignupInitComponent } from './auth/signup-init/signup-init.component';
 import { ForgotPasswordComponent } from './auth/forgot-password/forgot-password.component';
 import { ResetPasswordComponent } from './auth/reset-password/reset-password.component';
 
@@ -20,6 +21,7 @@ export const routes: Routes = [
     // AUTH
     {path: 'login', component: LoginComponent},
     {path: 'signup', component: SignupComponent },
+    {path: 'signup-init', component: SignupInitComponent},
     {path: 'forgot-password', component: ForgotPasswordComponent},
     {path: 'reset-password', component: ResetPasswordComponent},
 

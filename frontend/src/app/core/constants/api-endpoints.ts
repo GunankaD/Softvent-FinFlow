@@ -1,10 +1,12 @@
 export const API_ENDPOINTS = {
   AUTH: {
     LOGIN: '/auth/login',
-    SIGNUP: '/auth/signup',
     FORGOT_PASSWORD: '/auth/reset/forgot-password',
     RESET_PASSWORD: '/auth/reset/reset-password',
-    EMAIL_FOR_TOKEN: '/auth/reset/reset-password/email'
+    EMAIL_FOR_TOKEN: '/auth/reset/reset-password/email',
+    SIGNUP_INIT: '/auth/signup/init',
+    SIGNUP_VERIFY: '/auth/signup/verify',
+    SIGNUP_COMPLETE: '/auth/signup/complete',
   },
 
   CUSTOMERS: {

@@ -3,11 +3,6 @@ export interface LoginRequest {
   password: string;
 }
 
-export interface SignupRequest {
-  email: string;
-  password: string;
-}
-
 export interface AuthResponse {
   message?: string;
 }
@@ -23,4 +18,22 @@ export interface ResetPasswordRequest {
 
 export interface ResetPasswordEmailResponse{
   email: string;
+}
+
+export interface SignupInitRequest {
+  email: string;
+}
+
+export interface SignupVerifyRequest {
+  email: string;
+  otp: string;
+}
+
+export interface SignupVerifyResponse {
+  verificationToken: string;
+}
+
+export interface SignupCompleteRequest {
+  verificationToken: string;
+  password: string;
 }
