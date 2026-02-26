@@ -47,6 +47,7 @@ export class SignupInitComponent {
   // SIGNALS - STEP CONTROL
   otpSent = signal(false);
   loading = signal(false);
+  otpInvalid = signal(false);
   emailError = signal('');
 
   // EMAIL CONTROL
@@ -57,11 +58,12 @@ export class SignupInitComponent {
   ]);
 
   // OTP CONTROL
-  otp = new FormControl('', [
-    Validators.required,
-    Validators.minLength(6),
-    Validators.maxLength(6),
-  ]);
+  otpControls = Array.from({ length: 6 }, () =>
+    new FormControl('', [
+      Validators.required,
+      Validators.pattern(/^[0-9]$/),
+    ])
+  );
 
   constructor(
     private authService: AuthService,
@@ -88,6 +90,10 @@ export class SignupInitComponent {
     }
   }
 
+  private getOtpValue(): string {
+    return this.otpControls.map(c => c.value).join('');
+  }
+
   onSendOtp() {
     if (this.email.invalid || this.loading()) return;
 
@@ -106,7 +112,7 @@ export class SignupInitComponent {
       error: (err) => {
         this.loading.set(false);
         if (err.status === 409) {
-          this.snackbar.error('Account already exists');
+          this.snackbar.error('Account already exists. Try logging in instead.');
           this.router.navigate(['/login']);
         } else {
           this.snackbar.error('Failed to send OTP. Please try again.');
@@ -116,13 +122,13 @@ export class SignupInitComponent {
   }
 
   onVerifyOtp() {
-    if (this.otp.invalid || this.loading()) return;
+    if (this.otpControls.some(c => c.invalid) || this.loading()) return;
 
     this.loading.set(true);
 
     const payload: SignupVerifyRequest = {
       email: this.email.value!,
-      otp: this.otp.value!,
+      otp: this.getOtpValue(),
     };
 
     this.authService.signupVerify(payload).subscribe({
@@ -136,10 +142,50 @@ export class SignupInitComponent {
           },
         });
       },
-      error: () => {
+      error: (err) => {
         this.loading.set(false);
-        this.snackbar.error('Invalid or expired OTP.');
-      },
+
+        if (err.status === 401) {
+          // Wrong OTP
+          this.otpInvalid.set(true);
+          this.snackbar.error('Incorrect OTP. Please try again.');
+        } 
+        else if (err.status === 400) {
+          // Expired
+          this.snackbar.error('OTP expired. Please request a new one.');
+          this.router.navigate(['/signup-init']);
+        } 
+        else {
+          this.snackbar.error('Verification failed. Please try again.');
+        }
+      }
     });
+  }
+
+  onOtpInput(event: any, index: number) {
+    this.otpInvalid.set(false);
+    const input = event.target as HTMLInputElement;
+    const value = input.value;
+
+    if (!/^[0-9]$/.test(value)) {
+      input.value = '';
+      return;
+    }
+
+    if (index < 5) {
+      const next = document.getElementById(`otp-${index + 1}`);
+      next?.focus();
+    }
+  }
+
+  onOtpBackspace(event: KeyboardEvent, index: number) {
+    if (event.key === 'Backspace' && !this.otpControls[index].value && index > 0) {
+      const prev = document.getElementById(`otp-${index - 1}`);
+      prev?.focus();
+    }
+  }
+
+  get isOtpInvalid(): boolean {
+    return this.otpControls.some(c => c.invalid);
   }
 }

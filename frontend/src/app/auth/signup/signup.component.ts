@@ -158,7 +158,7 @@ export class SignupComponent {
     this.authService.signupComplete(payload).subscribe({
       next: () => {
         this.loading.set(false);
-        this.snackbar.success('Account created successfully');
+        this.snackbar.success('Account created successfully. Please Login', 6000);
         this.router.navigate(['/login']);
       },
       error: (err) => {

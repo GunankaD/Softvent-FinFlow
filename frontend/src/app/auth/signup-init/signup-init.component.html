@@ -5,7 +5,7 @@
 
       <h2>Create Account</h2>
       <p class="subtitle">
-        Enter your email & we’ll send you a verification OTP
+        Enter your email & we'll send you a verification OTP
       </p>
 
       <form (ngSubmit)="onSendOtp()">
@@ -46,7 +46,8 @@
 
       </form>
 
-    } @else {
+    } 
+    @else {
 
       <h2>Verify OTP</h2>
       <p class="subtitle">
@@ -55,25 +56,30 @@
 
       <form (ngSubmit)="onVerifyOtp()">
 
-        <mat-form-field appearance="outline" class="full email">
-          <mat-label>OTP</mat-label>
-          <input matInput [formControl]="otp" maxlength="6" />
-
-          @if (otp.invalid && otp.touched) {
-            <mat-error>Enter a valid 6 digit OTP</mat-error>
-          }
-        </mat-form-field>
+        <div class="otp-container" [class.error]="otpInvalid()">
+            @for (control of otpControls; track $index) {
+                <input
+                matInput
+                class="otp-box"
+                maxlength="1"
+                [formControl]="control"
+                [id]="'otp-' + $index"
+                (input)="onOtpInput($event, $index)"
+                (keydown)="onOtpBackspace($event, $index)"
+                />
+            }
+        </div>
 
         <div
           class="send-email-btn-wrapper"
-          [class.invalid]="otp.invalid"
+          [class.invalid]="isOtpInvalid"
           [class.loading]="loading()">
 
           <button
             mat-raised-button
             type="submit"
             class="full send-email-btn"
-            [disabled]="otp.invalid || loading()">
+            [disabled]="isOtpInvalid || loading()">
 
             @if (loading()) {
               <mat-progress-spinner
