@@ -46,9 +46,4 @@ public class Auth extends PanacheEntityBase {
     public void prePersist() {
         this.createdAt = Instant.now();
     }
-
-    @PreUpdate // RUNS BEFORE UPDATE COMMANDS
-    public void preUpdate() {
-        this.updatedAt = Instant.now();
-    }
 }

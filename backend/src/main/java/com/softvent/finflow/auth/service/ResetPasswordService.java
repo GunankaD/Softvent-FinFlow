@@ -73,6 +73,7 @@ public class ResetPasswordService {
         }
 
         user.pwdHash = BCrypt.hashpw(req.newPassword, BCrypt.gensalt());
+        user.updatedAt = Instant.now();
 
         reset.delete();
     }
