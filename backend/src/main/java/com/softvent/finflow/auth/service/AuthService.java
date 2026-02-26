@@ -1,6 +1,7 @@
 package com.softvent.finflow.auth.service;
 
 import com.softvent.finflow.auth.dto.*;
+import com.softvent.finflow.auth.dto.reset.password.ChangePasswordRequest;
 import com.softvent.finflow.auth.entity.Auth;
 import com.softvent.finflow.common.BusinessException;
 

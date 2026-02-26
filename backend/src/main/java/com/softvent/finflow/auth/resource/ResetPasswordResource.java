@@ -1,7 +1,7 @@
 package com.softvent.finflow.auth.resource;
 
-import com.softvent.finflow.auth.dto.ForgotPasswordRequest;
-import com.softvent.finflow.auth.dto.ResetPasswordRequest;
+import com.softvent.finflow.auth.dto.reset.password.ForgotPasswordRequest;
+import com.softvent.finflow.auth.dto.reset.password.ResetPasswordRequest;
 import com.softvent.finflow.auth.service.ResetPasswordService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;

@@ -1,6 +1,7 @@
 package com.softvent.finflow.auth.resource;
 
 import com.softvent.finflow.auth.dto.*;
+import com.softvent.finflow.auth.dto.reset.password.ChangePasswordRequest;
 import com.softvent.finflow.auth.entity.Auth;
 import com.softvent.finflow.auth.service.AuthService;
 import jakarta.inject.Inject;
