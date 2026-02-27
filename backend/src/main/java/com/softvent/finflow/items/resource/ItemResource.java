@@ -1,5 +1,6 @@
-package com.softvent.finflow.items;
+package com.softvent.finflow.items.resource;
 
+import com.softvent.finflow.items.entity.Item;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
 import jakarta.ws.rs.Produces;

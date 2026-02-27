@@ -1,0 +1,106 @@
+package com.softvent.finflow.items.entity;
+
+import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.time.Instant;
+
+/*
+                                          Table "public.items"
+     Column      |           Type           | Collation | Nullable |              Default
+-----------------+--------------------------+-----------+----------+------------------------------------
+ iid             | bigint                   |           | not null | nextval('items_iid_seq'::regclass)
+ icode           | character varying(30)    |           | not null |
+ name            | character varying(100)   |           | not null |
+ description     | text                     |           | not null |
+ hsn_sac_code    | character varying(10)    |           | not null |
+ item_type       | item_type_enum           |           | not null |
+ uom             | uom_enum                 |           | not null |
+ is_bom          | boolean                  |           | not null | false
+ created_at      | timestamp with time zone |           | not null | CURRENT_TIMESTAMP
+ stockable       | boolean                  |           | not null | true
+ last_updated_at | timestamp with time zone |           |          |
+ purchase_rate   | numeric(12,2)            |           |          |
+ sales_rate      | numeric(12,2)            |           |          |
+ gst_rate        | numeric(5,2)             |           | not null | 0
+ gst_type        | character varying(20)    |           | not null | 'GST'::character varying
+ is_active       | boolean                  |           | not null | true
+ igid            | bigint                   |           | not null |
+Indexes:
+    "items_pkey" PRIMARY KEY, btree (iid)
+    "idx_items_name" btree (name)
+    "items_icode_key" UNIQUE CONSTRAINT, btree (icode)
+Foreign-key constraints:
+    "fk_items_group" FOREIGN KEY (igid) REFERENCES item_groups(igid) ON DELETE RESTRICT
+
+*/
+
+@Entity
+@Table(name = "items")
+public class Item extends PanacheEntityBase {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    public Long iid;
+
+    @Column(nullable = false, unique = true, length = 30)
+    public String icode;
+
+    @Column(nullable = false, length = 100)
+    public String name;
+
+    @Column(nullable = false, columnDefinition = "TEXT")
+    public String description;
+
+    @Column(nullable = false, length = 10)
+    public String hsnSacCode;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    public ItemType itemType;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    public Uom uom;
+
+    @Column(nullable = false)
+    public Boolean isBom = false;
+
+    @Column(nullable = false)
+    public Boolean stockable = true;
+
+    @Column(nullable = false)
+    public Boolean isActive = true;
+
+    @Column(nullable = false)
+    public Instant createdAt;
+
+    public Instant lastUpdatedAt;
+
+    @Column(precision = 12, scale = 2)
+    public BigDecimal purchaseRate;
+
+    @Column(precision = 12, scale = 2)
+    public BigDecimal salesRate;
+
+    @Column(nullable = false, precision = 5, scale = 2)
+    public BigDecimal gstRate = BigDecimal.ZERO;
+
+    @Column(nullable = false, length = 20)
+    public String gstType = "GST";
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "igid", nullable = false)
+    public ItemGroup itemGroup;
+
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = Instant.now();
+    }
+
+    @PreUpdate
+    public void preUpdate() {
+        this.lastUpdatedAt = Instant.now();
+    }
+}
+
