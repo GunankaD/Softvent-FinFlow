@@ -1,8 +1,10 @@
 <div class="login-container">
   <mat-card class="login-card">
 
+    <!-- EMAIL INPUT PAGE BEGINS-->
     @if (!otpSent()) {
 
+      <!-- TITLE -->
       <h2>Create Account</h2>
       <p class="subtitle">
         Enter your email & we'll send you a verification OTP
@@ -10,6 +12,7 @@
 
       <form (ngSubmit)="onSendOtp()">
 
+        <!-- EMAIL INPUT -->
         <mat-form-field appearance="outline" class="full email">
           <mat-label>Email</mat-label>
           <input matInput [formControl]="email" />
@@ -19,6 +22,7 @@
           }
         </mat-form-field>
 
+        <!-- SEND OTP BUTTON -->
         <div
           class="send-email-btn-wrapper"
           [class.invalid]="email.invalid"
@@ -47,8 +51,12 @@
       </form>
 
     } 
+    <!-- EMAIL INPUT PAGE ENDS -->
+
+    <!-- OTP INPUT PAGE BEGINS -->
     @else {
 
+      <!-- TITLE -->
       <h2>Verify OTP</h2>
       <p class="subtitle">
         Enter the 6-digit OTP sent to your email
@@ -56,6 +64,7 @@
 
       <form (ngSubmit)="onVerifyOtp()">
 
+        <!-- OTP INPUT -->
         <div class="otp-container" [class.error]="otpInvalid()">
             @for (control of otpControls; track $index) {
                 <input
@@ -71,37 +80,33 @@
             }
         </div>
         
+        <!-- RESEND OTP BUTTON -->
         <div class="resend-wrapper">
+          <button
+            mat-button
+            disableRipple
+            class="resend-btn full"
+            [class.timer]="!canResend()"
+            [class.active]="canResend()"
+            (click)="onResendOtp()"
+            [disabled]="!canResend() || resendLoading()">
 
-            <button
-                mat-button
-                disableRipple
-                class="resend-btn full"
-                [class.timer]="!canResend()"
-                [class.active]="canResend()"
-                (click)="onResendOtp()"
-                [disabled]="!canResend() || resendLoading()">
-
-                @if (resendLoading()) {
-                <mat-progress-spinner
-                    mode="indeterminate"
-                    diameter="16"
-                    strokeWidth="2"
-                    style="--mdc-circular-progress-active-indicator-color: var(--button-blue)">
-                </mat-progress-spinner>
-                } @else {
-
-                    @if (!canResend()) {
-                        Resend OTP in {{ resendTimer() }}s
-                    } @else {
-                        Resend OTP
-                    }
-                }
-
-            </button>
-
+            @if (resendLoading()) {
+              <mat-progress-spinner
+                  mode="indeterminate"
+                  diameter="16"
+                  strokeWidth="2"
+                  style="--mdc-circular-progress-active-indicator-color: var(--button-blue)">
+              </mat-progress-spinner>
+            } 
+            @else {
+              @if (!canResend()) { Resend OTP in {{ resendTimer() }}s } 
+              @else { Resend OTP }
+            }
+          </button>
         </div>
 
+        <!-- VERIFY OTP BUTTON -->
         <div
           class="send-email-btn-wrapper"
           [class.invalid]="isOtpInvalid"
@@ -120,17 +125,18 @@
                 strokeWidth="2"
                 style="--mdc-circular-progress-active-indicator-color: white">
               </mat-progress-spinner>
-            } @else {
-              Verify
-            }
-
+            } 
+            @else { Verify }
           </button>
         </div>
 
       </form>
 
     }
+    <!-- OTP INPUT PAGE ENDS -->
 
+
+    <!-- GO BACK TO LOGIN BUTTON -->
     <button
       mat-button
       class="full go-back-btn"

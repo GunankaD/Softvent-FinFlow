@@ -1,3 +1,7 @@
+// ============================
+// COMMON SCSS
+// ============================
+
 .login-container {
   min-height: 85vh;
   display: flex;
@@ -25,6 +29,30 @@ h2 {
   color: var(--text-secondary);
 }
 
+.go-back-btn {
+  margin-top: 12px;
+  height: 44px;
+  font-weight: 400;
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important; 
+}
+
+.outline-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 300,
+    'GRAD' 0,
+    'opsz' 24;
+
+  color: white;
+}
+
+// ============================
+// FIRST EMAIL INPUT CARD
+// ============================
 .email {
   margin-bottom: 12px;
 }
@@ -66,28 +94,10 @@ h2 {
   opacity: 0.9;
 }
 
-.go-back-btn {
-  margin-top: 12px;
-  height: 44px;
-  font-weight: 400;
-  background-color: var(--bg-primary) !important;
-  color: var(--text-primary) !important; 
-}
 
-.outline-icon {
-  font-size: 24px;
-  width: 24px;
-  height: 24px;
-  font-variation-settings:
-    'FILL' 0,
-    'wght' 300,
-    'GRAD' 0,
-    'opsz' 24;
-
-  color: white;
-}
-
-
+// ============================
+//  SECOND OTP INPUT CARD
+// ============================
 .otp-container {
   display: flex;
   justify-content: center;
@@ -124,6 +134,7 @@ h2 {
   height: 44px;
   background-color: var(--bg-secondary) !important;
   transition: color 0.2s ease;
+  width: auto;
   
   /* Kill ripple overlay color */
   --mat-text-button-state-layer-color: transparent;

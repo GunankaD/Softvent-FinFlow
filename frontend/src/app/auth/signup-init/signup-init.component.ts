@@ -51,10 +51,10 @@ export class SignupInitComponent {
   otpInvalid = signal(false);
   emailError = signal('');
 
-  private otpResendInterval: number = 30;
+  private otpResendIntervalInSeconds: number = 10;
   private intervalId: any;
 
-  resendTimer = signal(this.otpResendInterval);
+  resendTimer = signal(this.otpResendIntervalInSeconds);
   canResend = signal(false);
   resendLoading = signal(false);
 
@@ -104,7 +104,7 @@ export class SignupInitComponent {
 
   private startResendTimer() {
     this.canResend.set(false);
-    this.resendTimer.set(this.otpResendInterval);
+    this.resendTimer.set(this.otpResendIntervalInSeconds);
 
     this.intervalId = setInterval(() => {
       const current = this.resendTimer();
