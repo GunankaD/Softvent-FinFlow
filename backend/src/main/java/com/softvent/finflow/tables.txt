@@ -57,21 +57,51 @@ Indexes:
 
 
                                           Table "public.items"
-    Column    |            Type             | Collation | Nullable |              Default
---------------+-----------------------------+-----------+----------+------------------------------------
- iid          | bigint                      |           | not null | nextval('items_iid_seq'::regclass)
- icode        | character varying(30)       |           | not null |
- name         | character varying(100)      |           | not null |
- description  | text                        |           | not null |
- hsn_sac_code | character varying(10)       |           | not null |
- item_group   | character varying(50)       |           | not null |
- item_type    | character varying(20)       |           | not null |
- uom          | character varying(20)       |           | not null |
- is_bom       | boolean                     |           | not null | false
- created_at   | timestamp without time zone |           | not null | CURRENT_TIMESTAMP
+     Column      |           Type           | Collation | Nullable |              Default
+-----------------+--------------------------+-----------+----------+------------------------------------
+ iid             | bigint                   |           | not null | nextval('items_iid_seq'::regclass)
+ icode           | character varying(30)    |           | not null |
+ name            | character varying(100)   |           | not null |
+ description     | text                     |           | not null |
+ hsn_sac_code    | character varying(10)    |           | not null |
+ item_type       | item_type_enum           |           | not null |
+ uom             | uom_enum                 |           | not null |
+ is_bom          | boolean                  |           | not null | false
+ created_at      | timestamp with time zone |           | not null | CURRENT_TIMESTAMP
+ stockable       | boolean                  |           | not null | true
+ last_updated_at | timestamp with time zone |           |          |
+ purchase_rate   | numeric(12,2)            |           |          |
+ sales_rate      | numeric(12,2)            |           |          |
+ gst_rate        | numeric(5,2)             |           | not null | 0
+ gst_type        | character varying(20)    |           | not null | 'GST'::character varying
+ is_active       | boolean                  |           | not null | true
+ igid            | bigint                   |           | not null |
 Indexes:
     "items_pkey" PRIMARY KEY, btree (iid)
+    "idx_items_igid" btree (igid)
+    "idx_items_name" btree (name)
     "items_icode_key" UNIQUE CONSTRAINT, btree (icode)
+Foreign-key constraints:
+    "fk_items_group" FOREIGN KEY (igid) REFERENCES item_groups(igid) ON DELETE RESTRICT
+
+
+                                          Table "public.item_groups"
+     Column      |           Type           | Collation | Nullable |                  Default
+-----------------+--------------------------+-----------+----------+-------------------------------------------
+ igid            | bigint                   |           | not null | nextval('item_groups_igid_seq'::regclass)
+ name            | character varying(100)   |           | not null |
+ parent_igid     | bigint                   |           |          |
+ is_active       | boolean                  |           | not null | true
+ created_at      | timestamp with time zone |           | not null | now()
+ last_updated_at | timestamp with time zone |           |          |
+Indexes:
+    "item_groups_pkey" PRIMARY KEY, btree (igid)
+    "uk_item_groups_name" UNIQUE CONSTRAINT, btree (name)
+Foreign-key constraints:
+    "fk_item_groups_parent" FOREIGN KEY (parent_igid) REFERENCES item_groups(igid) ON DELETE RESTRICT
+Referenced by:
+    TABLE "item_groups" CONSTRAINT "fk_item_groups_parent" FOREIGN KEY (parent_igid) REFERENCES item_groups(igid) ON DELETE RESTRICT
+    TABLE "items" CONSTRAINT "fk_items_group" FOREIGN KEY (igid) REFERENCES item_groups(igid) ON DELETE RESTRICT
 
 
                                             Table "public.transactions"
