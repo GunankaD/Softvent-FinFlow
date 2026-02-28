@@ -82,6 +82,6 @@ export type Uom =
   | 'NOS'
   | 'BOX'
   | 'KG'
-  | 'LTR'
-  | 'MTR'
+  | 'LITRE'
+  | 'METER'
   | 'PCS';
