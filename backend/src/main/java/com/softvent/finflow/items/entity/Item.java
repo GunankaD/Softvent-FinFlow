@@ -32,6 +32,8 @@ import java.time.Instant;
  igid            | bigint                   |           | not null |
 Indexes:
     "items_pkey" PRIMARY KEY, btree (iid)
+    "idx_items_igid" btree (igid)
+    "idx_items_is_active" btree (is_active)
     "idx_items_name" btree (name)
     "items_icode_key" UNIQUE CONSTRAINT, btree (icode)
 Foreign-key constraints:
