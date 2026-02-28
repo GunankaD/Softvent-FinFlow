@@ -38,6 +38,7 @@ export interface ItemSummaryResponse {
   itemType: ItemType;
   uom: Uom;
   stockable: boolean;
+  purchaseRate?: number;
   salesRate?: number;
   gstRate: number;
   isActive: boolean;
