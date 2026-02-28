@@ -89,6 +89,14 @@ public class ItemService {
         return mapToDetailResponse(item);
     }
 
+    // AVAILABILITY CHECKERS
+    public AvailabilityResponse isIcodeAvailable(String icode) {
+        boolean exists =  Item.find("icode", icode)
+                .firstResultOptional()
+                .isPresent();
+        return new AvailabilityResponse(!exists);
+    }
+
     // MAPPERS
     private void mapCreateRequestToEntity(ItemCreateRequest req, Item item, ItemGroup group) {
         item.icode = req.icode;

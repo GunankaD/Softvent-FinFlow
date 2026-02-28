@@ -28,6 +28,13 @@ public class ItemResource {
         return Response.status(Response.Status.CREATED).build();
     }
 
+    // AVAILABILITY CHECKERS
+    @GET
+    @Path("/availability/{icode}")
+    public Response checkIcodeAvailability(@PathParam("icode") String icode) {
+        return Response.ok(itemService.isIcodeAvailable(icode)).build();
+    }
+
     // UPDATE
     @PUT
     @Path("/{icode}")
