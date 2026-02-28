@@ -1,1 +1,14 @@
-<p>show-items works!</p>
+<div class="container">
+  <h1 class="title">Items</h1>
+  <p class="subtitle">View and manage all registered items</p>
+
+  <div>
+    <app-grid-table
+      [columns]="columns"
+      [data]="items()"
+      [loading]="loading()"
+      (refresh)="loadItems()"
+      (view)="onRowClick($event)">
+    </app-grid-table>
+  </div>
+</div>

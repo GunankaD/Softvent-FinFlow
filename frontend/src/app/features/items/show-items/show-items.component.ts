@@ -1,11 +1,81 @@
-import { Component } from '@angular/core';
+// ANGULAR
+import {
+  Component,
+  OnInit,
+  inject,
+  signal
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
+
+// MATERIAL UI
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+
+// DEPENDENCIES AND SERVICES
+import { SnackbarService } from '../../../core/services/snackbar/snackbar.service';
+import { ItemService } from '../../../core/services/item/item.service';
+import { GridTableComponent } from '../../../shared/components/grid-table/grid-table.component';
+
+// DTOs
+import { ItemSummaryResponse } from '../../../core/models/item.models';
+import { TableColumn } from '../../../shared/components/models/table-column.model';
 
 @Component({
   selector: 'app-show-items',
-  imports: [],
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatSnackBarModule,
+    GridTableComponent
+  ],
   templateUrl: './show-items.component.html',
-  styleUrl: './show-items.component.scss'
+  styleUrls: ['./show-items.component.scss']
 })
-export class ShowItemsComponent {
+export class ShowItemsComponent implements OnInit {
 
+  private readonly itemService = inject(ItemService);
+  private readonly snackbarService = inject(SnackbarService);
+  private readonly router = inject(Router);
+
+  readonly loading = signal(false);
+  readonly items = signal<ItemSummaryResponse[]>([]);
+
+readonly columns: TableColumn[] = [
+  { key: 'icode',        label: 'Item Code',        flex: 1,    minWidth: 100 },
+  { key: 'name',         label: 'Item Name',        flex: 2,    minWidth: 160 },
+  { key: 'itemType',     label: 'Type',             flex: 0.5,  minWidth: 90  },
+  { key: 'uom',          label: 'UOM',              flex: 0.5,  minWidth: 90  },
+  { key: 'purchaseRate', label: 'Purchase Rate ₹',  flex: 1,    minWidth: 140 },
+  { key: 'salesRate',    label: 'Sales Rate ₹',     flex: 1,    minWidth: 140 },
+  { key: 'gstRate',      label: 'GST %',            flex: 0.5,  minWidth: 80  },
+  { key: 'createdAt',    label: 'Created On',       flex: 2,    minWidth: 170 },
+  { key: 'isActive',     label: 'Active',           flex: 0.25, minWidth: 80  },
+  { key: 'eyeIcon',      label: 'View',             flex: 0.5,  minWidth: 80  }
+];
+
+  ngOnInit(): void {
+    this.loadItems();
+  }
+
+  loadItems(): void {
+    this.loading.set(true);
+
+    this.itemService.getAll().subscribe({
+      next: (data) => {
+        this.items.set([...data]);
+        this.loading.set(false);
+      },
+      error: (err) => {
+        this.snackbarService.error(
+          err?.error?.message ?? 'Failed to load items',
+          4000
+        );
+        this.loading.set(false);
+      }
+    });
+  }
+
+  onRowClick(item: ItemSummaryResponse): void {
+    this.router.navigate(['/items', item.icode]);
+  }
 }
