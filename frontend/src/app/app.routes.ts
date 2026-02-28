@@ -33,7 +33,11 @@ export const routes: Routes = [
         loadComponent: () =>
             import('./features/customers/customer-details/customer-details.component')
             .then(m => m.CustomerDetailsComponent)
-    }
-,
+    },
+    {path: 'items',
+        loadComponent: () =>
+            import('./features/items/items.component')
+            .then(m => m.ItemsComponent)
+    },
 ];
 
