@@ -21,32 +21,26 @@ public class ItemResource {
     @Inject
     ItemService itemService;
 
-    /* ---------------- CREATE ---------------- */
-
+    // CREATE
     @POST
     public Response create(ItemCreateRequest request) {
         itemService.createItem(request);
         return Response.status(Response.Status.CREATED).build();
     }
 
-    /* ---------------- UPDATE ---------------- */
-
+    // UPDATE
     @PUT
     @Path("/{icode}")
-    public Response update(@PathParam("icode") String icode,
-                           ItemUpdateRequest request) {
+    public Response update(@PathParam("icode") String icode, ItemUpdateRequest request) {
         itemService.updateItem(icode, request);
         return Response.ok().build();
     }
 
-    /* ---------------- FETCH ALL ---------------- */
-
+    // GETTERS
     @GET
     public List<ItemSummaryResponse> getAll() {
         return itemService.getAllItems();
     }
-
-    /* ---------------- FETCH BY CODE ---------------- */
 
     @GET
     @Path("/{icode}")
@@ -54,8 +48,7 @@ public class ItemResource {
         return itemService.getItemByCode(icode);
     }
 
-    /* ---------------- SOFT DELETE ---------------- */
-
+    // SOFT DELETE
     @DELETE
     @Path("/{icode}")
     public Response deactivate(@PathParam("icode") String icode) {
