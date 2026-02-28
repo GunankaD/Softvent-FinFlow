@@ -27,7 +27,7 @@ public class ItemGroupResource {
     /* ---------------- FETCH BY ID ---------------- */
 
     @GET
-    @Path("/{igid}")
+    @Path("/{igid:\\d+}")
     public ItemGroupResponse getById(@PathParam("igid") Long igid) {
         return itemGroupService.getById(igid);
     }
