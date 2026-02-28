@@ -2,6 +2,10 @@ package com.softvent.finflow.items.entity;
 
 import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import jakarta.persistence.*;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.dialect.type.PostgreSQLEnumJdbcType;
+
+
 import java.math.BigDecimal;
 import java.time.Instant;
 
@@ -56,11 +60,13 @@ public class Item extends PanacheEntityBase {
     public String hsnSacCode;
 
     @Enumerated(EnumType.STRING)
-    @Column(name="item_type", nullable = false)
+    @JdbcType(PostgreSQLEnumJdbcType.class)
+    @Column(name="item_type", nullable = false, columnDefinition = "item_type_enum")
     public ItemType itemType;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @JdbcType(PostgreSQLEnumJdbcType.class)
+    @Column(nullable = false, columnDefinition = "uom_enum")
     public Uom uom;
 
     @Column(name="is_bom", nullable = false)
