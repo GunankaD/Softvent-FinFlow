@@ -15,5 +15,16 @@ export const API_ENDPOINTS = {
     BY_CCODE: (ccode: string) => `/customers/ccode/${ccode}`,
     AVAILABILITY_CCODE: '/customers/availability/ccode',
     AVAILABILITY_EMAIL: '/customers/availability/email'
+  },
+  
+  ITEMS: {
+    BASE: '/items',
+    BY_ICODE: (icode: string) => `/items/${icode}`,
+    AVAILABILITY: (icode: string) => `/items/availability/${icode}`
+  },
+
+  ITEM_GROUPS: {
+    BASE: '/item-groups',
+    BY_IGD: (igid: number) => `/item-groups/${igid}`
   }
 } as const;
