@@ -1,1 +1,51 @@
-<p>add-item works!</p>
+<div class="container">
+  <h1 class="title">Add Item</h1>
+  <p class="subtitle">Create a new item entry</p>
+
+  <form [formGroup]="form" (ngSubmit)="submit()" class="form-grid">
+
+    <input formControlName="icode" placeholder="Item Code" />
+    <input formControlName="name" placeholder="Item Name" />
+    <input formControlName="hsnSacCode" placeholder="HSN/SAC Code" />
+
+    <select formControlName="itemType">
+      <option value="" disabled>Select Item Type</option>
+      <option *ngFor="let type of itemTypes" [value]="type">{{ type }}</option>
+    </select>
+
+    <select formControlName="uom">
+      <option value="" disabled>Select UOM</option>
+      <option *ngFor="let u of uoms" [value]="u">{{ u }}</option>
+    </select>
+
+    <select formControlName="igid">
+      <option value="" disabled>Select Item Group</option>
+      <option *ngFor="let g of itemGroups()" [value]="g.igid">
+        {{ g.name }}
+      </option>
+    </select>
+
+    <input type="number" formControlName="purchaseRate" placeholder="Purchase Rate" />
+    <input type="number" formControlName="salesRate" placeholder="Sales Rate" />
+    <input type="number" formControlName="gstRate" placeholder="GST %" />
+
+    <div class="checkbox-group">
+      <label>
+        <input type="checkbox" formControlName="isBom" />
+        BOM Item
+      </label>
+
+      <label>
+        <input type="checkbox" formControlName="stockable" />
+        Stockable
+      </label>
+    </div>
+
+    <textarea formControlName="description" placeholder="Description"></textarea>
+
+    <button type="submit" [disabled]="form.invalid || loading()">
+      {{ loading() ? 'Creating...' : 'Create Item' }}
+    </button>
+
+  </form>
+</div>

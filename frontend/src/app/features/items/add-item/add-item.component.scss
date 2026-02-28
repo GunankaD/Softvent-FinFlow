@@ -1,0 +1,52 @@
+.container {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.title {
+  color: var(--text-primary);
+  margin: 20px 0;
+}
+
+.subtitle {
+  color: var(--text-secondary);
+  margin-bottom: 30px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+input,
+select,
+textarea {
+  padding: 12px;
+  border-radius: 8px;
+  background: var(--bg-secondary);
+  border: 1px solid rgba(255,255,255,0.06);
+  color: var(--text-primary);
+}
+
+textarea {
+  grid-column: span 3;
+  min-height: 100px;
+  resize: vertical;
+}
+
+.checkbox-group {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+button {
+  grid-column: span 3;
+  padding: 14px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  background: var(--accent-primary);
+  color: white;
+}
