@@ -135,6 +135,7 @@ public class ItemService {
         res.itemType = item.itemType;
         res.uom = item.uom;
         res.stockable = item.stockable;
+        res.purchaseRate = item.purchaseRate;
         res.salesRate = item.salesRate;
         res.gstRate = item.gstRate;
         res.isActive = item.isActive;

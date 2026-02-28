@@ -13,6 +13,7 @@ public class ItemSummaryResponse {
     public ItemType itemType;
     public Uom uom;
     public Boolean stockable;
+    public BigDecimal purchaseRate;
     public BigDecimal salesRate;
     public BigDecimal gstRate;
     public Boolean isActive;
