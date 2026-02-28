@@ -52,41 +52,42 @@ public class Item extends PanacheEntityBase {
     @Column(nullable = false, columnDefinition = "TEXT")
     public String description;
 
-    @Column(nullable = false, length = 10)
+    @Column(name="hsn_sac_code", nullable = false, length = 10)
     public String hsnSacCode;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name="item_type", nullable = false)
     public ItemType itemType;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     public Uom uom;
 
-    @Column(nullable = false)
+    @Column(name="is_bom", nullable = false)
     public Boolean isBom = false;
 
     @Column(nullable = false)
     public Boolean stockable = true;
 
-    @Column(nullable = false)
+    @Column(name="is_active", nullable = false)
     public Boolean isActive = true;
 
-    @Column(nullable = false)
+    @Column(name="created_at", nullable = false)
     public Instant createdAt;
 
+    @Column(name="last_updated_at", nullable = true)
     public Instant lastUpdatedAt;
 
-    @Column(precision = 12, scale = 2)
+    @Column(name="purchase_rate", precision = 12, scale = 2)
     public BigDecimal purchaseRate;
 
-    @Column(precision = 12, scale = 2)
+    @Column(name="sales_rate", precision = 12, scale = 2)
     public BigDecimal salesRate;
 
-    @Column(nullable = false, precision = 5, scale = 2)
+    @Column(name="gst_rate", nullable = false, precision = 5, scale = 2)
     public BigDecimal gstRate = BigDecimal.ZERO;
 
-    @Column(nullable = false, length = 20)
+    @Column(name="gst_type", nullable = false, length = 20)
     public String gstType = "GST";
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

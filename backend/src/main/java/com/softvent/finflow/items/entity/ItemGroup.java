@@ -13,19 +13,20 @@ public class ItemGroup extends PanacheEntityBase {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     public Long igid;
 
-    @Column(nullable = false, unique = true, length = 100)
+    @Column(name="name", nullable = false, unique = true, length = 100)
     public String name;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_igid")
     public ItemGroup parent;
 
-    @Column(nullable = false)
+    @Column(name="is_active", nullable = false)
     public Boolean isActive = true;
 
-    @Column(nullable = false)
+    @Column(name="created_at", nullable = false)
     public Instant createdAt;
 
+    @Column(name="last_updated_at", nullable = true)
     public Instant lastUpdatedAt;
 
     @PrePersist
