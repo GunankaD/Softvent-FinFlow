@@ -4,47 +4,144 @@
 
   <form [formGroup]="form" (ngSubmit)="submit()" class="form-grid">
 
-    <input formControlName="icode" placeholder="Item Code" />
-    <input formControlName="name" placeholder="Item Name" />
-    <input formControlName="hsnSacCode" placeholder="HSN/SAC Code" />
+    <!-- ITEM CODE -->
+    <mat-form-field appearance="outline">
+      <mat-label>Item Code</mat-label>
+      <input matInput (input)="onIcodeInput($event)" formControlName="icode" />
+      <mat-error *ngIf="form.controls.icode.hasError('required')">
+        Item code is required
+      </mat-error>
+      <mat-error *ngIf="form.controls.icode.hasError('icodeTaken')">
+        Item code already exists
+      </mat-error>
+      <mat-error *ngIf="form.controls.icode.hasError('pattern')">
+         Wrong Format. Ex: ABC1234
+      </mat-error>
+    </mat-form-field>
 
-    <select formControlName="itemType">
-      <option value="" disabled>Select Item Type</option>
-      <option *ngFor="let type of itemTypes" [value]="type">{{ type }}</option>
-    </select>
+    <!-- NAME -->
+    <mat-form-field appearance="outline">
+      <mat-label>Item Name</mat-label>
+      <input matInput formControlName="name" />
+      <mat-error *ngIf="form.controls.name.hasError('required')">
+         Item Name is Required
+      </mat-error>
+    </mat-form-field>
 
-    <select formControlName="uom">
-      <option value="" disabled>Select UOM</option>
-      <option *ngFor="let u of uoms" [value]="u">{{ u }}</option>
-    </select>
+    <!-- GROUP -->
+    <mat-form-field appearance="outline">
+      <mat-label>Item Group</mat-label>
+      <mat-select formControlName="igid">
+        <mat-option [value]="null" disabled>Select Item Group</mat-option>
+        <mat-option *ngFor="let group of itemGroups()" [value]="group.igid">
+          {{ group.name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
-    <select formControlName="igid">
-      <option value="" disabled>Select Item Group</option>
-      <option *ngFor="let g of itemGroups()" [value]="g.igid">
-        {{ g.name }}
-      </option>
-    </select>
+    <!-- ITEM TYPE -->
+    <mat-form-field appearance="outline">
+      <mat-label>Item Type</mat-label>
+      <mat-select formControlName="itemType">
+        <mat-option *ngFor="let type of itemTypes" [value]="type">
+          {{ type }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
-    <input type="number" formControlName="purchaseRate" placeholder="Purchase Rate" />
-    <input type="number" formControlName="salesRate" placeholder="Sales Rate" />
-    <input type="number" formControlName="gstRate" placeholder="GST %" />
+    <!-- UOM -->
+    <mat-form-field appearance="outline">
+      <mat-label>Unit of Measure</mat-label>
+      <mat-select formControlName="uom">
+        <mat-option *ngFor="let u of uoms" [value]="u">
+          {{ u }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
 
+    <!-- HSN -->
+    <mat-form-field appearance="outline">
+      <mat-label>HSN / SAC Code</mat-label>
+      <input matInput formControlName="hsnSacCode" />
+      <mat-error *ngIf="form.controls.hsnSacCode.hasError('required')">
+         Code is Required
+      </mat-error>
+      <mat-error *ngIf="form.controls.hsnSacCode.hasError('pattern')">
+        Only numeric values allowed
+      </mat-error>
+    </mat-form-field>
+
+    <!-- PURCHASE RATE -->
+    <mat-form-field appearance="outline">
+      <mat-label>Purchase Rate ₹</mat-label>
+      <input 
+        matInput 
+        type="number" 
+        min="0"
+        step="0.01"
+        [maxDecimals]="2"
+        formControlName="purchaseRate" 
+      />
+      <mat-error *ngIf="form.controls.purchaseRate.hasError('min')">
+        Cannot be negative
+      </mat-error>
+    </mat-form-field>
+
+    <!-- SALES RATE -->
+    <mat-form-field appearance="outline">
+      <mat-label>Sales Rate ₹</mat-label>
+      <input 
+        matInput 
+        type="number" 
+        min="0"
+        step="0.01"
+        [maxDecimals]="2"
+        formControlName="salesRate" 
+      />
+      <mat-error *ngIf="form.controls.salesRate.hasError('min')">
+        Cannot be negative
+      </mat-error>
+    </mat-form-field>
+
+    <!-- GST -->
+    <mat-form-field appearance="outline">
+      <mat-label>GST %</mat-label>
+      <mat-select formControlName="gstRate">
+      <mat-option *ngFor="let rate of gstRates" [value]="rate">
+        {{ rate }}%
+      </mat-option>
+    </mat-select>
+    </mat-form-field>
+
+    <!-- CHECKBOXES -->
     <div class="checkbox-group">
-      <label>
-        <input type="checkbox" formControlName="isBom" />
-        BOM Item
-      </label>
-
-      <label>
-        <input type="checkbox" formControlName="stockable" />
-        Stockable
-      </label>
+      <mat-checkbox formControlName="isBom">BOM Item</mat-checkbox>
+      <mat-checkbox formControlName="stockable">Stockable</mat-checkbox>
     </div>
 
-    <textarea formControlName="description" placeholder="Description"></textarea>
+    <!-- DESCRIPTION -->
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description"></textarea>
+      <mat-error *ngIf="form.controls.description.hasError('required')">
+         Description is Required
+      </mat-error>
+    </mat-form-field>
 
-    <button type="submit" [disabled]="form.invalid || loading()">
-      {{ loading() ? 'Creating...' : 'Create Item' }}
+    <!-- BUTTON -->
+    <button
+      mat-flat-button
+      color="primary"
+      type="submit"
+      [disabled]="form.invalid || loading()">
+
+      <mat-spinner
+        *ngIf="loading()"
+        diameter="20"
+        strokeWidth="3">
+      </mat-spinner>
+
+      <span *ngIf="!loading()">Create Item</span>
     </button>
 
   </form>

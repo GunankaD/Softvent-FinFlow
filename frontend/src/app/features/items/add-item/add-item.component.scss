@@ -1,52 +1,40 @@
 .container {
-  max-width: 1100px;
+  max-width: 1200px;
   margin: 0 auto;
-}
+  height: 90vh;
 
-.title {
-  color: var(--text-primary);
-  margin: 20px 0;
-}
+  .title {
+    color: var(--text-primary);
+    margin-bottom: 20px;
+  }
 
-.subtitle {
-  color: var(--text-secondary);
-  margin-bottom: 30px;
+  .subtitle {
+    color: var(--text-secondary);
+    margin-bottom: 30px;
+  }
 }
 
 .form-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 20px;
+  row-gap: 20px;
+  column-gap: 20px;
 }
 
-input,
-select,
-textarea {
-  padding: 12px;
-  border-radius: 8px;
-  background: var(--bg-secondary);
-  border: 1px solid rgba(255,255,255,0.06);
-  color: var(--text-primary);
-}
-
-textarea {
+.full-width {
   grid-column: span 3;
-  min-height: 100px;
-  resize: vertical;
 }
 
 .checkbox-group {
   display: flex;
-  gap: 20px;
   align-items: center;
+  gap: 30px;
+  margin-top: -30px;
+  margin-bottom: -10px;
 }
 
 button {
   grid-column: span 3;
-  padding: 14px;
-  border-radius: 10px;
-  border: none;
-  cursor: pointer;
-  background: var(--accent-primary);
-  color: white;
+  height: 48px;
+  font-weight: 500;
 }
