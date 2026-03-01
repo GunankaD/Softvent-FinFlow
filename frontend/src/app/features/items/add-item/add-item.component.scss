@@ -33,8 +33,96 @@
   margin-bottom: -10px;
 }
 
-button {
-  grid-column: span 3;
-  height: 48px;
-  font-weight: 500;
+/* ===========================
+        ACTION BAR
+=========================== */
+.step-action-bar {
+  margin-top: -10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.right-actions {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+/* Go Back */
+.go-back-btn {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Delete */
+.delete-btn {
+  border: 1px solid red;
+  color: red;
+}
+
+/* Go back + DELETE disabled look */
+.go-back-btn:disabled,
+.delete-btn:disabled {
+  opacity: 0.5 !important;
+}
+
+/*
+ * CREATE BUTTON
+ */
+.create-btn {
+  min-width: 180px;
+  background-color: var(--button-green) !important;
+  color: var(--text-primary) !important;
+
+  display: inline-flex ;
+  align-items: center ;
+  justify-content: center ;
+}
+
+/* Disabled button look */
+.create-btn-wrapper.invalid .create-btn {
+  background-color: var(--button-dark-green) !important;
+  color: var(--text-disabled) !important;
+  opacity: 0.8;
+}
+
+/* Loading state */
+.create-btn-wrapper.loading .create-btn {
+  background-color: var(--button-green) !important;
+  color: var(--text-primary) !important;
+  opacity: 1;
+  cursor: default;
+}
+
+/* Cursor invalid */
+.create-btn-wrapper.invalid,
+.create-btn-wrapper.loading {
+  cursor: not-allowed;
+}
+
+/* Hover feedback */
+.create-btn-wrapper.invalid:hover,
+.create-btn-wrapper.loading:hover {
+  opacity: 0.9;
+}
+
+.create-btn-wrapper.invalid .create-btn .outline-icon,
+.create-btn-wrapper.invalid .create-btn mat-icon {
+  color: var(--text-disabled) !important;
+}
+
+/* Material filled circle */
+.outline-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 300,
+    'GRAD' 0,
+    'opsz' 24;
+
+  color: white;
 }

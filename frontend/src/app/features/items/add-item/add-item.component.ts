@@ -22,7 +22,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-
+import { MatIconModule } from '@angular/material/icon';
+import { MatDialog } from '@angular/material/dialog';
 
 // SERVICES AND DEPENDENCIES
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -30,6 +31,7 @@ import { ItemService } from '../../../core/services/item/item.service';
 import { ItemValidatorsService } from '../../../core/services/item/item-validators.service';
 import { SnackbarService } from '../../../core/services/snackbar/snackbar.service';
 import { MaxDecimalsDirective } from '../../../shared/directives/max-decimals.directive';
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 // DTOs
 import { ItemGroupResponse, ItemType, Uom } from '../../../core/models/item.models';
@@ -47,6 +49,7 @@ import { ItemGroupResponse, ItemType, Uom } from '../../../core/models/item.mode
     MatCheckboxModule,
     MatButtonModule,
     MatProgressSpinnerModule,
+    MatIconModule,
     MaxDecimalsDirective
   ],
   templateUrl: './add-item.component.html',
@@ -60,6 +63,7 @@ export class AddItemComponent implements OnInit {
   private readonly validatorService = inject(ItemValidatorsService);
   private readonly snackbar = inject(SnackbarService);
   private readonly router = inject(Router);
+  private readonly dialog = inject(MatDialog);
 
   readonly loading = signal(false);
   readonly itemGroups = signal<ItemGroupResponse[]>([]);
@@ -166,14 +170,77 @@ readonly form = this.fb.group({
     }
   }
 
-  limitToTwoDecimals(controlName: string): void {
-    const control = this.form.get(controlName);
-    if (!control || control.value == null) return;
+  public onGoBack(): void {
 
-    const value = Number(control.value);
-    control.setValue(
-      Math.floor(value * 100) / 100,
-      { emitEvent: false }
-    );
+    if (this.loading()) return;
+
+    if (!this.form.dirty) {
+      this.router.navigate(['/items/show-items']);
+      return;
+    }
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Discard Changes',
+        message: 'You have unsaved changes. Are you sure you want to leave?',
+        confirmColor: 'red',
+        confirmButtonText: 'Leave'
+      },
+      panelClass: 'custom-dialog-panel'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) return;
+      this.router.navigate(['/items/show-items']);
+    });
+  }
+
+  public onClear(): void {
+
+    if (this.loading() || this.form.pristine) return;
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Clear Form',
+        message: 'Are you sure you want to clear all entered item details?',
+        confirmColor: 'red',
+        confirmButtonText: 'Clear'
+      },
+      panelClass: 'custom-dialog-panel'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+
+      if (!result) { return; }
+
+      this.form.reset({
+        isBom: false,
+        stockable: true,
+        gstType: 'GST'
+      });
+
+      this.form.markAsPristine();
+      this.form.markAsUntouched();
+    });
+  }
+
+  public onCreateClick(): void {
+
+    if (this.form.invalid || this.loading()) return;
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Create Item',
+        message: `Are you sure you want to create item "${this.form.value.name}"?`,
+        confirmColor: 'green',
+        confirmButtonText: 'Create'
+      },
+      panelClass: 'custom-dialog-panel'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) return;
+      this.submit();
+    });
   }
 }

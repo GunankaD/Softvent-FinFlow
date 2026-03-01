@@ -2,7 +2,7 @@
   <h1 class="title">Add Item</h1>
   <p class="subtitle">Create a new item entry</p>
 
-  <form [formGroup]="form" (ngSubmit)="submit()" class="form-grid">
+  <form [formGroup]="form" class="form-grid">
 
     <!-- ITEM CODE -->
     <mat-form-field appearance="outline">
@@ -128,21 +128,76 @@
       </mat-error>
     </mat-form-field>
 
-    <!-- BUTTON -->
-    <button
-      mat-flat-button
-      color="primary"
-      type="submit"
-      [disabled]="form.invalid || loading()">
+    <!-- BOTTOM ACTION BUTTONS -->
+    <div class="step-action-bar full-width">
 
-      <mat-spinner
-        *ngIf="loading()"
-        diameter="20"
-        strokeWidth="3">
-      </mat-spinner>
+      <!-- LEFT: GO BACK -->
+      <button
+        mat-button
+        class="go-back-btn"
+        (click)="onGoBack()"
+        [disabled]="loading()"
+        type="button"
+      >
+        <mat-icon fontSet="material-symbols-outlined" class="outline-icon">
+          arrow_circle_left
+        </mat-icon>
+        Go Back
+      </button>
 
-      <span *ngIf="!loading()">Create Item</span>
-    </button>
+      <!-- RIGHT SIDE GROUP -->
+      <div class="right-actions">
+
+        <!-- CLEAR -->
+        <button
+          mat-stroked-button
+          class="delete-btn"
+          (click)="onClear()"
+          [disabled]="loading()"
+          type="button"
+        >
+          <mat-icon>delete</mat-icon>
+          Clear
+        </button>
+
+        <!-- CREATE ITEM -->
+        <div
+          class="create-btn-wrapper"
+          [class.invalid]="form.invalid || form.pending"
+          [class.loading]="loading()"
+        >
+          <button
+            mat-raised-button
+            class="create-btn"
+            type="button"
+            (click)="onCreateClick()"
+            [disabled]="form.invalid || loading()"
+          >
+
+            <mat-progress-spinner
+              *ngIf="loading()"
+              mode="indeterminate"
+              diameter="20"
+              strokeWidth="2"
+              style="--mdc-circular-progress-active-indicator-color: white"
+            >
+            </mat-progress-spinner>
+
+            <mat-icon
+              *ngIf="!loading()"
+              fontSet="material-symbols-outlined"
+              class="outline-icon"
+            >
+              add_circle
+            </mat-icon>
+
+            <span *ngIf="!loading()">Create Item</span>
+
+          </button>
+        </div>
+
+      </div>
+    </div>
 
   </form>
 </div>
