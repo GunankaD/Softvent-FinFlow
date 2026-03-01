@@ -1,5 +1,5 @@
 // ANGULAR
-import { Component, OnDestroy, inject, signal } from '@angular/core';
+import { Component, OnDestroy, inject, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -12,11 +12,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCardModule } from '@angular/material/card';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDialog } from '@angular/material/dialog';
+import { MatStepper } from '@angular/material/stepper';
 
 // SERVICES
 import { CustomerValidatorsService } from '../../../core/services/customer/customer-validators.service';
 import { CustomerService } from '../../../core/services/customer/customer.service';
 import { SnackbarService } from '../../../core/services/snackbar/snackbar.service';
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 // DTOs
 import { 
@@ -43,11 +46,14 @@ import {
 })
 export class AddCustomerComponent implements OnDestroy {
 
+  @ViewChild(MatStepper) stepper!: MatStepper;
+
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly customerValidators = inject(CustomerValidatorsService);
   private readonly customerService = inject(CustomerService);
   private readonly snackbar = inject(SnackbarService);  
+  private readonly dialog = inject(MatDialog);
 
 
   protected isSubmitting = signal(false);
@@ -156,15 +162,37 @@ export class AddCustomerComponent implements OnDestroy {
   }
 
 
-  protected onCancel(): void {
-    this.router.navigate(['/customers']);
+  protected onClear(): void {
+
+    if (this.isSubmitting()) return;
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Clear Customer',
+        message: 'You have unsaved changes. Are you sure you want to clear?',
+        confirmColor: 'red',
+        confirmButtonText: 'Clear'
+      },
+      panelClass: 'custom-dialog-panel'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+
+      if (!result) return;
+
+      this.customerForm.reset();
+      this.customerForm.markAsPristine();
+      this.customerForm.markAsUntouched();
+
+      this.stepper.reset();
+    });
   }
 
   ngOnDestroy(): void {
     this.customerForm.reset();
   }
 
-  protected onSubmit(): void {
+  private onSubmit(): void {
 
     if (this.customerForm.invalid) return;
 
@@ -203,4 +231,25 @@ export class AddCustomerComponent implements OnDestroy {
     });
   }
 
+  protected onCreateClick(): void {
+
+    if (this.customerForm.invalid || this.isSubmitting()) return;
+
+    const businessDetails = this.customerForm.value.businessDetails;
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Create Customer',
+        message: `Are you sure you want to create customer "${businessDetails.cname}"?`,
+        confirmColor: 'green',
+        confirmButtonText: 'Create'
+      },
+      panelClass: 'custom-dialog-panel'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) return;
+      this.onSubmit();
+    });
+  }
 }

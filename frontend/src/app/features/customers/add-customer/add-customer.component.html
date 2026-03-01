@@ -362,11 +362,11 @@
           <button
             mat-stroked-button
             class="delete-btn"
-            (click)="onCancel()"
+            (click)="onClear()"
             [disabled]="isSubmitting()"
           >
             <mat-icon>delete</mat-icon>
-            Delete
+            Clear
           </button>
 
           <!-- CREATE CUSTOMER -->
@@ -378,7 +378,7 @@
             <button
               mat-raised-button
               class="create-btn"
-              (click)="onSubmit()"
+              (click)="onCreateClick()"
               [disabled]="customerForm.invalid || isSubmitting()"
             >
               <mat-progress-spinner
