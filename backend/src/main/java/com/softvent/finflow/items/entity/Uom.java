@@ -4,5 +4,7 @@ public enum Uom {
     NOS,
     KG,
     LITRE,
-    METER
+    METER,
+    PCS,
+    BOX
 }
