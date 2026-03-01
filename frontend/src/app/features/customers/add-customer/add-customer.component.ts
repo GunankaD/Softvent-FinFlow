@@ -17,7 +17,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { CustomerValidatorsService } from '../../../core/services/customer/customer-validators.service';
 import { CustomerService } from '../../../core/services/customer/customer.service';
 import { SnackbarService } from '../../../core/services/snackbar/snackbar.service';
-import { CustomerCreateRequest } from '../../../core/models/customer.models';
+
+// DTOs
+import { 
+  CustomerCreateRequest, 
+  CustomerSummaryResponse 
+} from '../../../core/models/customer.models';
 
 @Component({
   selector: 'app-add-customer',
@@ -186,10 +191,10 @@ export class AddCustomerComponent implements OnDestroy {
     };
 
     this.customerService.create(payload).subscribe({
-      next: () => {
+      next: (response: CustomerSummaryResponse) => {
         this.isSubmitting.set(false);
         this.snackbar.success('Customer created successfully', 6000);
-        this.router.navigate(['/customers']);
+        this.router.navigate([`/customers/${response.ccode}`]);
       },
       error: () => {
         this.snackbar.error('Failed to create customer', 6000);
