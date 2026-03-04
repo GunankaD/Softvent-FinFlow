@@ -80,6 +80,7 @@
         min="0"
         step="0.01"
         [maxDecimals]="2"
+        inputmode="decimal"
         formControlName="purchaseRate" 
       />
       <mat-error *ngIf="form.controls.purchaseRate.hasError('min')">
@@ -96,6 +97,7 @@
         min="0"
         step="0.01"
         [maxDecimals]="2"
+        inputmode="decimal"
         formControlName="salesRate" 
       />
       <mat-error *ngIf="form.controls.salesRate.hasError('min')">
