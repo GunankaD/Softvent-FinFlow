@@ -276,3 +276,11 @@ textarea,
 .ag-theme-quartz-dark .ag-header-cell {
   border-right: 1px solid rgba(255, 255, 255, 0.08);
 }
+
+
+mat-checkbox {
+  --mdc-checkbox-selected-icon-color: var(--accent-color);
+  --mdc-checkbox-selected-hover-icon-color: var(--accent-color);
+  --mdc-checkbox-selected-focus-icon-color: var(--accent-color);
+  --mdc-checkbox-selected-checkmark-color: white;
+}
