@@ -302,13 +302,34 @@ export class ItemFormComponent implements OnInit {
   public cancelEdit(): void {
     if (this.loading || this.updating || this.deleting) return;
 
-    if (this.initialData) {
-      this.form.patchValue(this.initialData);
+    if (!this.form.dirty) {
+      this.exitEditMode();
+      return;
     }
 
-    this.isEditMode = false;
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Discard Changes?',
+        message: `You have unsaved changes. Are you sure you want to revert?`,
+        confirmColor: 'red',
+        confirmButtonText: 'Discard'
+      },
+      panelClass: 'custom-dialog-panel'
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) return;
+      if (this.initialData) {
+        this.form.patchValue(this.initialData);
+      }
+      this.exitEditMode();
+    });
+  }
+  
+  private exitEditMode(): void {
+    this.isEditMode = false;
     this.form.disable();
+    this.form.markAsPristine();
   }
 
   public onIcodeInput(event: Event): void {

@@ -98,14 +98,43 @@ export class CustomerDetailsComponent implements OnInit {
   }
 
   enableEdit(): void {
+    if (this.isLoadingCustomer() || this.isSaving() || this.isDeleting()) return;
+
     this.isEditMode.set(true);
     this.form.enable();
   }
 
   cancelEdit(): void {
+    if (this.isLoadingCustomer() || this.isSaving() || this.isDeleting()) return;
+
+    if (!this.form.dirty) {
+      this.exitEditMode();
+      return;
+    }
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Discard Changes?',
+        message: `You have unsaved changes. Are you sure you want to revert?`,
+        confirmColor: 'red',
+        confirmButtonText: 'Discard'
+      },
+      panelClass: 'custom-dialog-panel'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) return;
+      if (this.customer()) {
+        this.form.patchValue(this.customer()!);
+      }
+      this.exitEditMode();
+    });
+  }
+
+  private exitEditMode(): void {
     this.isEditMode.set(false);
-    this.form.patchValue(this.customer()!);
     this.form.disable();
+    this.form.markAsPristine();
   }
 
   private save(): void {
