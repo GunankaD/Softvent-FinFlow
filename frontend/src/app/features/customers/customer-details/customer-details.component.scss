@@ -1,6 +1,14 @@
 .container {
   max-width: 1200px;
   margin: 0 auto;
+  height: 90vh;
+  
+  .page-loading-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+  }
 }
 
 /* ================= HEADER ================= */

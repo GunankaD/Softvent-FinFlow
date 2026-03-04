@@ -44,7 +44,7 @@ export class CustomerDetailsComponent implements OnInit {
   private readonly snackbar = inject(SnackbarService);
   private readonly dialog = inject(MatDialog);
 
-  customer!: CustomerDetailResponse;
+  readonly customer = signal<CustomerDetailResponse | null>(null);
   form!: FormGroup;
 
   isSaving = signal(false);
@@ -86,7 +86,7 @@ export class CustomerDetailsComponent implements OnInit {
     this.customerService.getByCode(this.ccode).subscribe({
       next: (response) => {
         this.snackbar.success('Customer details loaded successfully.');
-        this.customer = response;
+        this.customer.set(response);
         this.form.patchValue(response);
         this.isLoadingCustomer.set(false);
       },
@@ -105,7 +105,7 @@ export class CustomerDetailsComponent implements OnInit {
 
   cancelEdit(): void {
     this.isEditMode.set(false);
-    this.form.patchValue(this.customer);
+    this.form.patchValue(this.customer()!);
     this.form.disable();
   }
 
@@ -119,7 +119,7 @@ export class CustomerDetailsComponent implements OnInit {
 
     this.customerService.updateByCode(this.ccode, request).subscribe({
       next: (response) => {
-        this.customer = response;
+        this.customer.set(response);
         this.form.patchValue(response);
         this.isEditMode.set(false);
         this.isSaving.set(false);
@@ -144,7 +144,7 @@ export class CustomerDetailsComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: 'Save Changes',
-        message: `Are you sure you want to save changes to ${this.customer.ccode}?`,
+        message: `Are you sure you want to save changes to ${this.customer()!.ccode}?`,
         confirmColor: 'green',
         confirmButtonText: 'Save'
       },
@@ -157,12 +157,11 @@ export class CustomerDetailsComponent implements OnInit {
     });
   }
 
-
   deleteCustomer(): void {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       data: {
         title: 'Delete Customer',
-        message: `Are you sure you want to delete ${this.customer.ccode}?`,
+        message: `Are you sure you want to delete ${this.customer()!.ccode}?`,
         confirmColor: 'red',
         confirmButtonText: 'Delete'
       },

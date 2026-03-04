@@ -1,204 +1,218 @@
 <div class="container">
   <!-- HEADER -->
-  <div class="header-row">
-    <div>
-      <h1 class="title">{{ customer.cname }}</h1>
-      <p class="subtitle">{{ customer.ccode }}</p>
-    </div>
-
-    <div class="header-actions">
-      <!-- EDIT -->
-      <button
-        *ngIf="!isEditMode()"
-        mat-stroked-button
-        class="edit-btn"
-        [disabled]="isDeleting() || isSaving() || isLoadingCustomer()"
-        (click)="enableEdit()"
-      >
-        <mat-icon fontSet="material-symbols-outlined" class="outline-icon"
-          >edit</mat-icon
-        >
-        Edit
-      </button>
-
-      <!-- SAVE -->
-      <div
-        *ngIf="isEditMode()"
-        class="save-btn-wrapper"
-        [class.invalid]="form.invalid"
-        [class.loading]="isSaving()"
-      >
-        <button
-          mat-raised-button
-          class="save-btn"
-          (click)="confirmSave()"
-          [disabled]="
-            form.invalid ||
-            form.pending ||
-            isSaving() ||
-            isDeleting() ||
-            isLoadingCustomer()
-          "
-        >
-          <mat-progress-spinner
-            *ngIf="isSaving()"
-            mode="indeterminate"
-            style="--mdc-circular-progress-active-indicator-color: white"
-            diameter="20"
-            strokeWidth="2"
-          >
-          </mat-progress-spinner>
-
-          <mat-icon
-            *ngIf="!isSaving()"
-            fontSet="material-symbols-outlined"
-            class="outline-icon"
-          >
-            save
-          </mat-icon>
-
-          <span *ngIf="!isSaving()">Save</span>
-        </button>
+  @if(customer()){
+    <div class="header-row">
+      <div>
+        <h1 class="title">{{ customer()!.cname }}</h1>
+        <p class="subtitle">{{ customer()!.ccode }}</p>
       </div>
 
-      <!-- CANCEL -->
-      <button
-        *ngIf="isEditMode()"
-        class="cancel-btn"
-        mat-stroked-button
-        [disabled]="isDeleting() || isSaving() || isLoadingCustomer()"
-        (click)="cancelEdit()"
-      >
-        <mat-icon fontSet="material-symbols-outlined" class="outline-icon"
-          >edit_off</mat-icon
-        >
-        Cancel
-      </button>
-
-      <!-- DELETE -->
-      <div class="delete-btn-wrapper" [class.loading]="isDeleting()">
+      <div class="header-actions">
+        <!-- EDIT -->
         <button
+          *ngIf="!isEditMode()"
           mat-stroked-button
-          class="delete-btn"
-          [disabled]="isSaving() || isDeleting() || isLoadingCustomer()"
-          (click)="deleteCustomer()"
+          class="edit-btn"
+          [disabled]="isDeleting() || isSaving() || isLoadingCustomer()"
+          (click)="enableEdit()"
         >
-          <mat-progress-spinner
-            *ngIf="isDeleting()"
-            mode="indeterminate"
-            diameter="18"
-            strokeWidth="2"
-            style="--mdc-circular-progress-active-indicator-color: red"
+          <mat-icon fontSet="material-symbols-outlined" class="outline-icon"
+            >edit</mat-icon
           >
-          </mat-progress-spinner>
-
-          <mat-icon
-            *ngIf="!isDeleting()"
-            fontSet="material-symbols-outlined"
-            class="outline-icon"
-          >
-            delete
-          </mat-icon>
-
-          <span *ngIf="!isDeleting()">Delete</span>
+          Edit
         </button>
+
+        <!-- SAVE -->
+        <div
+          *ngIf="isEditMode()"
+          class="save-btn-wrapper"
+          [class.invalid]="form.invalid"
+          [class.loading]="isSaving()"
+        >
+          <button
+            mat-raised-button
+            class="save-btn"
+            (click)="confirmSave()"
+            [disabled]="
+              form.invalid ||
+              form.pending ||
+              isSaving() ||
+              isDeleting() ||
+              isLoadingCustomer()
+            "
+          >
+            <mat-progress-spinner
+              *ngIf="isSaving()"
+              mode="indeterminate"
+              style="--mdc-circular-progress-active-indicator-color: white"
+              diameter="20"
+              strokeWidth="2"
+            >
+            </mat-progress-spinner>
+
+            <mat-icon
+              *ngIf="!isSaving()"
+              fontSet="material-symbols-outlined"
+              class="outline-icon"
+            >
+              save
+            </mat-icon>
+
+            <span *ngIf="!isSaving()">Save</span>
+          </button>
+        </div>
+
+        <!-- CANCEL -->
+        <button
+          *ngIf="isEditMode()"
+          class="cancel-btn"
+          mat-stroked-button
+          [disabled]="isDeleting() || isSaving() || isLoadingCustomer()"
+          (click)="cancelEdit()"
+        >
+          <mat-icon fontSet="material-symbols-outlined" class="outline-icon"
+            >edit_off</mat-icon
+          >
+          Cancel
+        </button>
+
+        <!-- DELETE -->
+        <div class="delete-btn-wrapper" [class.loading]="isDeleting()">
+          <button
+            mat-stroked-button
+            class="delete-btn"
+            [disabled]="isSaving() || isDeleting() || isLoadingCustomer()"
+            (click)="deleteCustomer()"
+          >
+            <mat-progress-spinner
+              *ngIf="isDeleting()"
+              mode="indeterminate"
+              diameter="18"
+              strokeWidth="2"
+              style="--mdc-circular-progress-active-indicator-color: red"
+            >
+            </mat-progress-spinner>
+
+            <mat-icon
+              *ngIf="!isDeleting()"
+              fontSet="material-symbols-outlined"
+              class="outline-icon"
+            >
+              delete
+            </mat-icon>
+
+            <span *ngIf="!isDeleting()">Delete</span>
+          </button>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- FORM -->
-  <form [formGroup]="form" class="details-form">
-    <!-- BUSINESS DETAILS -->
-    <section class="details-section">
-      <h2>Business Details</h2>
+    <!-- FORM -->
+    <form [formGroup]="form" class="details-form">
+      <!-- BUSINESS DETAILS -->
+      <section class="details-section">
+        <h2>Business Details</h2>
 
-      <div class="grid">
-        <mat-form-field appearance="outline">
-          <mat-label>Customer Name</mat-label>
-          <input matInput formControlName="cname" />
-        </mat-form-field>
+        <div class="grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Customer Name</mat-label>
+            <input matInput formControlName="cname" />
+          </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>GST No</mat-label>
-          <input matInput formControlName="gstNo" />
-        </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>GST No</mat-label>
+            <input matInput formControlName="gstNo" />
+          </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>PAN No</mat-label>
-          <input matInput formControlName="panNo" />
-        </mat-form-field>
-      </div>
-    </section>
+          <mat-form-field appearance="outline">
+            <mat-label>PAN No</mat-label>
+            <input matInput formControlName="panNo" />
+          </mat-form-field>
+        </div>
+      </section>
 
-    <!-- CONTACT DETAILS -->
-    <section class="details-section">
-      <h2>Contact Details</h2>
+      <!-- CONTACT DETAILS -->
+      <section class="details-section">
+        <h2>Contact Details</h2>
 
-      <div class="grid">
-        <mat-form-field appearance="outline">
-          <mat-label>Mobile Number</mat-label>
-          <input matInput formControlName="mobileNumber" />
-        </mat-form-field>
+        <div class="grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Mobile Number</mat-label>
+            <input matInput formControlName="mobileNumber" />
+          </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Email</mat-label>
-          <input matInput formControlName="email" />
-        </mat-form-field>
-      </div>
-    </section>
+          <mat-form-field appearance="outline">
+            <mat-label>Email</mat-label>
+            <input matInput formControlName="email" />
+          </mat-form-field>
+        </div>
+      </section>
 
-    <!-- ADDRESS -->
-    <section class="details-section">
-      <h2>Address</h2>
+      <!-- ADDRESS -->
+      <section class="details-section">
+        <h2>Address</h2>
 
-      <div class="grid">
-        <mat-form-field appearance="outline" class="full-width">
-          <mat-label>Address</mat-label>
-          <input matInput formControlName="address" />
-        </mat-form-field>
+        <div class="grid">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Address</mat-label>
+            <input matInput formControlName="address" />
+          </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>City</mat-label>
-          <input matInput formControlName="city" />
-        </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>City</mat-label>
+            <input matInput formControlName="city" />
+          </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>State</mat-label>
-          <input matInput formControlName="state" />
-        </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>State</mat-label>
+            <input matInput formControlName="state" />
+          </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Country</mat-label>
-          <input matInput formControlName="country" />
-        </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Country</mat-label>
+            <input matInput formControlName="country" />
+          </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Pincode</mat-label>
-          <input matInput formControlName="pincode" />
-        </mat-form-field>
-      </div>
-    </section>
+          <mat-form-field appearance="outline">
+            <mat-label>Pincode</mat-label>
+            <input matInput formControlName="pincode" />
+          </mat-form-field>
+        </div>
+      </section>
 
-    <!-- BANK DETAILS -->
-    <section class="details-section">
-      <h2>Bank Details</h2>
+      <!-- BANK DETAILS -->
+      <section class="details-section">
+        <h2>Bank Details</h2>
 
-      <div class="grid">
-        <mat-form-field appearance="outline">
-          <mat-label>Bank Name</mat-label>
-          <input matInput formControlName="bankName" />
-        </mat-form-field>
+        <div class="grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Bank Name</mat-label>
+            <input matInput formControlName="bankName" />
+          </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Branch Name</mat-label>
-          <input matInput formControlName="branchName" />
-        </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Branch Name</mat-label>
+            <input matInput formControlName="branchName" />
+          </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Account No</mat-label>
-          <input matInput formControlName="accountNo" />
-        </mat-form-field>
-      </div>
-    </section>
-  </form>
+          <mat-form-field appearance="outline">
+            <mat-label>Account No</mat-label>
+            <input matInput formControlName="accountNo" />
+          </mat-form-field>
+        </div>
+      </section>
+    </form>
+  }
+  @else{
+    <div class="page-loading-container">
+        <mat-spinner 
+            diameter="100"
+            strokeWidth="3"
+            style="--mdc-circular-progress-active-indicator-color: white;"
+        >
+        </mat-spinner>
+    </div>
+  }
+
+
 </div>
