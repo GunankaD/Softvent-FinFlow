@@ -6,8 +6,10 @@
   <app-item-form
     #itemForm
     mode="create"
+
     [itemGroups]="itemGroups()"
-    [loading]="loading()"
+    [creating]="creating()"
+    
     (create)="onCreate($event)"
     (goBack)="onGoBack(itemForm)"
   >

@@ -48,7 +48,7 @@ export class AddItemComponent implements OnInit {
   private readonly dialog = inject(MatDialog);
 
   // GOES TO CHILD COMPONENT
-  readonly loading = signal(false);
+  readonly creating = signal(false);
   readonly itemGroups = signal<ItemGroupResponse[]>([]);
 
   ngOnInit(): void {
@@ -62,11 +62,11 @@ export class AddItemComponent implements OnInit {
 
   public onCreate(data: any): void {
 
-    if (this.loading()) return;
+    if (this.creating()) return;
 
     const request: ItemCreateRequest = data;
 
-    this.loading.set(true);
+    this.creating.set(true);
 
     this.itemService.create(request).subscribe({
       next: () => {
@@ -78,14 +78,14 @@ export class AddItemComponent implements OnInit {
           err?.error?.message ?? 'Failed to create item',
           4000
         );
-        this.loading.set(false);
+        this.creating.set(false);
       }
     });
   }
 
   public onGoBack(form: ItemFormComponent): void {
 
-    if (this.loading()) return;
+    if (this.creating()) return;
 
     if (!form.isDirty) {
       this.router.navigate(['/items/show-items']);
