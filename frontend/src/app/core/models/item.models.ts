@@ -28,7 +28,6 @@ export interface ItemUpdateRequest {
   gstRate: number;
   gstType: string;
   igid: number;
-  isActive: boolean;
 }
 
 // RESPONSE DTOs
