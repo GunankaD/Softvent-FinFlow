@@ -49,7 +49,11 @@ export const routes: Routes = [
         loadComponent: () =>
             import('./features/items/show-items/show-items.component')
             .then(m => m.ShowItemsComponent)
-    }
-
+    },
+    {path: 'items/:icode',
+        loadComponent: () =>
+            import('./features/items/item-details/item-details.component')
+            .then(m => m.ItemDetailsComponent)
+    },
 ];
 
