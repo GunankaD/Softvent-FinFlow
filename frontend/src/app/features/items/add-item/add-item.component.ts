@@ -24,7 +24,8 @@ import { ItemFormComponent } from '../shared/item-form/item-form.component';
 // MODELS
 import {
   ItemGroupResponse,
-  ItemCreateRequest
+  ItemCreateRequest,
+  ItemDetailResponse
 } from '../../../core/models/item.models';
 
 @Component({
@@ -69,9 +70,9 @@ export class AddItemComponent implements OnInit {
     this.creating.set(true);
 
     this.itemService.create(request).subscribe({
-      next: () => {
+      next: (response : ItemDetailResponse) => {
         this.snackbar.success('Item created successfully', 3000);
-        this.router.navigate(['/items/show-items']);
+        this.router.navigate(['/items', response.icode]);
       },
       error: (err) => {
         this.snackbar.error(
