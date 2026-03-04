@@ -36,15 +36,15 @@ export class ItemService {
     );
   }
 
-  create(request: ItemCreateRequest): Observable<void> {
-    return this.http.post<void>(
+  create(request: ItemCreateRequest): Observable<ItemDetailResponse> {
+    return this.http.post<ItemDetailResponse>(
       `${this.baseUrl}${API_ENDPOINTS.ITEMS.BASE}`,
       request
     );
   }
 
-  updateByCode(icode: string, request: ItemUpdateRequest): Observable<void> {
-    return this.http.put<void>(
+  updateByCode(icode: string, request: ItemUpdateRequest): Observable<ItemDetailResponse> {
+    return this.http.put<ItemDetailResponse>(
       `${this.baseUrl}${API_ENDPOINTS.ITEMS.BY_ICODE(icode)}`,
       request
     );
