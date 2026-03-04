@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class ItemService {
 
     // CREATE
-    public void createItem(ItemCreateRequest req) {
+    public ItemDetailResponse createItem(ItemCreateRequest req) {
 
         if (Item.find("icode", req.icode).firstResultOptional().isPresent()) {
             throw new BusinessException(
@@ -37,10 +37,11 @@ public class ItemService {
         Item item = new Item();
         mapCreateRequestToEntity(req, item, group);
         item.persist();
+        return mapToDetailResponse(item);
     }
 
     // UPDATE
-    public void updateItem(String icode, ItemUpdateRequest req) {
+    public ItemDetailResponse updateItem(String icode, ItemUpdateRequest req) {
 
         Item item = Item.find("icode", icode).firstResult();
         if (item == null) {
@@ -59,6 +60,7 @@ public class ItemService {
         }
 
         mapUpdateRequestToEntity(req, item, group);
+        return mapToDetailResponse(item);
     }
     public void deactivateItem(String icode) {
         Item item = Item.find("icode", icode).firstResult();

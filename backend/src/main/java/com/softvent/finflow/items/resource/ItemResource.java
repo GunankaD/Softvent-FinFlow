@@ -24,8 +24,8 @@ public class ItemResource {
     // CREATE
     @POST
     public Response create(ItemCreateRequest request) {
-        itemService.createItem(request);
-        return Response.status(Response.Status.CREATED).build();
+        ItemDetailResponse response = itemService.createItem(request);
+        return Response.status(Response.Status.CREATED).entity(response).build();
     }
 
     // AVAILABILITY CHECKERS
@@ -39,8 +39,8 @@ public class ItemResource {
     @PUT
     @Path("/{icode}")
     public Response update(@PathParam("icode") String icode, ItemUpdateRequest request) {
-        itemService.updateItem(icode, request);
-        return Response.ok().build();
+        ItemDetailResponse response = itemService.updateItem(icode, request);
+        return Response.ok(response).build();
     }
 
     // GETTERS
