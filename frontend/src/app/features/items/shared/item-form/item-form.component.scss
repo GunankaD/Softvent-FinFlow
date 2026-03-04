@@ -45,7 +45,7 @@
 =========================== */
 /* Clear */
 .clear-btn {
-  border: 1px solid red;
+  border: 2px solid red;
   color: red;
 }
 
@@ -159,7 +159,7 @@
  * DELETE BUTTON
  */
 .delete-btn {
-  border: 1px solid red !important;
+  border: 2px solid red !important;
   color: red !important;
 
   display: inline-flex;
@@ -171,7 +171,7 @@
 /* Remove grey fade during loading */
 .delete-btn-wrapper.loading .delete-btn.mat-mdc-button-disabled {
   opacity: 1 !important;
-  border: 1px solid red !important;
+  border: 2px solid red !important;
   color: red !important;
 }
 
@@ -184,6 +184,7 @@
 .edit-btn {
   min-width: 128px;
   background-color: var(--bg-primary) !important;
+  border: 2px solid white;
   color: var(--text-primary) !important; 
 }
 
@@ -195,6 +196,7 @@
 .cancel-btn {
   min-width: 128px;
   background-color: var(--bg-primary) !important;
+  border: 2px solid white;
   color: var(--text-primary) !important; 
 }
 

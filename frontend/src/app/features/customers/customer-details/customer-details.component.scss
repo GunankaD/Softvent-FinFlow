@@ -1,13 +1,12 @@
 .container {
   max-width: 1200px;
   margin: 0 auto;
-  height: 90vh;
   
   .page-loading-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 80vh;
+    height: 70vh;
   }
 }
 
@@ -85,7 +84,7 @@
  * DELETE BUTTON
  */
 .delete-btn {
-  border: 1px solid red !important;
+  border: 2px solid red !important;
   color: red !important;
 
   display: inline-flex;
@@ -97,7 +96,7 @@
 /* Remove grey fade during loading */
 .delete-btn-wrapper.loading .delete-btn.mat-mdc-button-disabled {
   opacity: 1 !important;
-  border: 1px solid red !important;
+  border: 2px solid red !important;
   color: red !important;
 }
 
@@ -110,6 +109,7 @@
 .edit-btn {
   min-width: 128px;
   background-color: var(--bg-primary) !important;
+  border: 2px solid white !important;
   color: var(--text-primary) !important; 
 }
 
@@ -120,6 +120,7 @@
 /* Cancel button style */
 .cancel-btn {
   min-width: 128px;
+  border: 2px solid white !important;
   background-color: var(--bg-primary) !important;
   color: var(--text-primary) !important; 
 }

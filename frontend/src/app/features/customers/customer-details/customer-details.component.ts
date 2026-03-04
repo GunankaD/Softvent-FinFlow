@@ -49,7 +49,7 @@ export class CustomerDetailsComponent implements OnInit {
 
   isSaving = signal(false);
   isDeleting = signal(false);
-  isLoadingCustomer = signal(false);
+  isLoadingCustomer = signal(true);
   protected isEditMode = signal(false);
 
   private ccode!: string;

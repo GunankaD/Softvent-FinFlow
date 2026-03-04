@@ -1,112 +1,113 @@
 <div class="container">
   <!-- HEADER -->
-  @if(customer()){
-    <div class="header-row">
-      <div>
-        <h1 class="title">{{ customer()!.cname }}</h1>
-        <p class="subtitle">{{ customer()!.ccode }}</p>
-      </div>
 
-      <div class="header-actions">
-        <!-- EDIT -->
-        <button
-          *ngIf="!isEditMode()"
-          mat-stroked-button
-          class="edit-btn"
-          [disabled]="isDeleting() || isSaving() || isLoadingCustomer()"
-          (click)="enableEdit()"
-        >
-          <mat-icon fontSet="material-symbols-outlined" class="outline-icon"
-            >edit</mat-icon
-          >
-          Edit
-        </button>
-
-        <!-- SAVE -->
-        <div
-          *ngIf="isEditMode()"
-          class="save-btn-wrapper"
-          [class.invalid]="form.invalid"
-          [class.loading]="isSaving()"
-        >
-          <button
-            mat-raised-button
-            class="save-btn"
-            (click)="confirmSave()"
-            [disabled]="
-              form.invalid ||
-              form.pending ||
-              isSaving() ||
-              isDeleting() ||
-              isLoadingCustomer()
-            "
-          >
-            <mat-progress-spinner
-              *ngIf="isSaving()"
-              mode="indeterminate"
-              style="--mdc-circular-progress-active-indicator-color: white"
-              diameter="20"
-              strokeWidth="2"
-            >
-            </mat-progress-spinner>
-
-            <mat-icon
-              *ngIf="!isSaving()"
-              fontSet="material-symbols-outlined"
-              class="outline-icon"
-            >
-              save
-            </mat-icon>
-
-            <span *ngIf="!isSaving()">Save</span>
-          </button>
-        </div>
-
-        <!-- CANCEL -->
-        <button
-          *ngIf="isEditMode()"
-          class="cancel-btn"
-          mat-stroked-button
-          [disabled]="isDeleting() || isSaving() || isLoadingCustomer()"
-          (click)="cancelEdit()"
-        >
-          <mat-icon fontSet="material-symbols-outlined" class="outline-icon"
-            >edit_off</mat-icon
-          >
-          Cancel
-        </button>
-
-        <!-- DELETE -->
-        <div class="delete-btn-wrapper" [class.loading]="isDeleting()">
-          <button
-            mat-stroked-button
-            class="delete-btn"
-            [disabled]="isSaving() || isDeleting() || isLoadingCustomer()"
-            (click)="deleteCustomer()"
-          >
-            <mat-progress-spinner
-              *ngIf="isDeleting()"
-              mode="indeterminate"
-              diameter="18"
-              strokeWidth="2"
-              style="--mdc-circular-progress-active-indicator-color: red"
-            >
-            </mat-progress-spinner>
-
-            <mat-icon
-              *ngIf="!isDeleting()"
-              fontSet="material-symbols-outlined"
-              class="outline-icon"
-            >
-              delete
-            </mat-icon>
-
-            <span *ngIf="!isDeleting()">Delete</span>
-          </button>
-        </div>
-      </div>
+  <div class="header-row">
+    <div>
+      <h1 class="title">{{ customer()?.cname }}</h1>
+      <p class="subtitle">{{ customer()?.ccode }}</p>
     </div>
 
+    <div class="header-actions">
+      <!-- EDIT -->
+      <button
+        *ngIf="!isEditMode()"
+        mat-stroked-button
+        class="edit-btn"
+        [disabled]="isDeleting() || isSaving() || isLoadingCustomer()"
+        (click)="enableEdit()"
+      >
+        <mat-icon fontSet="material-symbols-outlined" class="outline-icon"
+          >edit</mat-icon
+        >
+        Edit
+      </button>
+
+      <!-- SAVE -->
+      <div
+        *ngIf="isEditMode()"
+        class="save-btn-wrapper"
+        [class.invalid]="form.invalid"
+        [class.loading]="isSaving()"
+      >
+        <button
+          mat-raised-button
+          class="save-btn"
+          (click)="confirmSave()"
+          [disabled]="
+            form.invalid ||
+            form.pending ||
+            isSaving() ||
+            isDeleting() ||
+            isLoadingCustomer()
+          "
+        >
+          <mat-progress-spinner
+            *ngIf="isSaving()"
+            mode="indeterminate"
+            style="--mdc-circular-progress-active-indicator-color: white"
+            diameter="20"
+            strokeWidth="2"
+          >
+          </mat-progress-spinner>
+
+          <mat-icon
+            *ngIf="!isSaving()"
+            fontSet="material-symbols-outlined"
+            class="outline-icon"
+          >
+            save
+          </mat-icon>
+
+          <span *ngIf="!isSaving()">Save</span>
+        </button>
+      </div>
+
+      <!-- CANCEL -->
+      <button
+        *ngIf="isEditMode()"
+        class="cancel-btn"
+        mat-stroked-button
+        [disabled]="isDeleting() || isSaving() || isLoadingCustomer()"
+        (click)="cancelEdit()"
+      >
+        <mat-icon fontSet="material-symbols-outlined" class="outline-icon"
+          >edit_off</mat-icon
+        >
+        Cancel
+      </button>
+
+      <!-- DELETE -->
+      <div class="delete-btn-wrapper" [class.loading]="isDeleting()">
+        <button
+          mat-stroked-button
+          class="delete-btn"
+          [disabled]="isSaving() || isDeleting() || isLoadingCustomer()"
+          (click)="deleteCustomer()"
+        >
+          <mat-progress-spinner
+            *ngIf="isDeleting()"
+            mode="indeterminate"
+            diameter="18"
+            strokeWidth="2"
+            style="--mdc-circular-progress-active-indicator-color: red"
+          >
+          </mat-progress-spinner>
+
+          <mat-icon
+            *ngIf="!isDeleting()"
+            fontSet="material-symbols-outlined"
+            class="outline-icon"
+          >
+            delete
+          </mat-icon>
+
+          <span *ngIf="!isDeleting()">Delete</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  @if(customer()){
     <!-- FORM -->
     <form [formGroup]="form" class="details-form">
       <!-- BUSINESS DETAILS -->
@@ -213,6 +214,4 @@
         </mat-spinner>
     </div>
   }
-
-
 </div>
