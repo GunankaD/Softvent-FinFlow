@@ -94,7 +94,7 @@ export class ItemDetailsComponent implements OnInit {
 
   public onUpdate(data: any): void {
 
-    if (this.updating()) return;
+    if (this.loading() || this.updating() || this.deleting()) return;
 
     const { icode, ...rest } = data;
     const request: ItemUpdateRequest = rest;
@@ -106,6 +106,7 @@ export class ItemDetailsComponent implements OnInit {
         this.snackbar.success('Item updated successfully', 3000);
         this.item.set(response);
         this.updating.set(false);
+        this.itemForm?.form.markAsPristine();
         this.itemForm?.cancelEdit();
       },
       error: (err) => {
