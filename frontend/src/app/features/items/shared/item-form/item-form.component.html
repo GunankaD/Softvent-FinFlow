@@ -143,7 +143,7 @@
         mat-button
         class="go-back-btn"
         (click)="onGoBack()"
-        [disabled]="loading"
+        [disabled]="loading || creating || updating || deleting"
         type="button"
         >
         <mat-icon fontSet="material-symbols-outlined" class="outline-icon">
@@ -155,53 +155,174 @@
         <!-- RIGHT SIDE GROUP -->
         <div class="right-actions">
 
-        <!-- CLEAR -->
-        <button
-            mat-stroked-button
-            class="delete-btn"
-            (click)="onClear()"
-            [disabled]="loading"
-            type="button"
-        >
-            <mat-icon>delete</mat-icon>
-            Clear
-        </button>
+            <!-- CREATE MODE BEGINS -->
+            @if(isCreateMode){
+                <!-- CLEAR -->
+                <button
+                    mat-stroked-button
+                    class="clear-btn"
+                    (click)="onClearClick()"
+                    [disabled]="creating"
+                    type="button"
+                >
+                    <mat-icon 
+                        fontSet="material-symbols-outlined"
+                        class="outline-icon">
+                        ink_eraser
+                    </mat-icon>
+                    Clear
+                </button>
 
-        <!-- CREATE ITEM -->
-        <div
-            class="create-btn-wrapper"
-            [class.invalid]="form.invalid || form.pending"
-            [class.loading]="loading"
-        >
-            <button
-            mat-raised-button
-            class="create-btn"
-            type="button"
-            (click)="onCreateClick()"
-            [disabled]="form.invalid || loading"
-            >
+                <!-- CREATE ITEM -->
+                <div
+                    class="create-btn-wrapper"
+                    [class.invalid]="form.invalid || form.pending"
+                    [class.loading]="creating"
+                >
+                    <button
+                    mat-raised-button
+                    class="create-btn"
+                    type="button"
+                    (click)="onCreateClick()"
+                    [disabled]="form.invalid || creating"
+                    >
 
-            <mat-progress-spinner
-                *ngIf="loading"
-                mode="indeterminate"
-                diameter="20"
-                strokeWidth="2"
-                style="--mdc-circular-progress-active-indicator-color: white"
-            >
-            </mat-progress-spinner>
+                    <mat-progress-spinner
+                        *ngIf="creating"
+                        mode="indeterminate"
+                        diameter="20"
+                        strokeWidth="2"
+                        style="--mdc-circular-progress-active-indicator-color: white"
+                    >
+                    </mat-progress-spinner>
 
-            <mat-icon
-                *ngIf="!loading"
-                fontSet="material-symbols-outlined"
-                class="outline-icon"
-            >
-                add_circle
-            </mat-icon>
+                    <mat-icon
+                        *ngIf="!creating"
+                        fontSet="material-symbols-outlined"
+                        class="outline-icon"
+                    >
+                        add_circle
+                    </mat-icon>
 
-            <span *ngIf="!loading">Create Item</span>
+                    <span *ngIf="!creating">Create Item</span>
 
-            </button>
-        </div>
+                    </button>
+                </div>
+            }
+
+            <!-- VIEW MODE BEGINS -->
+            @if (isViewMode) {
+
+                <div class="header-actions">
+
+                    <!-- EDIT -->
+                    @if (!isEditMode) {
+
+                        <button
+                        mat-stroked-button
+                        class="edit-btn"
+                        [disabled]="loading || updating || deleting"
+                        (click)="enableEdit()"
+                        >
+                            <mat-icon fontSet="material-symbols-outlined" class="outline-icon">
+                                edit
+                            </mat-icon>
+                            Edit
+                        </button>
+
+                    }
+
+                    @if (isEditMode) {
+                        <!-- SAVE CHANGES BUTTON-->
+                        <div
+                        class="save-btn-wrapper"
+                        [class.invalid]="form.invalid"
+                        [class.loading]="updating"
+                        >
+                        <button
+                            mat-raised-button
+                            class="save-btn"
+                            (click)="onUpdateClick()"
+                            [disabled]="
+                                form.invalid || 
+                                form.pending || 
+                                loading || 
+                                deleting || 
+                                updating"
+                        >
+
+                            <mat-progress-spinner
+                            *ngIf="updating"
+                            mode="indeterminate"
+                            diameter="20"
+                            strokeWidth="2"
+                            style="--mdc-circular-progress-active-indicator-color: white"
+                            >
+                            </mat-progress-spinner>
+
+                            <mat-icon
+                            *ngIf="!updating"
+                            fontSet="material-symbols-outlined"
+                            class="outline-icon"
+                            >
+                            save
+                            </mat-icon>
+
+                            <span *ngIf="!updating">Save Changes</span>
+
+                        </button>
+                        </div>
+
+                        <!-- CANCEL EDIT BUTTON-->
+                        <button
+                        mat-stroked-button
+                        class="cancel-btn"
+                        [disabled]="loading || deleting || updating"
+                        (click)="cancelEdit()"
+                        >
+                        <mat-icon fontSet="material-symbols-outlined" class="outline-icon">
+                            edit_off
+                        </mat-icon>
+                        Cancel
+                        </button>
+                    }
+
+                    <!-- DELETE -->
+                    <div class="delete-btn-wrapper" [class.loading]="deleting">
+
+                        <button
+                        mat-stroked-button
+                        class="delete-btn"
+                        [disabled]="updating || loading || deleting"
+                        (click)="onDeleteClick()"
+                        >
+
+                        <mat-progress-spinner
+                            *ngIf="deleting"
+                            mode="indeterminate"
+                            diameter="18"
+                            strokeWidth="2"
+                            style="--mdc-circular-progress-active-indicator-color: red"
+                        >
+                        </mat-progress-spinner>
+
+                        <mat-icon
+                            *ngIf="!deleting"
+                            fontSet="material-symbols-outlined"
+                            class="outline-icon"
+                        >
+                            delete
+                        </mat-icon>
+
+                        <span *ngIf="!deleting">Delete</span>
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+            }
 
         </div>
     </div>

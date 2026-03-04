@@ -62,7 +62,7 @@ import {
 export class ItemFormComponent implements OnInit {
 
   // MODE
-  @Input() mode: 'create' | 'view' | 'edit' = 'create';
+  @Input() mode: 'create' | 'view' = 'create';
 
   // DATA
   @Input() initialData?: ItemDetailResponse;
@@ -70,10 +70,15 @@ export class ItemFormComponent implements OnInit {
 
   // STATE
   @Input() loading = false;
+  @Input() creating = false;
+  @Input() updating = false;
+  @Input() deleting = false;
+  public isEditMode = false;
 
   // EVENTS
   @Output() create = new EventEmitter<Record<string, any>>();
   @Output() update = new EventEmitter<Record<string, any>>();
+  @Output() delete = new EventEmitter<void>();
   @Output() goBack = new EventEmitter<void>();
 
   // DEPENDENCIES
@@ -144,7 +149,7 @@ export class ItemFormComponent implements OnInit {
 
   ngOnInit(): void {
 
-    // PATCH DATA (VIEW / EDIT)
+    // PATCH DATA (VIEW)
     if (this.initialData) {
       this.form.patchValue(this.initialData);
     }
@@ -153,46 +158,22 @@ export class ItemFormComponent implements OnInit {
     if (this.mode === 'view') {
       this.form.disable();
     }
-
-    // EDIT MODE
-    if (this.mode === 'edit') {
-
-      this.form.controls.icode.disable();
-
-      this.form.controls.icode.clearAsyncValidators();
-      this.form.controls.icode.updateValueAndValidity();
-    }
-
   }
 
-  public onCreateClick(): void {
-
-    if (this.form.invalid || this.loading) return;
-
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        title: 'Create Item',
-        message: `Are you sure you want to create item "${this.form.value.name}"?`,
-        confirmColor: 'green',
-        confirmButtonText: 'Create'
-      },
-      panelClass: 'custom-dialog-panel'
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-
-      if (!result) return;
-
-      this.submit();
-
-    });
-
+  public onGoBack(): void {
+    this.goBack.emit();
   }
-  
+
   // EMIT
   submit(): void {
 
-    if (this.form.invalid || this.loading) return;
+    if (
+      this.form.invalid || 
+      this.loading || 
+      this.creating || 
+      this.updating ||
+      this.deleting 
+    ) return;
 
     const raw = this.form.getRawValue();
 
@@ -202,21 +183,16 @@ export class ItemFormComponent implements OnInit {
       this.create.emit(raw);
     }
 
-    if (this.mode === 'edit') {
+    if (this.mode === 'view') {
       this.update.emit(raw);
     }
 
   }
-  
-  public onGoBack(): void {
-    this.goBack.emit();
-  }
 
-  public onClear(): void {
+  // CREATE MODE
+  public onClearClick(): void {
 
-    if (this.loading){
-      return;
-    }
+    if (this.form.invalid || this.creating) return;
 
     if (this.form.pristine) {
       this.form.markAsPristine();
@@ -251,6 +227,90 @@ export class ItemFormComponent implements OnInit {
 
   }
 
+  public onCreateClick(): void {
+
+    if (this.form.invalid || this.creating) return;
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Create Item',
+        message: `Are you sure you want to create item "${this.form.value.name}"?`,
+        confirmColor: 'green',
+        confirmButtonText: 'Create'
+      },
+      panelClass: 'custom-dialog-panel'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) return;
+      this.submit();
+    });
+
+  }
+
+  // VIEW/EDIT MODE
+  public onUpdateClick(): void {
+
+    if (this.form.invalid || this.loading || this.updating || this.deleting) return;
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Update Item',
+        message: `Are you sure you want to update item "${this.form.getRawValue().name}"?`,
+        confirmColor: 'green',
+        confirmButtonText: 'Update'
+      },
+      panelClass: 'custom-dialog-panel'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) return;
+      this.submit();
+    });
+  }
+
+  public onDeleteClick(): void {
+
+    if (this.loading || this.deleting || this.updating) return;
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Delete Item',
+        message: `Are you sure you want to delete item "${this.form.getRawValue().name}"?`,
+        confirmColor: 'red',
+        confirmButtonText: 'Delete'
+      },
+      panelClass: 'custom-dialog-panel'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) return;
+      this.delete.emit();
+    });
+
+  }
+
+  public enableEdit(): void {
+    if (this.loading || this.updating || this.deleting) return;
+
+    this.isEditMode = true;
+
+    this.form.enable();
+    this.form.controls.icode.disable();
+  }
+
+  public cancelEdit(): void {
+    if (this.loading || this.updating || this.deleting) return;
+
+    if (this.initialData) {
+      this.form.patchValue(this.initialData);
+    }
+
+    this.isEditMode = false;
+
+    this.form.disable();
+  }
+
   public onIcodeInput(event: Event): void {
 
     const input = event.target as HTMLInputElement;
@@ -264,5 +324,14 @@ export class ItemFormComponent implements OnInit {
 
   get isDirty(): boolean {
     return this.form.dirty;
+  }
+
+  // MODE HELPERS
+  get isCreateMode(): boolean {
+    return this.mode === 'create';
+  }
+
+  get isViewMode(): boolean {
+    return this.mode === 'view';
   }
 }

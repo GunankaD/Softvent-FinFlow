@@ -19,36 +19,39 @@
 }
 
 /* ===========================
-        ACTION BAR
+        ACTION BAR SHARED
 =========================== */
 .step-action-bar {
-  margin-top: -10px;
-  display: flex;
-  justify-content: space-between;
+    margin-top: -10px;
+    display: flex;
+    justify-content: space-between;
   align-items: center;
 }
 
 .right-actions {
-  display: flex;
-  gap: 20px;
-  align-items: center;
+    display: flex;
+    gap: 20px;
+    align-items: center;
 }
 
 /* Go Back */
 .go-back-btn {
-  background-color: var(--bg-secondary) !important;
-  color: var(--text-primary) !important;
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-primary) !important;
 }
 
-/* Delete */
-.delete-btn {
+/* ===========================
+        CREATE MODE
+=========================== */
+/* Clear */
+.clear-btn {
   border: 1px solid red;
   color: red;
 }
 
-/* Go back + DELETE disabled look */
+/* Go back + Clear disabled look */
 .go-back-btn:disabled,
-.delete-btn:disabled {
+.clear-btn:disabled {
   opacity: 0.5 !important;
 }
 
@@ -97,6 +100,108 @@
   color: var(--text-disabled) !important;
 }
 
+/* ===========================
+        VIEW MODE
+=========================== */
+.header-actions {
+    display: flex;
+    gap: 12px;
+}
+
+/*
+ * SAVE BUTTON
+ */
+.save-btn {
+  min-width: 150px;
+  background-color: var(--button-green) !important;
+  color: var(--text-primary) !important;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Disabled state */
+.save-btn-wrapper.invalid .save-btn {
+  background-color: var(--button-dark-green) !important;
+  color: var(--text-disabled) !important;
+  opacity: 0.8;
+}
+
+/* Loading state */
+.save-btn-wrapper.loading .save-btn {
+  background-color: var(--button-green) !important;
+  color: var(--text-primary) !important;
+  opacity: 1 !important;
+  cursor: default;
+}
+
+/* Cursor states */
+.save-btn-wrapper.invalid,
+.save-btn-wrapper.loading {
+  cursor: not-allowed;
+}
+
+/* Hover feedback */
+.save-btn-wrapper.invalid:hover,
+.save-btn-wrapper.loading:hover {
+  opacity: 0.9;
+}
+
+/* Icon disabled coloring */
+.save-btn-wrapper.invalid .save-btn .outline-icon,
+.save-btn-wrapper.invalid .save-btn mat-icon {
+  color: var(--text-disabled) !important;
+}
+
+/* Delete button style */
+/*
+ * DELETE BUTTON
+ */
+.delete-btn {
+  border: 1px solid red !important;
+  color: red !important;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 130px;
+}
+
+/* Remove grey fade during loading */
+.delete-btn-wrapper.loading .delete-btn.mat-mdc-button-disabled {
+  opacity: 1 !important;
+  border: 1px solid red !important;
+  color: red !important;
+}
+
+/* Cursor control */
+.delete-btn-wrapper.loading {
+  cursor: not-allowed;
+}
+
+/* Edit button style */
+.edit-btn {
+  min-width: 128px;
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important; 
+}
+
+.edit-btn:disabled {
+  opacity: 0.5 !important;
+}
+
+/* Cancel button style */
+.cancel-btn {
+  min-width: 128px;
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important; 
+}
+
+.cancel -btn:disabled {
+  opacity: 0.5 !important;
+}
+
 /* Material filled circle */
 .outline-icon {
   font-size: 24px;
@@ -108,6 +213,4 @@
     'wght' 300,
     'GRAD' 0,
     'opsz' 24;
-
-  color: white;
 }
