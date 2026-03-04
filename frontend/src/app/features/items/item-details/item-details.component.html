@@ -1,1 +1,26 @@
-<p>item-details works!</p>
+<div class="container">
+
+    <h1 class="title">Add Item</h1>
+    <p class="subtitle">Create a new item entry</p>
+
+    @if (item()) {
+        <app-item-form
+            #itemForm
+            mode="view"
+
+            [initialData]="item()!"
+            [itemGroups]="itemGroups()"
+
+            [loading]="loading()"
+            [creating]="false"
+            [updating]="updating()"
+            [deleting]="deleting()"
+
+            (update)="onUpdate($event)"
+            (delete)="onDelete()"
+            (goBack)="onGoBack(itemForm)"
+        >
+        </app-item-form>
+    }
+
+</div>
