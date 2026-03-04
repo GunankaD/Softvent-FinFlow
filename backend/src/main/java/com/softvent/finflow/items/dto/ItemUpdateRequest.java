@@ -19,5 +19,4 @@ public class ItemUpdateRequest {
     public BigDecimal gstRate;
     public String gstType;
     public Long igid;
-    public Boolean isActive;
 }

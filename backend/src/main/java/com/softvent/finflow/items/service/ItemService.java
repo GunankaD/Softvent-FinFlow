@@ -125,7 +125,6 @@ public class ItemService {
         item.salesRate = req.salesRate;
         item.gstRate = req.gstRate;
         item.gstType = req.gstType;
-        item.isActive = req.isActive;
         item.itemGroup = group;
     }
     private ItemSummaryResponse mapToSummaryResponse(Item item) {
