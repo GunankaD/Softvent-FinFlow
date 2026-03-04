@@ -13,12 +13,4 @@ import { SnackbarService } from '../../core/services/snackbar/snackbar.service'
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })
-export class HomeComponent {
-
-  private readonly snackbar = inject(SnackbarService);
-
-  ngOnInit(){
-    console.log("hello");
-    // this.snackbar.success('TEST SNACKBAR :>', 6000);
-  }
-}
+export class HomeComponent {}

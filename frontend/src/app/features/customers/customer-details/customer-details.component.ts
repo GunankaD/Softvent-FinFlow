@@ -85,7 +85,6 @@ export class CustomerDetailsComponent implements OnInit {
 
     this.customerService.getByCode(this.ccode).subscribe({
       next: (response) => {
-        this.snackbar.success('Customer details loaded successfully.');
         this.customer.set(response);
         this.form.patchValue(response);
         this.isLoadingCustomer.set(false);
