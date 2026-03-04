@@ -1,9 +1,8 @@
 <div class="container">
-
-    <h1 class="title">Add Item</h1>
-    <p class="subtitle">Create a new item entry</p>
-
     @if (item()) {
+    <h1 class="title">{{ item()!.name }}</h1>
+    <p class="subtitle">{{ item()!.icode }}</p>
+
         <app-item-form
             #itemForm
             mode="view"
@@ -21,6 +20,16 @@
             (goBack)="onGoBack(itemForm)"
         >
         </app-item-form>
+    }
+    @else{
+        <div class="page-loading-container">
+            <mat-spinner 
+                diameter="100"
+                strokeWidth="3"
+                style="--mdc-circular-progress-active-indicator-color: white;"
+            >
+            </mat-spinner>
+        </div>
     }
 
 </div>
