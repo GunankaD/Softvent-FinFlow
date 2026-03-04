@@ -4,7 +4,8 @@ import {
   OnInit,
   inject,
   signal,
-  ChangeDetectionStrategy
+  ChangeDetectionStrategy,
+  ViewChild
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -12,6 +13,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 // MATERIAL
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // SERVICES
 import { ItemService } from '../../../core/services/item/item.service';
@@ -34,6 +36,7 @@ import {
   imports: [
     CommonModule,
     MatSnackBarModule,
+    MatProgressSpinnerModule,
     ItemFormComponent
   ],
   templateUrl: './item-details.component.html',
@@ -41,6 +44,8 @@ import {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ItemDetailsComponent implements OnInit {
+  @ViewChild(ItemFormComponent)
+  private itemForm?: ItemFormComponent;
 
   // INJECTIONS
   private readonly itemService = inject(ItemService);
@@ -70,8 +75,8 @@ export class ItemDetailsComponent implements OnInit {
 
     // FETCH ITEM
     this.itemService.getByCode(this.icode).subscribe({
-      next: (data) => {
-        this.item.set(data);
+      next: (response: ItemDetailResponse) => {
+        this.item.set(response);
         this.loading.set(false);
       },
       error: () => {
@@ -97,13 +102,11 @@ export class ItemDetailsComponent implements OnInit {
     this.updating.set(true);
 
     this.itemService.updateByCode(this.icode, request).subscribe({
-      next: () => {
+      next: (response: ItemDetailResponse) => {
         this.snackbar.success('Item updated successfully', 3000);
-        this.item.set({
-          ...this.item()!,
-          ...rest
-        });
+        this.item.set(response);
         this.updating.set(false);
+        this.itemForm?.cancelEdit();
       },
       error: (err) => {
         this.snackbar.error(
