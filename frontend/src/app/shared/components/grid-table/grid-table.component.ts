@@ -13,12 +13,6 @@ import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { FormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
-import { MatInputModule } from '@angular/material/input';
-import { MatDatepickerModule } from '@angular/material/datepicker';
-import { MatNativeDateModule } from '@angular/material/core';
 
 // DTOs & DEPENDENCIES
 import { TableColumn } from '../models/table-column.model';
@@ -31,18 +25,10 @@ import { TableColumn } from '../models/table-column.model';
   imports: [
     CommonModule,
     AgGridAngular,
-    MatTableModule,
-    MatProgressSpinnerModule,
     MatProgressBarModule,
     MatIconModule,
     MatButtonModule,
-    MatTooltipModule,
-    FormsModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatInputModule,
-    MatDatepickerModule,
-    MatNativeDateModule,
+    MatTooltipModule
   ]
 })
 export class GridTableComponent {
@@ -56,12 +42,6 @@ export class GridTableComponent {
   @Output() refresh = new EventEmitter<void>();
   @Output() view = new EventEmitter<any>();
 
-  // ACTION ROW VARIABLES
-  selectedColumn: string = '__all';
-  searchValue: string = '';
-  fromDate: Date | null = null;
-  toDate: Date | null = null;
-
   // GRID STATE
   private gridApi!: GridApi;
 
@@ -72,7 +52,7 @@ export class GridTableComponent {
     sortable: true,
     resizable: true,
     filter: true,
-    floatingFilter: false,
+    floatingFilter: true,
     suppressHeaderFilterButton: true,
     suppressHeaderMenuButton: true,
   };
@@ -90,34 +70,35 @@ export class GridTableComponent {
   // COLUMN BUILDER
   private buildColumnDefs(): void {
 
+    // INDEX COLUMN
     const rowNumberColumn: ColDef = {
       headerName: 'No.',
       valueGetter: params => {
-        if (!this.gridApi) return '';
-        if (!params.node) return '';
+        if (!this.gridApi || !params.node) return '';
         const pageSize = this.gridApi.paginationGetPageSize();
         const currentPage = this.gridApi.paginationGetCurrentPage();
         return currentPage * pageSize + params.node.rowIndex! + 1;
       },
-      // valueGetter: params => "0000",
+      // valueGetter: params => "0000", // fits 4 digits atm
       flex: 0.5,
       minWidth: 60,
       sortable: false,
-      cellStyle: {
-        textAlign: 'center'
-      }
+      filter: false,
+      cellStyle: { textAlign: 'center'}
     };
 
     const dynamicColumns: ColDef[] = this.columns.map(col => {
 
-      if (col.key === 'eyeIcon') {
+      // ICON COLUMNS
+      if (col.type === 'icon') {
         return {
           headerName: col.label,
+          field: col.key,
           width: 90,
           minWidth: col.minWidth,
           flex: col.flex,
           sortable: false,
-          field: 'eyeIcon',
+          filter: false,
           cellRenderer: () => `
             <div class="eye-cell">
               <span class="material-icons">visibility</span>
@@ -133,28 +114,39 @@ export class GridTableComponent {
         };
       }
 
-      if (col.key === 'createdAt') {
+      // DATE COLUMNS
+      if (col.type === 'date') {
         return {
           headerName: col.label,
           field: col.key,
-          minWidth: col.minWidth,
           flex: col.flex,
-          filter: false,
+          minWidth: col.minWidth,
+          filter: 'agDateColumnFilter',
           valueFormatter: params => {
             if (!params.value) return '';
-            return new Date(params.value)
-              .toLocaleString('en-IN', {
-                day: '2-digit',
-                month: 'short',
-                year: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              });
+            return new Date(params.value).toLocaleString('en-IN', {
+              day: '2-digit',
+              month: 'short',
+              year: 'numeric',
+              hour: '2-digit',
+              minute: '2-digit'
+            });
           }
         };
       }
 
-      // ALL OTHER COLUMNS
+      // NUMBER COLUMNS
+      if (col.type === 'number') {
+        return {
+          headerName: col.label,
+          field: col.key,
+          flex: col.flex,
+          minWidth: col.minWidth,
+          filter: 'agNumberColumnFilter'
+        };
+      }
+
+      // TEXT COLUMNS (DEFAULT)
       return {
         headerName: col.label,
         field: col.key,
@@ -170,108 +162,19 @@ export class GridTableComponent {
     ];
   }
 
-  // FILTERING
-  applyFilter(): void {
-
-    if (!this.gridApi) return;
-
-    // DATE RANGE MODE
-    if (this.selectedColumn === 'createdAt') {
-      this.gridApi.onFilterChanged();
-      this.gridApi.paginationGoToFirstPage();
-      return;
-    }
-
-    // TEXT MODE
-    const value = this.searchValue.trim();
-    if (!value) {
-      this.gridApi.setFilterModel(null);
-      this.gridApi.setGridOption('quickFilterText', '');
-      return;
-    }
-
-    // ALL COLUMNS
-    if (this.selectedColumn === '__all') {
-      this.gridApi.setFilterModel(null);
-      this.gridApi.setGridOption('quickFilterText', value);
-      return;
-    }
-
-    // SPECIFIC COLUMN
-    this.gridApi.setGridOption('quickFilterText', '');
-    this.gridApi.setFilterModel({
-      [this.selectedColumn]: {
-        filterType: 'text',
-        type: 'contains',
-        filter: value
-      }
-    });
-
-  }
-  
-  // DATE FILTERING
-  isExternalFilterPresent(): boolean {
-    return this.selectedColumn === 'createdAt' && (!!this.fromDate || !!this.toDate);
-  }
-  doesExternalFilterPass(node: IRowNode<any>): boolean {
-    const value = node.data.createdAt;
-    if (!value) return true;
-
-    // STEP 1: extract date along with time
-    const cellDate = new Date(value);
-
-    // STEP 2: strip time and keep year, month and date only
-    const cell = new Date(cellDate.getFullYear(), cellDate.getMonth(), cellDate.getDate());
-
-    // STEP 3: filter out current row if its before fromDate
-    if (this.fromDate) {
-      const from = new Date(this.fromDate.getFullYear(), this.fromDate.getMonth(), this.fromDate.getDate());
-      if (cell < from) return false;
-    }
-
-    // STEP 4: filter out current row if its after toDate
-    if (this.toDate) {
-      const to = new Date(this.toDate.getFullYear(), this.toDate.getMonth(), this.toDate.getDate());
-      if (cell > to) return false;
-    }
-
-    return true;
-  }
-
   // VIEW ICON: EMIT VIEW EVENT TO ROUTE
   onCellClicked(event: any): void {
-    if (event.colDef.field === 'eyeIcon') {
+    if (event.colDef.field === 'viewIcon') {
       this.view.emit(event.data);
     }
   }
-  onRefresh(): void {
-    this.selectedColumn = '__all';
-    this.searchValue = '';
-    this.fromDate = null;
-    this.toDate = null;
 
+  onRefresh(): void {
     if (this.gridApi) {
       this.gridApi.setFilterModel(null);
-      this.gridApi.setGridOption('quickFilterText', '');
       this.gridApi.paginationGoToFirstPage();
     }
 
     this.refresh.emit();
-  }
-  clearSearch(): void {
-    this.searchValue = '';
-    this.applyFilter();
-  }
-  clearDateRange(): void {
-    this.fromDate = null;
-    this.toDate = null;
-    this.applyFilter();
-  }
-  onColumnChange(): void {
-    this.searchValue = '';
-    this.fromDate = null;
-    this.toDate = null;
-
-    this.applyFilter();
   }
 }

@@ -2,7 +2,6 @@
 
   <!-- 1. TABLE ACTION ROW BEGINS -->
   <div class="table-actions">
-    <!-- 1. REFRESH BUTTON -->
     <button
       mat-icon-button
       type="button"
@@ -10,95 +9,6 @@
       matTooltip="Reload data">
       <mat-icon>refresh</mat-icon>
     </button>
-
-    <!-- 2. SELECT FIELD -->
-    <mat-form-field appearance="outline" class="search-select compact">
-      <mat-select
-        [(ngModel)]="selectedColumn"
-        (selectionChange)="onColumnChange()">
-
-        <mat-option value="__all">All Columns</mat-option>
-
-        <mat-option
-          *ngFor="let column of columns"
-          [value]="column.key">
-          {{ column.label }}
-        </mat-option>
-
-      </mat-select>
-    </mat-form-field>
-
-    <!-- 3. SEARCHING FIELD -->
-    @if (selectedColumn === 'createdAt') {
-
-      <!-- DATE RANGE FIELD -->
-      <div class="date-range-group">
-
-        <!-- 1. FROM DATE -->
-        <mat-form-field appearance="outline" class="compact">
-          <input
-            matInput
-            [matDatepicker]="fromPicker"
-            placeholder="From"
-            [(ngModel)]="fromDate"
-            [max]="toDate"
-            (dateChange)="applyFilter()">
-          <mat-datepicker-toggle matSuffix [for]="fromPicker"></mat-datepicker-toggle>
-          <mat-datepicker #fromPicker></mat-datepicker>
-        </mat-form-field>
-
-        <!-- 2. TO DATE -->
-        <mat-form-field appearance="outline" class="compact">
-          <input
-            matInput
-            [matDatepicker]="toPicker"
-            placeholder="To"
-            [(ngModel)]="toDate"
-            [min]="fromDate"
-            (dateChange)="applyFilter()">
-          <mat-datepicker-toggle matSuffix [for]="toPicker"></mat-datepicker-toggle>
-          <mat-datepicker #toPicker></mat-datepicker>
-        </mat-form-field>
-
-          <!-- 3. CLEAR RANGE BUTTON -->
-        <button
-          mat-icon-button
-          type="button"
-          (click)="clearDateRange()"
-          [disabled]="!fromDate && !toDate"
-          class="clear-range-btn">
-
-          <mat-icon>close</mat-icon>
-
-        </button>
-      </div>
-
-    } 
-    @else {
-      <!-- TEXT FIELD -->
-      <mat-form-field appearance="outline" class="search-input compact">
-        <mat-icon matPrefix>search</mat-icon>
-
-        <input
-          matInput
-          placeholder="Search..."
-          [(ngModel)]="searchValue"
-          (input)="applyFilter()" />
-
-        <button
-          *ngIf="searchValue"
-          mat-icon-button
-          matSuffix
-          type="button"
-          (click)="clearSearch()"
-          class="clear-btn">
-
-          <mat-icon>close</mat-icon>
-
-        </button>
-      </mat-form-field>
-
-    }
   </div>
 
   <!-- 2. PROGRESS BAR BEGINS -->
@@ -114,19 +24,16 @@
         [rowData]="rowData"
         [columnDefs]="columnDefs"
         [defaultColDef]="defaultColDef"
-
-        [alwaysShowVerticalScroll]="true"
-        [enableCellTextSelection]="true"
-
+        
         [pagination]="true"
         [paginationPageSize]="25"
         [paginationPageSizeSelector]="[10, 25, 50, 100]"
 
-        [isExternalFilterPresent]="isExternalFilterPresent.bind(this)"
-        [doesExternalFilterPass]="doesExternalFilterPass.bind(this)"
+        [alwaysShowVerticalScroll]="true"
+        [enableCellTextSelection]="true"
 
-        (cellClicked)="onCellClicked($event)"
-        (gridReady)="onGridReady($event)">
+        (gridReady)="onGridReady($event)"
+        (cellClicked)="onCellClicked($event)">
     </ag-grid-angular>
   </div>
 </div>
