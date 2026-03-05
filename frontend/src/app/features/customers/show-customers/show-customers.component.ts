@@ -44,14 +44,14 @@ export class ShowCustomersComponent implements OnInit {
   // TABLE
   readonly customers = signal<CustomerSummaryResponse[]>([]);
   readonly columns: TableColumn[] = [
-  { key: 'ccode',        label: 'CCode',         flex: 1,   minWidth: 100 },
-  { key: 'cname',        label: 'Customer Name', flex: 1.5, minWidth: 150 },
-  { key: 'city',         label: 'City',          flex: 1,   minWidth: 130 },
-  { key: 'state',        label: 'State',         flex: 1,   minWidth: 120 },
-  { key: 'mobileNumber', label: 'Mobile Number', flex: 1.5, minWidth: 140 },
-  { key: 'email',        label: 'Email Address', flex: 2,   minWidth: 170 },
-  { key: 'createdAt',    label: 'Created On',    flex: 2,   minWidth: 180 },
-  { key: 'eyeIcon',      label: 'View',          flex: 0.5, minWidth: 80  }
+  { key: 'ccode',        label: 'CCode',         flex: 1,   minWidth: 100,  type: 'text' },
+  { key: 'cname',        label: 'Customer Name', flex: 1.5, minWidth: 150,  type: 'text' },
+  { key: 'city',         label: 'City',          flex: 1,   minWidth: 130,  type: 'text' },
+  { key: 'state',        label: 'State',         flex: 1,   minWidth: 120,  type: 'text' },
+  { key: 'mobileNumber', label: 'Mobile Number', flex: 1.5, minWidth: 140,  type: 'text' },
+  { key: 'email',        label: 'Email Address', flex: 2,   minWidth: 170,  type: 'text' },
+  { key: 'createdAt',    label: 'Created On',    flex: 2,   minWidth: 180,  type: 'date' },
+  { key: 'viewIcon',     label: 'View',          flex: 0.5, minWidth: 80 ,  type: 'icon' }
 ];
 
 

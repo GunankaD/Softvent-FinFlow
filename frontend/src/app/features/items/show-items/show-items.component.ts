@@ -41,16 +41,16 @@ export class ShowItemsComponent implements OnInit {
   readonly items = signal<ItemSummaryResponse[]>([]);
 
 readonly columns: TableColumn[] = [
-  { key: 'icode',        label: 'Item Code',        flex: 1,    minWidth: 100 },
-  { key: 'name',         label: 'Item Name',        flex: 2,    minWidth: 160 },
-  { key: 'itemType',     label: 'Type',             flex: 0.5,  minWidth: 90  },
-  { key: 'uom',          label: 'UOM',              flex: 0.5,  minWidth: 90  },
-  { key: 'purchaseRate', label: 'Purchase Rate ₹',  flex: 1,    minWidth: 140 },
-  { key: 'salesRate',    label: 'Sales Rate ₹',     flex: 1,    minWidth: 140 },
-  { key: 'gstRate',      label: 'GST %',            flex: 0.5,  minWidth: 80  },
-  { key: 'createdAt',    label: 'Created On',       flex: 2,    minWidth: 170 },
-  { key: 'isActive',     label: 'Active',           flex: 0.25, minWidth: 80  },
-  { key: 'eyeIcon',      label: 'View',             flex: 0.5,  minWidth: 80  }
+  { key: 'icode',        label: 'Item Code',        flex: 1,    minWidth: 100,   type: 'text' },
+  { key: 'name',         label: 'Item Name',        flex: 2,    minWidth: 160,   type: 'text' },
+  { key: 'itemType',     label: 'Type',             flex: 0.5,  minWidth: 90 ,   type: 'text' },
+  { key: 'uom',          label: 'UOM',              flex: 0.5,  minWidth: 90 ,   type: 'text' },
+  { key: 'purchaseRate', label: 'Purchase Rate ₹',  flex: 1,    minWidth: 140,   type: 'number' },
+  { key: 'salesRate',    label: 'Sales Rate ₹',     flex: 1,    minWidth: 140,   type: 'number' },
+  { key: 'gstRate',      label: 'GST %',            flex: 0.5,  minWidth: 80 ,   type: 'number' },
+  { key: 'createdAt',    label: 'Created On',       flex: 2,    minWidth: 170,   type: 'date' },
+  { key: 'isActive',     label: 'Active',           flex: 0.25, minWidth: 80 ,   type: 'boolean' },
+  { key: 'viewIcon',     label: 'View',             flex: 0.5,  minWidth: 80 ,   type: 'icon' }
 ];
 
   ngOnInit(): void {
