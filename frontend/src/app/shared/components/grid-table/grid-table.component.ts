@@ -4,11 +4,9 @@ import { CommonModule } from '@angular/common';
 
 // AG GRID
 import { AgGridAngular } from 'ag-grid-angular';
-import { IRowNode, ColDef, GridApi, GridReadyEvent } from 'ag-grid-community';
+import { ColDef, GridApi, GridReadyEvent, CellStyle } from 'ag-grid-community';
 
 // MATERIAL UI
-import { MatTableModule } from '@angular/material/table';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -73,6 +71,7 @@ export class GridTableComponent {
     // INDEX COLUMN
     const rowNumberColumn: ColDef = {
       headerName: 'No.',
+      headerTooltip: 'Index',
       valueGetter: params => {
         if (!this.gridApi || !params.node) return '';
         const pageSize = this.gridApi.paginationGetPageSize();
@@ -93,6 +92,7 @@ export class GridTableComponent {
       if (col.type === 'icon') {
         return {
           headerName: col.label,
+          headerTooltip: col.label,
           field: col.key,
           width: 90,
           minWidth: col.minWidth,
@@ -118,6 +118,7 @@ export class GridTableComponent {
       if (col.type === 'date') {
         return {
           headerName: col.label,
+          headerTooltip: col.label,
           field: col.key,
           flex: col.flex,
           minWidth: col.minWidth,
@@ -139,6 +140,7 @@ export class GridTableComponent {
       if (col.type === 'number') {
         return {
           headerName: col.label,
+          headerTooltip: col.label,
           field: col.key,
           flex: col.flex,
           minWidth: col.minWidth,
@@ -146,9 +148,28 @@ export class GridTableComponent {
         };
       }
 
+      // CHECKBOX COLUMNS
+      if (col.type === 'boolean') {
+        return {
+          headerName: col.label,
+          headerTooltip: col.label,
+          field: col.key,
+          flex: col.flex,
+          minWidth: col.minWidth,
+          filter: 'agSetColumnFilter',
+          // editable: true,
+          cellStyle: {
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center'
+          } as CellStyle
+        };
+      }
+
       // TEXT COLUMNS (DEFAULT)
       return {
         headerName: col.label,
+        headerTooltip: col.label,
         field: col.key,
         flex: col.flex,
         minWidth: col.minWidth, 
