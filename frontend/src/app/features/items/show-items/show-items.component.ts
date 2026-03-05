@@ -46,8 +46,8 @@ readonly columns: TableColumn[] = [
   { key: 'itemType',     label: 'Type',             flex: 0.5,  minWidth: 90 ,   type: 'text' },
   { key: 'uom',          label: 'UOM',              flex: 0.5,  minWidth: 90 ,   type: 'text' },
   { key: 'purchaseRate', label: 'Purchase Rate ₹',  flex: 1,    minWidth: 140,   type: 'number' },
-  { key: 'salesRate',    label: 'Sales Rate ₹',     flex: 1,    minWidth: 140,   type: 'number' },
-  { key: 'gstRate',      label: 'GST %',            flex: 0.5,  minWidth: 80 ,   type: 'number' },
+  { key: 'salesRate',    label: 'Sales Rate ₹',     flex: 1,    minWidth: 120,   type: 'number' },
+  { key: 'gstRate',      label: 'GST%',             flex: 0.5,  minWidth: 70 ,   type: 'number' },
   { key: 'createdAt',    label: 'Created On',       flex: 2,    minWidth: 170,   type: 'date' },
   { key: 'isActive',     label: 'Active',           flex: 0.25, minWidth: 80 ,   type: 'boolean' },
   { key: 'viewIcon',     label: 'View',             flex: 0.5,  minWidth: 80 ,   type: 'icon' }
