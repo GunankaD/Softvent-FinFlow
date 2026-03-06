@@ -69,6 +69,23 @@ public class AuthResource {
                 .cookie(refreshCookie)
                 .build(); // 200
     }
+    @POST
+    @Path("/refresh")
+    public Response refresh(@CookieParam("refresh_token") String refreshToken) {
+
+        LoginResponse response = authService.refresh(refreshToken);
+
+        NewCookie refreshCookie = new NewCookie.Builder("refresh_token")
+                .value(response.refreshToken)
+                .path("/auth/refresh")
+                .httpOnly(true)
+                .secure(true)
+                .maxAge(60 * 60 * 24 * 7)
+                .build();
+
+        return Response.ok(new LoginResponse(response.accessToken, null, response.email))
+                .cookie(refreshCookie)
+                .build();
     }
 
     /* DEVELOPMENT PURPOSE ONLY RESOURCES */

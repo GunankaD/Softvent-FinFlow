@@ -47,6 +47,32 @@ public class AuthService {
         return new LoginResponse(accessToken, refreshToken, user.email);
     }
 
+    @Transactional
+    public LoginResponse refresh(String refreshToken) {
+
+        if (refreshToken == null || refreshToken.isBlank()) {
+            throw new BusinessException("Missing refresh token", 401);
+        }
+
+        RefreshToken tokenEntity =
+                refreshTokenService.validateRefreshToken(refreshToken);
+
+        Auth user = Auth.findById(tokenEntity.uid);
+
+        if (user == null) {
+            throw new BusinessException("User not found", 404);
+        }
+
+        refreshTokenService.revokeToken(tokenEntity);
+
+        String newRefreshToken =
+                refreshTokenService.createRefreshToken(user.uid);
+
+        String newAccessToken =
+                jwtService.generateAccessToken(user.uid, user.email);
+
+        return new LoginResponse(newAccessToken, newRefreshToken, user.email);
+    }
     }
 
     @Transactional
