@@ -73,6 +73,18 @@ public class AuthService {
 
         return new LoginResponse(newAccessToken, newRefreshToken, user.email);
     }
+
+    @Transactional
+    public void logout(String refreshToken) {
+
+        if (refreshToken == null || refreshToken.isBlank()) {
+            return;
+        }
+
+        RefreshToken tokenEntity =
+                refreshTokenService.validateRefreshToken(refreshToken);
+
+        refreshTokenService.revokeToken(tokenEntity);
     }
 
     @Transactional

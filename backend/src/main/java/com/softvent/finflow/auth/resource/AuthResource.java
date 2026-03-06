@@ -69,6 +69,26 @@ public class AuthResource {
                 .cookie(refreshCookie)
                 .build(); // 200
     }
+
+    @POST
+    @Path("/logout")
+    public Response logout(@CookieParam("refresh_token") String refreshToken) {
+
+        authService.logout(refreshToken);
+
+        NewCookie deleteCookie = new NewCookie.Builder("refresh_token")
+                .value("")
+                .path("/auth/refresh")
+                .maxAge(0)
+                .httpOnly(true)
+                .secure(true)
+                .build();
+
+        return Response.noContent()
+                .cookie(deleteCookie)
+                .build();
+    }
+
     @POST
     @Path("/refresh")
     public Response refresh(@CookieParam("refresh_token") String refreshToken) {
