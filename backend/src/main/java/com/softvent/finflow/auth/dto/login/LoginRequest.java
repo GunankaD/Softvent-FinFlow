@@ -1,4 +1,4 @@
-package com.softvent.finflow.auth.dto;
+package com.softvent.finflow.auth.dto.login;
 
 public class LoginRequest {
     public String email;
