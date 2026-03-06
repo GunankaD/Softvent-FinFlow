@@ -6,17 +6,22 @@ softvent_finflow=# \d
  public | auth_uid_seq                     | sequence | postgres
  public | customers                        | table    | postgres
  public | customers_cid_seq                | sequence | postgres
+ public | item_groups                      | table    | postgres
+ public | item_groups_igid_seq             | sequence | postgres
  public | items                            | table    | postgres
  public | items_iid_seq                    | sequence | postgres
  public | outstanding_summary              | table    | postgres
  public | password_reset                   | table    | postgres
  public | password_reset_id_seq            | sequence | postgres
+ public | refresh_tokens                   | table    | postgres
+ public | refresh_tokens_id_seq            | sequence | postgres
  public | signup_email_verification        | table    | postgres
  public | signup_email_verification_id_seq | sequence | postgres
  public | transaction_items                | table    | postgres
  public | transaction_items_tiid_seq       | sequence | postgres
  public | transactions                     | table    | postgres
  public | transactions_tid_seq             | sequence | postgres
+(19 rows)
 
 
                                            Table "public.auth"
@@ -171,3 +176,18 @@ Indexes:
 Indexes:
     "signup_email_verification_pkey" PRIMARY KEY, btree (id)
     "idx_signup_email_verification_email" btree (email)
+
+                                       Table "public.refresh_tokens"
+   Column   |           Type           | Collation | Nullable |                  Default
+------------+--------------------------+-----------+----------+--------------------------------------------
+ id         | bigint                   |           | not null | nextval('refresh_tokens_id_seq'::regclass)
+ uid        | bigint                   |           | not null |
+ token_hash | character varying(255)   |           | not null |
+ expires_at | timestamp with time zone |           | not null |
+ created_at | timestamp with time zone |           | not null | now()
+ revoked    | boolean                  |           | not null | false
+Indexes:
+    "refresh_tokens_pkey" PRIMARY KEY, btree (id)
+    "refresh_tokens_token_hash_key" UNIQUE CONSTRAINT, btree (token_hash)
+Foreign-key constraints:
+    "refresh_tokens_uid_fkey" FOREIGN KEY (uid) REFERENCES auth(uid) ON DELETE CASCADE
