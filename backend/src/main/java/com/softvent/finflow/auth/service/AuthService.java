@@ -1,11 +1,14 @@
 package com.softvent.finflow.auth.service;
 
-import com.softvent.finflow.auth.dto.*;
+import com.softvent.finflow.auth.dto.login.LoginRequest;
+import com.softvent.finflow.auth.dto.login.LoginResponse;
 import com.softvent.finflow.auth.dto.reset.password.ChangePasswordRequest;
 import com.softvent.finflow.auth.entity.Auth;
+import com.softvent.finflow.auth.entity.RefreshToken;
 import com.softvent.finflow.common.BusinessException;
 
 import jakarta.enterprise.context.ApplicationScoped;
+import jakarta.inject.Inject;
 import jakarta.transaction.Transactional;
 
 import org.mindrot.jbcrypt.BCrypt;
@@ -14,9 +17,14 @@ import java.time.Instant;
 
 @ApplicationScoped
 public class AuthService {
+    @Inject
+    JwtService jwtService;
+
+    @Inject
+    RefreshTokenService refreshTokenService;
 
     @Transactional
-    public void login(LoginRequest req) {
+    public LoginResponse login(LoginRequest req) {
 
         if (req == null || req.email == null || req.password == null) {
             throw new BusinessException("Invalid login request", 400); // BAD_REQUEST
@@ -29,6 +37,16 @@ public class AuthService {
         }
 
         user.lastLoggedInAt = Instant.now();
+
+        String accessToken =
+                jwtService.generateAccessToken(user.uid, user.email);
+
+        String refreshToken =
+                refreshTokenService.createRefreshToken(user.uid);
+
+        return new LoginResponse(accessToken, refreshToken, user.email);
+    }
+
     }
 
     @Transactional

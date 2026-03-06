@@ -1,6 +1,7 @@
 package com.softvent.finflow.auth.resource;
 
-import com.softvent.finflow.auth.dto.*;
+import com.softvent.finflow.auth.dto.login.LoginRequest;
+import com.softvent.finflow.auth.dto.login.LoginResponse;
 import com.softvent.finflow.auth.dto.signup.*;
 import com.softvent.finflow.auth.dto.reset.password.ChangePasswordRequest;
 import com.softvent.finflow.auth.entity.Auth;
@@ -9,6 +10,7 @@ import com.softvent.finflow.auth.service.SignupEmailVerificationService;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.NewCookie;
 import jakarta.ws.rs.core.Response;
 import java.util.List;
 
@@ -53,8 +55,20 @@ public class AuthResource {
     @POST
     @Path("/login")
     public Response login(LoginRequest req) {
-        authService.login(req);
-        return Response.ok().build(); // 200
+        LoginResponse response = authService.login(req);
+
+        NewCookie refreshCookie = new NewCookie.Builder("refresh_token")
+                .value(response.refreshToken)
+                .path("/auth/refresh")
+                .httpOnly(true)
+                .secure(true)
+                .maxAge(60 * 60 * 24 * 7)
+                .build();
+
+        return Response.ok(new LoginResponse(response.accessToken, null, response.email))
+                .cookie(refreshCookie)
+                .build(); // 200
+    }
     }
 
     /* DEVELOPMENT PURPOSE ONLY RESOURCES */
