@@ -26,7 +26,7 @@ import { AuthService } from '../../core/services/auth/auth.service';
 import { SnackbarService } from '../../core/services/snackbar/snackbar.service';
 
 // DTOs
-import { LoginRequest } from '../../core/models/auth.models';
+import { LoginRequest, LoginResponse } from '../../core/models/auth.models';
 
 @Component({
   standalone: true,
@@ -97,8 +97,10 @@ export class LoginComponent {
       this.emailError.set('Invalid email format');
     } else if (this.email.hasError('maxlength')) {
       this.emailError.set('Email too long');
+    } else if (this.email.hasError('invalidAuth')) {
+      this.emailError.set('Check your credentials'); 
     } else {
-      this.emailError.set('defaulting');
+      this.emailError.set('');
     }
   }
 
@@ -109,8 +111,10 @@ export class LoginComponent {
       this.passwordError.set('Password too long');
     } else if (this.password.hasError('minlength')) {
       this.passwordError.set('Minimum 6 characters');
+    } else if (this.password.hasError('invalidAuth')) {
+      this.passwordError.set(' ');
     } else {
-      this.passwordError.set('defaulting');
+      this.passwordError.set('');
     }
   }
 
@@ -127,16 +131,27 @@ export class LoginComponent {
     };
 
     this.authService.login(payload).subscribe({
-      next: () => {
+      next: (response: LoginResponse) => {
+
+        this.authService.setSession(response);
+
         this.loading.set(false);
         this.router.navigate(['/']);
         this.snackbar.success('Login Successful!', 6000);
       },
-       error: (err) => {
+      error: (err) => {
         this.loading.set(false);
         if (err.status === 401) {
+          // 1. Turn the fields red manually
+          this.email.setErrors({ invalidAuth: true });
+          this.password.setErrors({ invalidAuth: true });
+
+          // 2. Mark them as "touched" so the error styling shows up immediately
+          this.email.markAsTouched();
+          this.password.markAsTouched();
           this.snackbar.error('Invalid email or password', 6000);
-        } else {
+        } 
+        else {
           this.snackbar.error('Login failed. Please try again.');
         }
       }
