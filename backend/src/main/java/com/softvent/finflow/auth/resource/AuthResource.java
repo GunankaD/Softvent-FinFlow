@@ -63,10 +63,11 @@ public class AuthResource {
 
         NewCookie refreshCookie = new NewCookie.Builder("refresh_token")
                 .value(response.refreshToken)
-                .path("/auth/refresh")
+                .path("/auth")
                 .httpOnly(true)
-                .secure(true)
+                .secure(cookieSecure)
                 .maxAge(60 * 60 * 24 * 7)
+                .sameSite(NewCookie.SameSite.LAX)
                 .build();
 
         return Response.ok(new LoginResponse(response.accessToken, null, response.email))
