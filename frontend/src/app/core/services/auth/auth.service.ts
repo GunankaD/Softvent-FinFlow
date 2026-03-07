@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, of, delay } from 'rxjs';
 
 // APIs
 import { environment } from '../../../../environments/environment';
@@ -15,7 +15,8 @@ import {
   SignupCompleteRequest,
   ForgotPasswordRequest,
   ResetPasswordRequest,
-  ResetPasswordEmailResponse
+  ResetPasswordEmailResponse,
+  LoginResponse
 } from '../../models/auth.models';
 
 @Injectable({
@@ -26,15 +27,61 @@ export class AuthService {
   private readonly http = inject(HttpClient);
   private readonly baseUrl = environment.apiBaseUrl;
 
-  // login service
-  login(request: LoginRequest): Observable<void> {
-    return this.http.post<void>(
+  // STATE
+  private accessToken: string | null = null;
+  private userEmail: string | null = null;
+
+  // LOGIN SERVICE
+  login(request: LoginRequest): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(
       `${this.baseUrl}${API_ENDPOINTS.AUTH.LOGIN}`,
-      request
+      request,
+      { withCredentials: true }
     );
   }
 
-  // signup service
+  // LOGOUT SERVICE
+  logout(): Observable<void> {
+    return this.http.post<void>(
+      `${this.baseUrl}${API_ENDPOINTS.AUTH.LOGOUT}`,
+      {}, // browser automatically attaches the cookie
+      { withCredentials: true } // this tells the browser to attach the cookie
+    );
+  }
+
+  // SESSION MANAGEMENT SERVICES
+  setSession(response: LoginResponse): void {
+    this.accessToken = response.accessToken;
+    this.userEmail = response.email;
+  }
+
+  getAccessToken(): string | null {
+    return this.accessToken;
+  }
+
+  getUserEmail(): string | null {
+    return this.userEmail;
+  }
+
+  clearSession(): void {
+    this.accessToken = null;
+    this.userEmail = null;
+  }
+
+  isAuthenticated(): boolean {
+    return this.accessToken !== null;
+  }
+
+  // REFRESH FOR NEW ACCESS TOKEN
+  refresh(): Observable<LoginResponse> {
+    return this.http.post<LoginResponse>(
+      `${this.baseUrl}${API_ENDPOINTS.AUTH.REFRESH}`,
+      {}, // browser automatically attaches the cookie
+      { withCredentials: true } // this tells the browser to attach the cookie
+    );
+  }
+
+  // SIGNUP SERVICE
   signupInit(request: SignupInitRequest): Observable<void> {
     return this.http.post<void>(
       `${this.baseUrl}${API_ENDPOINTS.AUTH.SIGNUP_INIT}`,
@@ -56,7 +103,7 @@ export class AuthService {
     );
   }
 
-  // forgot password service
+  // FORGOT PASSWORD SERVICE
   forgotPassword(request: ForgotPasswordRequest): Observable<void> {
     return this.http.post<void>(
       `${this.baseUrl}${API_ENDPOINTS.AUTH.FORGOT_PASSWORD}`,
@@ -64,7 +111,7 @@ export class AuthService {
     );
   }
 
-  // reset password service
+  // RESET PASSWORD SERVICE
   resetPassword(request: ResetPasswordRequest): Observable<void> {
     return this.http.post<void>(
       `${this.baseUrl}${API_ENDPOINTS.AUTH.RESET_PASSWORD}`,
@@ -72,7 +119,7 @@ export class AuthService {
     );
   }
 
-  // request email for a specific reset password token
+  // REQUEST EMAIL FOR SIGNUP PAGE THROUGH URL TOKEN
   getEmailForToken(token: string): Observable<ResetPasswordEmailResponse> {
     return this.http.get<ResetPasswordEmailResponse>(
       `${this.baseUrl}${API_ENDPOINTS.AUTH.EMAIL_FOR_TOKEN}/${token}`
