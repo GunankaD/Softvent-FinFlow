@@ -81,10 +81,14 @@ public class AuthService {
             return;
         }
 
-        RefreshToken tokenEntity =
-                refreshTokenService.validateRefreshToken(refreshToken);
+        String hash = refreshTokenService.hashToken(refreshToken);
 
-        refreshTokenService.revokeToken(tokenEntity);
+        RefreshToken tokenEntity =
+                RefreshToken.find("tokenHash", hash).firstResult();
+
+        if (tokenEntity != null) {
+            refreshTokenService.revokeToken(tokenEntity);
+        }
     }
 
     @Transactional
