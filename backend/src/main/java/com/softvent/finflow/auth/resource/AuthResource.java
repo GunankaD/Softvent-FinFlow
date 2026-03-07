@@ -1,5 +1,6 @@
 package com.softvent.finflow.auth.resource;
 
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import com.softvent.finflow.auth.dto.login.LoginRequest;
 import com.softvent.finflow.auth.dto.login.LoginResponse;
 import com.softvent.finflow.auth.dto.signup.*;
@@ -23,6 +24,9 @@ public class AuthResource {
     AuthService authService;
     @Inject
     SignupEmailVerificationService signUpEmailVerificationService;
+
+    @ConfigProperty(name = "auth.cookie.secure")
+    boolean cookieSecure;
 
     @GET
     public List<Auth> getAll() {
@@ -78,10 +82,11 @@ public class AuthResource {
 
         NewCookie deleteCookie = new NewCookie.Builder("refresh_token")
                 .value("")
-                .path("/auth/refresh")
+                .path("/auth")
                 .maxAge(0)
                 .httpOnly(true)
-                .secure(true)
+                .secure(cookieSecure)
+                .sameSite(NewCookie.SameSite.LAX)
                 .build();
 
         return Response.noContent()
@@ -97,10 +102,11 @@ public class AuthResource {
 
         NewCookie refreshCookie = new NewCookie.Builder("refresh_token")
                 .value(response.refreshToken)
-                .path("/auth/refresh")
+                .path("/auth")
                 .httpOnly(true)
-                .secure(true)
+                .secure(cookieSecure)
                 .maxAge(60 * 60 * 24 * 7)
+                .sameSite(NewCookie.SameSite.LAX)
                 .build();
 
         return Response.ok(new LoginResponse(response.accessToken, null, response.email))
