@@ -37,3 +37,9 @@ export interface SignupCompleteRequest {
   verificationToken: string;
   password: string;
 }
+
+export interface LoginResponse {
+  accessToken: string;
+  refreshToken: string;
+  email: string;
+}
