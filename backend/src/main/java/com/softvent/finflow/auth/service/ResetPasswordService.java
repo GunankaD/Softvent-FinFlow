@@ -5,6 +5,7 @@ import com.softvent.finflow.auth.dto.reset.password.ResetPasswordRequest;
 import com.softvent.finflow.auth.dto.reset.password.ResetPasswordResponse;
 import com.softvent.finflow.auth.entity.Auth;
 import com.softvent.finflow.auth.entity.PasswordReset;
+import com.softvent.finflow.auth.entity.RefreshToken;
 import com.softvent.finflow.common.BusinessException;
 
 import jakarta.enterprise.context.ApplicationScoped;
@@ -76,6 +77,9 @@ public class ResetPasswordService {
 
         user.pwdHash = BCrypt.hashpw(req.newPassword, BCrypt.gensalt());
         user.updatedAt = Instant.now();
+
+        /* revoke all active sessions */
+        RefreshToken.update("revoked = true where uid = ?1", user.uid);
 
         reset.delete();
     }
