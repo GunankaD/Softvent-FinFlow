@@ -51,7 +51,7 @@ export class ShowCustomersComponent implements OnInit {
   { key: 'mobileNumber', label: 'Mobile Number', flex: 1.5, minWidth: 140,  type: 'text' },
   { key: 'email',        label: 'Email Address', flex: 2,   minWidth: 170,  type: 'text' },
   { key: 'createdAt',    label: 'Created On',    flex: 2,   minWidth: 180,  type: 'date' },
-  { key: 'viewIcon',     label: 'View',          flex: 0.5, minWidth: 80 ,  type: 'icon' }
+  { key: 'viewIcon',     label: 'View',          flex: 0.5, minWidth: 70 ,  type: 'icon' }
 ];
 
 

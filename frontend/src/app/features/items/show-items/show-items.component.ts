@@ -49,8 +49,8 @@ readonly columns: TableColumn[] = [
   { key: 'salesRate',    label: 'Sales Rate ₹',     flex: 1,    minWidth: 120,   type: 'number' },
   { key: 'gstRate',      label: 'GST%',             flex: 0.5,  minWidth: 70 ,   type: 'number' },
   { key: 'createdAt',    label: 'Created On',       flex: 2,    minWidth: 170,   type: 'date' },
-  { key: 'isActive',     label: 'Active',           flex: 0.25, minWidth: 80 ,   type: 'boolean' },
-  { key: 'viewIcon',     label: 'View',             flex: 0.5,  minWidth: 80 ,   type: 'icon' }
+  { key: 'isActive',     label: 'Active',           flex: 0.25, minWidth: 60 ,   type: 'boolean' },
+  { key: 'viewIcon',     label: 'View',             flex: 0.5,  minWidth: 70 ,   type: 'icon' }
 ];
 
   ngOnInit(): void {
