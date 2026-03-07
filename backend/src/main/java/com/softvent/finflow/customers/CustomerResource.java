@@ -4,6 +4,7 @@ import com.softvent.finflow.customers.dto.CustomerCreateRequest;
 import com.softvent.finflow.customers.dto.CustomerSummaryResponse;
 import com.softvent.finflow.customers.dto.CustomerDetailResponse;
 import com.softvent.finflow.customers.dto.CustomerUpdateRequest;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
@@ -12,6 +13,7 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.List;
 
+@RolesAllowed("USER")
 @Path("/customers")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)

@@ -6,6 +6,7 @@ import com.softvent.finflow.items.dto.ItemSummaryResponse;
 import com.softvent.finflow.items.dto.ItemUpdateRequest;
 
 import com.softvent.finflow.items.service.ItemService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -13,6 +14,7 @@ import jakarta.ws.rs.core.Response;
 
 import java.util.List;
 
+@RolesAllowed("USER")
 @Path("/items")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
