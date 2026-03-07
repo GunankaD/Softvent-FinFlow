@@ -64,7 +64,7 @@ public class RefreshTokenService {
         token.revoked = true;
     }
 
-    private String generateToken() {
+    public String generateToken() {
 
         byte[] randomBytes = new byte[64];
         secureRandom.nextBytes(randomBytes);
@@ -72,7 +72,7 @@ public class RefreshTokenService {
         return Base64.getUrlEncoder().withoutPadding().encodeToString(randomBytes);
     }
 
-    private String hashToken(String token) {
+    public String hashToken(String token) {
 
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
