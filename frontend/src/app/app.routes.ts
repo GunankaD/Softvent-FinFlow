@@ -1,9 +1,10 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './features/home/home.component';
+import { AuthGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
     // HOME
-    { path: '', component: HomeComponent },
+    { path: '', component: HomeComponent, canActivate: [AuthGuard]},
 
     // AUTH ROUTES
     {
@@ -42,25 +43,29 @@ export const routes: Routes = [
         path: 'customers',
         loadComponent: () =>
             import('./features/customers/customers.component')
-            .then(m => m.CustomersComponent)
+            .then(m => m.CustomersComponent),
+        canActivate: [AuthGuard]
     },
     {
         path: 'customers/show-customers',
         loadComponent: () =>
             import('./features/customers/show-customers/show-customers.component')
-            .then(m => m.ShowCustomersComponent)
+            .then(m => m.ShowCustomersComponent),
+        canActivate: [AuthGuard]
     },
     {
         path: 'customers/add-customer',
         loadComponent: () =>
             import('./features/customers/add-customer/add-customer.component')
-            .then(m => m.AddCustomerComponent)
+            .then(m => m.AddCustomerComponent),
+        canActivate: [AuthGuard]
     },
     {
         path: 'customers/:ccode',
         loadComponent: () =>
             import('./features/customers/customer-details/customer-details.component')
-            .then(m => m.CustomerDetailsComponent)
+            .then(m => m.CustomerDetailsComponent),
+        canActivate: [AuthGuard]
     },
 
     // ITEM ROUTES
@@ -68,24 +73,28 @@ export const routes: Routes = [
         path: 'items',
         loadComponent: () =>
             import('./features/items/items.component')
-            .then(m => m.ItemsComponent)
+            .then(m => m.ItemsComponent),
+        canActivate: [AuthGuard]
     },
     {
         path: 'items/add-item',
         loadComponent: () =>
             import('./features/items/add-item/add-item.component')
-            .then(m => m.AddItemComponent)
+            .then(m => m.AddItemComponent),
+        canActivate: [AuthGuard]
     },
     {
         path: 'items/show-items',
         loadComponent: () =>
             import('./features/items/show-items/show-items.component')
-            .then(m => m.ShowItemsComponent)
+            .then(m => m.ShowItemsComponent),
+        canActivate: [AuthGuard]
     },
     {
         path: 'items/:icode',
         loadComponent: () =>
             import('./features/items/item-details/item-details.component')
-            .then(m => m.ItemDetailsComponent)
+            .then(m => m.ItemDetailsComponent),
+        canActivate: [AuthGuard]
     },
 ];
