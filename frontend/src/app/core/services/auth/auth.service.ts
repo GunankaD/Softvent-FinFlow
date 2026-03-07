@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, of, delay } from 'rxjs';
+import { Observable, of, delay, shareReplay, tap, finalize } from 'rxjs';
 
 // APIs
 import { environment } from '../../../../environments/environment';
@@ -30,6 +30,7 @@ export class AuthService {
   // STATE
   private accessToken: string | null = null;
   private userEmail: string | null = null;
+  private refreshInProgress$: Observable<LoginResponse> | null = null;
 
   // LOGIN SERVICE
   login(request: LoginRequest): Observable<LoginResponse> {
@@ -74,12 +75,31 @@ export class AuthService {
 
   // REFRESH FOR NEW ACCESS TOKEN
   refresh(): Observable<LoginResponse> {
-    return this.http.post<LoginResponse>(
-      `${this.baseUrl}${API_ENDPOINTS.AUTH.REFRESH}`,
-      {}, // browser automatically attaches the cookie
-      { withCredentials: true } // this tells the browser to attach the cookie
-    );
+
+    if (!this.refreshInProgress$) {
+
+      this.refreshInProgress$ = this.http.post<LoginResponse>(
+        `${this.baseUrl}${API_ENDPOINTS.AUTH.REFRESH}`,
+        {},
+        { withCredentials: true }
+      ).pipe(
+
+        tap(response => {
+          this.setSession(response);
+        }),
+
+        finalize(() => {
+          this.refreshInProgress$ = null;
+        }),
+
+        shareReplay(1)
+
+      );
+    }
+
+    return this.refreshInProgress$;
   }
+
 
   // SIGNUP SERVICE
   signupInit(request: SignupInitRequest): Observable<void> {
