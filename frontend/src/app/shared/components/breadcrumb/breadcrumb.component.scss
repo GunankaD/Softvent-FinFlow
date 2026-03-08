@@ -1,0 +1,29 @@
+.breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 20px 0px 20px 0px;
+  
+}
+
+.crumb-link {
+  cursor: pointer;
+  text-decoration: none;
+  color: var(--primary-color);
+  opacity: 0.6;
+}
+
+.crumb-link:hover {
+  text-decoration: underline;
+}
+
+.crumb-active {
+  font-weight: 600;
+}
+
+.divider {
+  height: 28px;
+  width: 28px;
+  font-size: 28px;
+  opacity: 0.6;
+}

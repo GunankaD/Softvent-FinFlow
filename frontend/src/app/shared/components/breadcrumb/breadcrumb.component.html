@@ -1,1 +1,20 @@
-<p>breadcrumb works!</p>
+<h1 class="title breadcrumb">
+
+  <ng-container *ngFor="let item of items; let last = last">
+
+    <a *ngIf="item.route && !last"
+       [routerLink]="item.route"
+       class="crumb-link">
+      {{ item.label }}
+    </a>
+
+    <span *ngIf="!item.route || last"
+          class="crumb-active">
+      {{ item.label }}
+    </span>
+
+    <mat-icon *ngIf="!last" class="divider">arrow_forward_ios</mat-icon>
+
+  </ng-container>
+
+</h1>
