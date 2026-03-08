@@ -300,8 +300,8 @@ export class ItemFormComponent implements OnInit {
   }
 
   public cancelEdit(): void {
-    if (this.loading || this.updating || this.deleting) return;
-
+    if (this.loading || this.deleting) return;
+    
     if (!this.form.dirty) {
       this.exitEditMode();
       return;
