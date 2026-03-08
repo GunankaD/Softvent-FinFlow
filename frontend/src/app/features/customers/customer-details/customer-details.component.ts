@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { CustomerService } from '../../../core/services/customer/customer.service';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { SnackbarService } from '../../../core/services/snackbar/snackbar.service';
+import { BreadcrumbComponent } from '../../../shared/components/breadcrumb/breadcrumb.component';
 
 // MATERIAL UI
 import { MatDialog } from '@angular/material/dialog';
@@ -19,6 +20,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // DTOs
 import { CustomerDetailResponse, CustomerUpdateRequest } from '../../../core/models/customer.models';
+import { Breadcrumb } from '../../../shared/components/models/breadcrumb.model';
 
 @Component({
   selector: 'app-customer-details',
@@ -33,6 +35,7 @@ import { CustomerDetailResponse, CustomerUpdateRequest } from '../../../core/mod
     MatButtonModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    BreadcrumbComponent,
   ],
 })
 export class CustomerDetailsComponent implements OnInit {
@@ -51,6 +54,13 @@ export class CustomerDetailsComponent implements OnInit {
   isDeleting = signal(false);
   isLoadingCustomer = signal(true);
   protected isEditMode = signal(false);
+
+  public breadcrumbs(): Breadcrumb[] {
+    return [
+      { label: 'Customers', route: '/customers' },
+      { label: this.customer()?.cname ?? '' }
+    ];
+  }
 
   private ccode!: string;
 

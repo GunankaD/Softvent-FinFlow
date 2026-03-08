@@ -20,12 +20,14 @@ import { CustomerValidatorsService } from '../../../core/services/customer/custo
 import { CustomerService } from '../../../core/services/customer/customer.service';
 import { SnackbarService } from '../../../core/services/snackbar/snackbar.service';
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
+import { BreadcrumbComponent } from '../../../shared/components/breadcrumb/breadcrumb.component';
 
 // DTOs
 import { 
   CustomerCreateRequest, 
   CustomerSummaryResponse 
 } from '../../../core/models/customer.models';
+import { Breadcrumb } from '../../../shared/components/models/breadcrumb.model';
 
 @Component({
   selector: 'app-add-customer',
@@ -39,7 +41,8 @@ import {
     MatIconModule,
     MatSelectModule,
     MatCardModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    BreadcrumbComponent
   ],
   templateUrl: './add-customer.component.html',
   styleUrl: './add-customer.component.scss'
@@ -57,6 +60,13 @@ export class AddCustomerComponent implements OnDestroy {
 
 
   protected isSubmitting = signal(false);
+
+  public breadcrumbs(): Breadcrumb[] {
+    return [
+      { label: 'Customers', route: '/customers' },
+      { label: 'Add Customer' }
+    ];
+  }
 
   protected readonly customerForm: FormGroup = this.fb.nonNullable.group({
     businessDetails: this.fb.nonNullable.group({

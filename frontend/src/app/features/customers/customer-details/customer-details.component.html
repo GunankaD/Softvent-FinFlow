@@ -3,7 +3,7 @@
 
   <div class="header-row">
     <div>
-      <h1 class="title">{{ customer()?.cname }}</h1>
+      <app-breadcrumb [items]="breadcrumbs()"></app-breadcrumb>
       <p class="subtitle">{{ customer()?.ccode }}</p>
     </div>
 

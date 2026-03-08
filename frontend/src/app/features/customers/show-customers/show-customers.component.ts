@@ -14,10 +14,12 @@ import { SnackbarService } from '../../../core/services/snackbar/snackbar.servic
 import { CustomerService } from '../../../core/services/customer/customer.service';
 import { DataTableComponent } from '../../../shared/components/data-table/data-table.component'
 import { GridTableComponent } from '../../../shared/components/grid-table/grid-table.component';
+import { BreadcrumbComponent } from '../../../shared/components/breadcrumb/breadcrumb.component';
 
 // DTOs
 import { CustomerSummaryResponse } from '../../../core/models/customer.models';
 import { TableColumn } from '../../../shared/components/models/table-column.model'
+import { Breadcrumb } from '../../../shared/components/models/breadcrumb.model';
 
 @Component({
   selector: 'app-show-customers',
@@ -27,6 +29,7 @@ import { TableColumn } from '../../../shared/components/models/table-column.mode
     MatSnackBarModule,
     // DataTableComponent,
     GridTableComponent,
+    BreadcrumbComponent,
   ],
   templateUrl: './show-customers.component.html',
   styleUrls: ['./show-customers.component.scss']
@@ -40,6 +43,13 @@ export class ShowCustomersComponent implements OnInit {
 
   // SIGNALS
   readonly loading = signal(false);
+
+  public breadcrumbs(): Breadcrumb[] {
+    return [
+      { label: 'Customers', route: '/customers' },
+      { label: 'All' }
+    ];
+  }
 
   // TABLE
   readonly customers = signal<CustomerSummaryResponse[]>([]);
