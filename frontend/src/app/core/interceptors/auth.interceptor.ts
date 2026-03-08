@@ -18,6 +18,7 @@ import { Router } from '@angular/router';
 // services
 import { AuthService } from '../services/auth/auth.service';
 import { SnackbarService } from '../services/snackbar/snackbar.service';
+import { environment } from '../../../environments/environment';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -39,6 +40,10 @@ export class AuthInterceptor implements HttpInterceptor {
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
 
+    // disable auth logic in dev
+    if (!environment.authEnabled) {
+      return next.handle(request);
+    }
     // skip auth endpoints  
     if (this.authEndpoints.some(url => request.url.includes(url))) {
       return next.handle(request.clone({ withCredentials: true }));

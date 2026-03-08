@@ -137,7 +137,7 @@ export class LoginComponent {
 
         this.loading.set(false);
         this.router.navigate(['/']);
-        this.snackbar.success('Login Successful!', 6000);
+        this.snackbar.success('You have successfully logged in', 6000);
       },
       error: (err) => {
         this.loading.set(false);
