@@ -2,7 +2,10 @@
 
   <!-- MENU & LOGO BEGINS -->
   <div class="left">
-    <button mat-icon-button (click)="onToggleSidebar()">
+    <button 
+      mat-icon-button 
+      (click)="onToggleSidebar()" 
+      [style.visibility]="isAuthPage() ? 'hidden' : 'visible'">
       <mat-icon>menu</mat-icon>
     </button>
     <span class="logo">Softvent FinFlow</span>
@@ -17,7 +20,7 @@
     <a mat-button routerLink="/about" routerLinkActive="active">About Us</a>
     <a mat-button routerLink="/contact" routerLinkActive="active">Contact</a>
 
-    <button mat-icon-button routerLink="login">
+    <button mat-icon-button (click)="logout()">
       <mat-icon fontSet="material-symbols-outlined" class="outline-icon">account_circle</mat-icon>
     </button>
   </nav>
