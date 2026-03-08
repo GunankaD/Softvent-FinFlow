@@ -58,6 +58,7 @@ export class CustomerDetailsComponent implements OnInit {
   public breadcrumbs(): Breadcrumb[] {
     return [
       { label: 'Customers', route: '/customers' },
+      { label: 'All', route: '/customers/show-customers' },
       { label: this.customer()?.cname ?? '' }
     ];
   }

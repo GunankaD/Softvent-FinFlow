@@ -20,6 +20,7 @@ import { SnackbarService } from '../../../core/services/snackbar/snackbar.servic
 // SHARED
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { ItemFormComponent } from '../shared/item-form/item-form.component';
+import { BreadcrumbComponent } from '../../../shared/components/breadcrumb/breadcrumb.component';
 
 // MODELS
 import {
@@ -27,6 +28,7 @@ import {
   ItemCreateRequest,
   ItemDetailResponse
 } from '../../../core/models/item.models';
+import { Breadcrumb } from '../../../shared/components/models/breadcrumb.model';
 
 @Component({
   selector: 'app-add-item',
@@ -34,7 +36,8 @@ import {
   imports: [
     CommonModule,
     MatSnackBarModule,
-    ItemFormComponent
+    ItemFormComponent,
+    BreadcrumbComponent
   ],
   templateUrl: './add-item.component.html',
   styleUrls: ['./add-item.component.scss'],
@@ -51,6 +54,13 @@ export class AddItemComponent implements OnInit {
   // GOES TO CHILD COMPONENT
   readonly creating = signal(false);
   readonly itemGroups = signal<ItemGroupResponse[]>([]);
+
+  public breadcrumbs(): Breadcrumb[] {
+    return [
+      { label: 'Items', route: '/items' },
+      { label: 'Add Item' }
+    ];
+  }
 
   ngOnInit(): void {
 

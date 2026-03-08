@@ -1,5 +1,5 @@
 <div class="container">
-    <h1 class="title">{{ item()?.name ?? '' }}</h1>
+    <app-breadcrumb [items]="breadcrumbs()"></app-breadcrumb>
     <p class="subtitle">{{ item()?.icode ?? '' }}</p>
     @if (item()) {
 

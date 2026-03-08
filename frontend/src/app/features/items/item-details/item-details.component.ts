@@ -22,6 +22,7 @@ import { SnackbarService } from '../../../core/services/snackbar/snackbar.servic
 // SHARED
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { ItemFormComponent } from '../shared/item-form/item-form.component';
+import { BreadcrumbComponent } from '../../../shared/components/breadcrumb/breadcrumb.component';
 
 // MODELS
 import {
@@ -29,6 +30,7 @@ import {
   ItemGroupResponse,
   ItemUpdateRequest
 } from '../../../core/models/item.models';
+import { Breadcrumb } from '../../../shared/components/models/breadcrumb.model';
 
 @Component({
   selector: 'app-item-details',
@@ -37,7 +39,8 @@ import {
     CommonModule,
     MatSnackBarModule,
     MatProgressSpinnerModule,
-    ItemFormComponent
+    ItemFormComponent,
+    BreadcrumbComponent,
   ],
   templateUrl: './item-details.component.html',
   styleUrls: ['./item-details.component.scss'],
@@ -63,6 +66,14 @@ export class ItemDetailsComponent implements OnInit {
   readonly item = signal<ItemDetailResponse | null>(null);
   readonly itemGroups = signal<ItemGroupResponse[]>([]);
   private icode = '';
+
+  public breadcrumbs(): Breadcrumb[] {
+    return [
+      { label: 'Items', route: '/items' },
+      { label: 'All', route: '/items/show-items' },
+      { label: this.item()?.name ?? '' }
+    ];
+  }
 
   ngOnInit(): void {
 
