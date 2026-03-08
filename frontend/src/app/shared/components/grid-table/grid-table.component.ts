@@ -156,7 +156,7 @@ export class GridTableComponent {
           field: col.key,
           flex: col.flex,
           minWidth: col.minWidth,
-          filter: 'agSetColumnFilter',
+          filter: 'agTextColumnFilter',
           // editable: true,
           cellStyle: {
             display: 'flex',
