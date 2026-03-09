@@ -1,11 +1,13 @@
 <mat-toolbar class="app-header">
 
   <!-- MENU & LOGO BEGINS -->
+   <!-- [style.visibility]="isAuthPage() ? 'hidden' : 'visible'" -->
   <div class="left">
     <button 
       mat-icon-button 
       (click)="onToggleSidebar()" 
-      [style.visibility]="isAuthPage() ? 'hidden' : 'visible'">
+      
+      >
       <mat-icon>menu</mat-icon>
     </button>
     <span class="logo">Softvent FinFlow</span>
@@ -20,9 +22,15 @@
     <a mat-button routerLink="/about" routerLinkActive="active">About Us</a>
     <a mat-button routerLink="/contact" routerLinkActive="active">Contact</a>
 
-    <button mat-icon-button (click)="logout()">
-      <mat-icon fontSet="material-symbols-outlined" class="outline-icon">account_circle</mat-icon>
+    <button
+      mat-icon-button
+      [matMenuTriggerFor]="accountMenuComp.menu">
+      <mat-icon fontSet="material-symbols-outlined" class="outline-icon">
+        account_circle
+      </mat-icon>
     </button>
+
+    <app-account-menu #accountMenuComp></app-account-menu>
   </nav>
   <!-- RIGHT NAV ENDS -->
 

@@ -7,12 +7,12 @@ import { RouterLink, RouterModule } from '@angular/router';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatToolbarModule} from '@angular/material/toolbar';
+import { MatMenuModule } from '@angular/material/menu';
 
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { AuthService } from '../../services/auth/auth.service';
-import { SnackbarService } from '../../services/snackbar/snackbar.service';
+import { AccountMenuComponent } from '../../../shared/components/account-menu/account-menu.component';
 
 @Component({
   selector: 'app-header',
@@ -25,35 +25,18 @@ import { SnackbarService } from '../../services/snackbar/snackbar.service';
     MatIconModule,
     MatButtonModule,
     MatToolbarModule,
-    CommonModule
+    CommonModule,
+    AccountMenuComponent,
+    MatMenuModule
   ]
 })
 export class HeaderComponent {
   @Output() toggleSidebar = new EventEmitter<void>();
 
-  private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
-  private readonly snackbar = inject(SnackbarService);
 
   onToggleSidebar(): void {
     this.toggleSidebar.emit();
-  }
-
-  logout(): void {
-
-    this.authService.logout().subscribe({
-      next: () => {
-        this.authService.clearSession();
-        this.snackbar.success('Logged out successfully', 4000);
-        this.router.navigate(['/login']);
-      },
-      error: () => {
-        // even if backend fails, clear session
-        this.authService.clearSession();
-        this.router.navigate(['/login']);
-      }
-    });
-
   }
 
   isAuthPage(): boolean {
