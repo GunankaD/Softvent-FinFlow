@@ -1,0 +1,58 @@
+<mat-menu #accountMenu="matMenu">
+
+  <!-- 1. Profile -->
+  <div class="profile">
+    <mat-icon fontSet="material-symbols-outlined" class="avatar outline-icon">account_circle</mat-icon>
+    <div class="username">Gunanka</div>
+    <mat-icon fontSet="material-symbols-outlined" class="switch-icon outline-icon">swap_horiz</mat-icon>
+  </div>
+
+  <mat-divider></mat-divider>
+  
+  <!-- 2. Items  -->
+  <button mat-menu-item>
+    <mat-icon fontSet="material-symbols-outlined">person</mat-icon>
+    <span>Profile</span>
+  </button>
+
+  <button mat-menu-item>
+    <mat-icon fontSet="material-symbols-outlined">groups</mat-icon>
+    <span>Organizations</span>
+  </button>
+
+  <button mat-menu-item>
+    <mat-icon fontSet="material-symbols-outlined">corporate_fare</mat-icon>
+    <span>Enterprise</span>
+  </button>
+
+  <button mat-menu-item>
+    <mat-icon fontSet="material-symbols-outlined">volunteer_activism</mat-icon>
+    <span>Sponsor</span>
+  </button>
+
+  <mat-divider></mat-divider>
+
+  <button mat-menu-item>
+    <mat-icon fontSet="material-symbols-outlined">settings</mat-icon>
+    <span>Settings</span>
+  </button>
+
+  <button mat-menu-item>
+    <mat-icon fontSet="material-symbols-outlined">palette</mat-icon>
+    <span>Appearance</span>
+  </button>
+
+  <button mat-menu-item>
+    <mat-icon fontSet="material-symbols-outlined">accessibility</mat-icon>
+    <span>Accessibility</span>
+  </button>
+
+  <mat-divider></mat-divider>
+
+  <!-- Sign out -->
+  <button mat-menu-item (click)="onLogout()">
+    <mat-icon fontSet="material-symbols-outlined">logout</mat-icon>
+    <span>Sign out</span>
+  </button>
+
+</mat-menu>
