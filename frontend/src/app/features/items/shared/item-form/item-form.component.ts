@@ -192,7 +192,7 @@ export class ItemFormComponent implements OnInit {
   // CREATE MODE
   public onClearClick(): void {
 
-    if (this.form.invalid || this.creating) return;
+    if (this.creating) return;
 
     if (this.form.pristine) {
       this.form.markAsPristine();
