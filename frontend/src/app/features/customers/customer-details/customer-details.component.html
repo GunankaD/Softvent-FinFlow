@@ -11,6 +11,7 @@
       <!-- EDIT -->
       <button
         *ngIf="!isEditMode()"
+        type="button"
         mat-stroked-button
         class="edit-btn"
         [disabled]="isDeleting() || isSaving() || isLoadingCustomer()"
@@ -25,6 +26,7 @@
       <!-- SAVE -->
       <div
         *ngIf="isEditMode()"
+        type="button"
         class="save-btn-wrapper"
         [class.invalid]="form.invalid"
         [class.loading]="isSaving()"
@@ -65,6 +67,7 @@
       <!-- CANCEL -->
       <button
         *ngIf="isEditMode()"
+        type="button"
         class="cancel-btn"
         mat-stroked-button
         [disabled]="isDeleting() || isSaving() || isLoadingCustomer()"
@@ -80,6 +83,7 @@
       <div class="delete-btn-wrapper" [class.loading]="isDeleting()">
         <button
           mat-stroked-button
+          type="button"
           class="delete-btn"
           [disabled]="isSaving() || isDeleting() || isLoadingCustomer()"
           (click)="deleteCustomer()"

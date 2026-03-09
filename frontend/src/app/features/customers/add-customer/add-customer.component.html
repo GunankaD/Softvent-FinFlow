@@ -2,7 +2,7 @@
   <app-breadcrumb [items]="breadcrumbs()"></app-breadcrumb>
   <p class="subtitle">Create and register a new customer</p>
 
-  <mat-horizontal-stepper linear>
+  <mat-horizontal-stepper>
     <!-- STEP 1: BUSINESS DETAILS -->
     <mat-step [stepControl]="businessDetailsGroup" [editable]="!isSubmitting()">
       <form [formGroup]="businessDetailsGroup">
@@ -209,7 +209,11 @@
         <!-- BOTTOM STEP ACTION BAR BUTTONS -->
         <div class="step-action-bar step-action-bar--step-2">
           <!-- Previous Step -->
-          <button mat-button matStepperPrevious class="go-back-btn">
+          <button 
+            mat-button 
+            type="button"
+            matStepperPrevious 
+            class="go-back-btn">
             <mat-icon fontSet="material-symbols-outlined" class="outline-icon">
               arrow_circle_left
             </mat-icon>
@@ -346,6 +350,7 @@
         <!-- LEFT: PREVIOUS STEP -->
         <button
           mat-button
+          type="button"
           matStepperPrevious
           class="go-back-btn"
           [disabled]="isSubmitting()"
@@ -361,6 +366,7 @@
           <!-- DELETE -->
           <button
             mat-stroked-button
+            type="button"
             class="delete-btn"
             (click)="onClear()"
             [disabled]="isSubmitting()"

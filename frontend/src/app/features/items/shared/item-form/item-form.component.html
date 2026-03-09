@@ -220,6 +220,7 @@
 
                         <button
                         mat-stroked-button
+                        type="button"
                         class="edit-btn"
                         [disabled]="loading || updating || deleting"
                         (click)="enableEdit()"
@@ -241,6 +242,7 @@
                         >
                         <button
                             mat-raised-button
+                            type="button"
                             class="save-btn"
                             (click)="onUpdateClick()"
                             [disabled]="
@@ -275,10 +277,11 @@
 
                         <!-- CANCEL EDIT BUTTON-->
                         <button
-                        mat-stroked-button
-                        class="cancel-btn"
-                        [disabled]="loading || deleting || updating"
-                        (click)="cancelEdit()"
+                            mat-stroked-button
+                            type="button"
+                            class="cancel-btn"
+                            [disabled]="loading || deleting || updating"
+                            (click)="cancelEdit()"
                         >
                         <mat-icon fontSet="material-symbols-outlined" class="outline-icon">
                             edit_off
@@ -292,6 +295,7 @@
 
                         <button
                         mat-stroked-button
+                        type="button"
                         class="delete-btn"
                         [disabled]="updating || loading || deleting"
                         (click)="onDeleteClick()"
