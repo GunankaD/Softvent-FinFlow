@@ -83,9 +83,21 @@
 }
 
 
-
 @media (max-width: 768px) {
   .sidebar {
     width: 200px;
   }
+}
+
+.mat-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 300,
+    'GRAD' 0,
+    'opsz' 24;
+
+  color: white;
 }
