@@ -58,12 +58,20 @@ public class InvoiceItem extends PanacheEntityBase {
     @Column(nullable = false, precision = 12, scale = 2)
     public BigDecimal rate;
 
-    @Column(name = "gst_rate", nullable = false, precision = 5, scale = 2)
-    public BigDecimal gstRate;
-
     @Column(name = "discount_percent", precision = 5, scale = 2)
     public BigDecimal discountPercent = BigDecimal.ZERO;
 
+    @Column(name = "gst_rate", nullable = false, precision = 5, scale = 2)
+    public BigDecimal gstRate;
+
+    @Column(name="gst_amount", nullable=false, precision=12, scale=2)
+    public BigDecimal gstAmount = BigDecimal.ZERO;
+
     @Column(name = "line_total", nullable = false, precision = 12, scale = 2)
     public BigDecimal lineTotal;
+
+    @Column(name="line_amount", nullable=false, precision=12, scale=2)
+    public BigDecimal lineAmount = BigDecimal.ZERO;
+
+
 }
