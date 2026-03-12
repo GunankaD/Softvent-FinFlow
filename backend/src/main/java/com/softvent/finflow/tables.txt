@@ -36,6 +36,47 @@ softvent_finflow=# \d
 Indexes:
     "auth_pkey" PRIMARY KEY, btree (uid)
 
+                                       Table "public.password_reset"
+   Column   |           Type           | Collation | Nullable |                  Default
+------------+--------------------------+-----------+----------+--------------------------------------------
+ id         | bigint                   |           | not null | nextval('password_reset_id_seq'::regclass)
+ email      | character varying(50)    |           | not null |
+ token      | character varying(255)   |           | not null |
+ expires_at | timestamp with time zone |           | not null |
+ created_at | timestamp with time zone |           | not null | now()
+Indexes:
+    "password_reset_pkey" PRIMARY KEY, btree (id)
+    "password_reset_token_key" UNIQUE CONSTRAINT, btree (token)
+
+                                           Table "public.signup_email_verification"
+       Column       |           Type           | Collation | Nullable |                        Default
+--------------------+--------------------------+-----------+----------+-------------------------------------------------------
+ id                 | bigint                   |           | not null | nextval('signup_email_verification_id_seq'::regclass)
+ email              | character varying(50)    |           | not null |
+ otp_hash           | character varying(100)   |           | not null |
+ expires_at         | timestamp with time zone |           | not null |
+ verified           | boolean                  |           | not null | false
+ verification_token | character varying(100)   |           |          |
+ created_at         | timestamp with time zone |           | not null | now()
+Indexes:
+    "signup_email_verification_pkey" PRIMARY KEY, btree (id)
+    "idx_signup_email_verification_email" btree (email)
+
+                                       Table "public.refresh_tokens"
+   Column   |           Type           | Collation | Nullable |                  Default
+------------+--------------------------+-----------+----------+--------------------------------------------
+ id         | bigint                   |           | not null | nextval('refresh_tokens_id_seq'::regclass)
+ uid        | bigint                   |           | not null |
+ token_hash | character varying(255)   |           | not null |
+ expires_at | timestamp with time zone |           | not null |
+ created_at | timestamp with time zone |           | not null | now()
+ revoked    | boolean                  |           | not null | false
+Indexes:
+    "refresh_tokens_pkey" PRIMARY KEY, btree (id)
+    "refresh_tokens_token_hash_key" UNIQUE CONSTRAINT, btree (token_hash)
+Foreign-key constraints:
+    "refresh_tokens_uid_fkey" FOREIGN KEY (uid) REFERENCES auth(uid) ON DELETE CASCADE
+
                                           Table "public.customers"
      Column      |           Type           | Collation | Nullable |                Default
 -----------------+--------------------------+-----------+----------+----------------------------------------
@@ -110,84 +151,85 @@ Referenced by:
     TABLE "items" CONSTRAINT "fk_items_group" FOREIGN KEY (igid) REFERENCES item_groups(igid) ON DELETE RESTRICT
 
 
-                                            Table "public.transactions"
-      Column      |            Type             | Collation | Nullable |                  Default
-------------------+-----------------------------+-----------+----------+-------------------------------------------
- tid              | bigint                      |           | not null | nextval('transactions_tid_seq'::regclass)
- cid              | bigint                      |           | not null |
- transaction_type | character varying(20)       |           | not null |
- parent_tid       | bigint                      |           |          |
- total_amount     | numeric(12,2)               |           | not null |
- paid_amount      | numeric(12,2)               |           | not null |
- balance_amount   | numeric(12,2)               |           | not null |
- transaction_date | date                        |           | not null |
- created_at       | timestamp without time zone |           | not null | CURRENT_TIMESTAMP
+                                     Table "public.invoices"
+     Column     |           Type           | Collation | Nullable |           Default
+----------------+--------------------------+-----------+----------+------------------------------
+ invid          | bigint                   |           | not null | generated always as identity
+ cid            | bigint                   |           | not null |
+ invoice_number | character varying(50)    |           | not null |
+ total_amount   | numeric(12,2)            |           | not null | 0
+ invoice_date   | date                     |           | not null |
+ due_date       | date                     |           |          |
+ status         | invoice_status_enum      |           | not null | 'DRAFT'::invoice_status_enum
+ created_at     | timestamp with time zone |           | not null | CURRENT_TIMESTAMP
+ deleted_at     | timestamp with time zone |           |          |
 Indexes:
-    "transactions_pkey" PRIMARY KEY, btree (tid)
-
-
-                                  Table "public.transaction_items"
-   Column   |     Type      | Collation | Nullable |                     Default
-------------+---------------+-----------+----------+-------------------------------------------------
- tiid       | bigint        |           | not null | nextval('transaction_items_tiid_seq'::regclass)
- tid        | bigint        |           | not null |
- iid        | bigint        |           | not null |
- quantity   | numeric(12,2) |           | not null |
- rate       | numeric(12,2) |           | not null |
- line_total | numeric(12,2) |           | not null |
-Indexes:
-    "transaction_items_pkey" PRIMARY KEY, btree (tiid)
-
-
-                      Table "public.outstanding_summary"
-        Column        |         Type          | Collation | Nullable | Default
-----------------------+-----------------------+-----------+----------+---------
- cid                  | bigint                |           | not null |
- ccode                | character varying(20) |           | not null |
- total_bill_amount    | numeric(12,2)         |           | not null | 0
- total_receipt_amount | numeric(12,2)         |           | not null | 0
- balance_amount       | numeric(12,2)         |           | not null | 0
-Indexes:
-    "outstanding_summary_pkey" PRIMARY KEY, btree (cid)
-
-
-                                       Table "public.password_reset"
-   Column   |           Type           | Collation | Nullable |                  Default
-------------+--------------------------+-----------+----------+--------------------------------------------
- id         | bigint                   |           | not null | nextval('password_reset_id_seq'::regclass)
- email      | character varying(50)    |           | not null |
- token      | character varying(255)   |           | not null |
- expires_at | timestamp with time zone |           | not null |
- created_at | timestamp with time zone |           | not null | now()
-Indexes:
-    "password_reset_pkey" PRIMARY KEY, btree (id)
-    "password_reset_token_key" UNIQUE CONSTRAINT, btree (token)
-
-                                           Table "public.signup_email_verification"
-       Column       |           Type           | Collation | Nullable |                        Default
---------------------+--------------------------+-----------+----------+-------------------------------------------------------
- id                 | bigint                   |           | not null | nextval('signup_email_verification_id_seq'::regclass)
- email              | character varying(50)    |           | not null |
- otp_hash           | character varying(100)   |           | not null |
- expires_at         | timestamp with time zone |           | not null |
- verified           | boolean                  |           | not null | false
- verification_token | character varying(100)   |           |          |
- created_at         | timestamp with time zone |           | not null | now()
-Indexes:
-    "signup_email_verification_pkey" PRIMARY KEY, btree (id)
-    "idx_signup_email_verification_email" btree (email)
-
-                                       Table "public.refresh_tokens"
-   Column   |           Type           | Collation | Nullable |                  Default
-------------+--------------------------+-----------+----------+--------------------------------------------
- id         | bigint                   |           | not null | nextval('refresh_tokens_id_seq'::regclass)
- uid        | bigint                   |           | not null |
- token_hash | character varying(255)   |           | not null |
- expires_at | timestamp with time zone |           | not null |
- created_at | timestamp with time zone |           | not null | now()
- revoked    | boolean                  |           | not null | false
-Indexes:
-    "refresh_tokens_pkey" PRIMARY KEY, btree (id)
-    "refresh_tokens_token_hash_key" UNIQUE CONSTRAINT, btree (token_hash)
+    "invoices_pkey" PRIMARY KEY, btree (invid)
+    "idx_invoices_cid" btree (cid)
+    "invoices_invoice_number_key" UNIQUE CONSTRAINT, btree (invoice_number)
 Foreign-key constraints:
-    "refresh_tokens_uid_fkey" FOREIGN KEY (uid) REFERENCES auth(uid) ON DELETE CASCADE
+    "fk_invoice_customer" FOREIGN KEY (cid) REFERENCES customers(cid) ON DELETE RESTRICT
+Referenced by:
+    TABLE "invoice_items" CONSTRAINT "fk_invoice_items_invoice" FOREIGN KEY (invid) REFERENCES invoices(invid) ON DELETE CASCADE
+    TABLE "payment_applications" CONSTRAINT "fk_payment_application_invoice" FOREIGN KEY (invid) REFERENCES invoices(invid) ON DELETE RESTRICT
+
+
+                                  Table "public.invoice_items"
+      Column      |          Type          | Collation | Nullable |           Default
+------------------+------------------------+-----------+----------+------------------------------
+ iviid            | bigint                 |           | not null | generated always as identity
+ invid            | bigint                 |           | not null |
+ iid              | bigint                 |           | not null |
+ item_code        | character varying(30)  |           | not null |
+ item_name        | character varying(100) |           | not null |
+ quantity         | numeric(12,2)          |           | not null |
+ rate             | numeric(12,2)          |           | not null |
+ gst_rate         | numeric(5,2)           |           | not null |
+ line_total       | numeric(12,2)          |           | not null |
+ discount_percent | numeric(5,2)           |           |          | 0
+Indexes:
+    "invoice_items_pkey" PRIMARY KEY, btree (iviid)
+    "idx_invoice_items_invid" btree (invid)
+Foreign-key constraints:
+    "fk_invoice_items_invoice" FOREIGN KEY (invid) REFERENCES invoices(invid) ON DELETE CASCADE
+    "fk_invoice_items_item" FOREIGN KEY (iid) REFERENCES items(iid) ON DELETE RESTRICT
+
+
+                                      Table "public.receipts"
+      Column      |           Type           | Collation | Nullable |           Default
+------------------+--------------------------+-----------+----------+------------------------------
+ rid              | bigint                   |           | not null | generated always as identity
+ cid              | bigint                   |           | not null |
+ receipt_number   | character varying(50)    |           | not null |
+ payment_mode     | payment_mode_enum        |           | not null |
+ reference_number | character varying(100)   |           |          |
+ total_received   | numeric(12,2)            |           | not null |
+ receipt_date     | date                     |           | not null |
+ created_at       | timestamp with time zone |           | not null | CURRENT_TIMESTAMP
+ deleted_at       | timestamp with time zone |           |          |
+Indexes:
+    "receipts_pkey" PRIMARY KEY, btree (rid)
+    "idx_receipts_cid" btree (cid)
+    "receipts_receipt_number_key" UNIQUE CONSTRAINT, btree (receipt_number)
+Foreign-key constraints:
+    "fk_receipt_customer" FOREIGN KEY (cid) REFERENCES customers(cid) ON DELETE RESTRICT
+Referenced by:
+    TABLE "payment_applications" CONSTRAINT "fk_payment_application_receipt" FOREIGN KEY (rid) REFERENCES receipts(rid) ON DELETE RESTRICT
+
+
+
+                               Table "public.payment_applications"
+     Column     |           Type           | Collation | Nullable |           Default
+----------------+--------------------------+-----------+----------+------------------------------
+ paid           | bigint                   |           | not null | generated always as identity
+ invid          | bigint                   |           | not null |
+ rid            | bigint                   |           | not null |
+ applied_amount | numeric(12,2)            |           | not null |
+ applied_at     | timestamp with time zone |           | not null | CURRENT_TIMESTAMP
+Indexes:
+    "payment_applications_pkey" PRIMARY KEY, btree (paid)
+    "idx_payment_applications_invid" btree (invid)
+    "idx_payment_applications_rid" btree (rid)
+Foreign-key constraints:
+    "fk_payment_application_invoice" FOREIGN KEY (invid) REFERENCES invoices(invid) ON DELETE RESTRICT
+    "fk_payment_application_receipt" FOREIGN KEY (rid) REFERENCES receipts(rid) ON DELETE RESTRICT
