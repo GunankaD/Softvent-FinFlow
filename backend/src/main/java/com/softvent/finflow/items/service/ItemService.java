@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 public class ItemService {
 
     // CREATE
-    public ItemDetailResponse createItem(ItemCreateRequest req) {
+    public ItemCreateResponse createItem(ItemCreateRequest req) {
 
         if (Item.find("icode", req.icode).firstResultOptional().isPresent()) {
             throw new BusinessException(
@@ -37,7 +37,7 @@ public class ItemService {
         Item item = new Item();
         mapCreateRequestToEntity(req, item, group);
         item.persist();
-        return mapToDetailResponse(item);
+        return new ItemCreateResponse(item.icode);
     }
 
     // UPDATE

@@ -1,9 +1,6 @@
 package com.softvent.finflow.items.resource;
 
-import com.softvent.finflow.items.dto.ItemCreateRequest;
-import com.softvent.finflow.items.dto.ItemDetailResponse;
-import com.softvent.finflow.items.dto.ItemSummaryResponse;
-import com.softvent.finflow.items.dto.ItemUpdateRequest;
+import com.softvent.finflow.items.dto.*;
 
 import com.softvent.finflow.items.service.ItemService;
 import jakarta.annotation.security.RolesAllowed;
@@ -26,7 +23,7 @@ public class ItemResource {
     // CREATE
     @POST
     public Response create(ItemCreateRequest request) {
-        ItemDetailResponse response = itemService.createItem(request);
+        ItemCreateResponse response = itemService.createItem(request);
         return Response.status(Response.Status.CREATED).entity(response).build();
     }
 
