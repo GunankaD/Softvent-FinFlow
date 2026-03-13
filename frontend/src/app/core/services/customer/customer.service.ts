@@ -12,7 +12,8 @@ import {
   CustomerSummaryResponse,
   CustomerDetailResponse,
   AvailabilityResponse,
-  CustomerUpdateRequest
+  CustomerUpdateRequest,
+  CustomerCreateResponse
 } from '../../models/customer.models'
 
 @Injectable({
@@ -36,8 +37,8 @@ export class CustomerService {
   }
 
   // POST CUSTOMERS
-  create(request: CustomerCreateRequest): Observable<CustomerSummaryResponse> {
-    return this.http.post<CustomerSummaryResponse>(`${this.baseUrl}${API_ENDPOINTS.CUSTOMERS.BASE}`, request);
+  create(request: CustomerCreateRequest): Observable<CustomerCreateResponse> {
+    return this.http.post<CustomerCreateResponse>(`${this.baseUrl}${API_ENDPOINTS.CUSTOMERS.BASE}`, request);
   }
 
   // PUT CUSTOMERS

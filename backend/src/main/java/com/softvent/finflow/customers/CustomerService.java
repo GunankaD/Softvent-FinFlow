@@ -1,12 +1,8 @@
 package com.softvent.finflow.customers;
 
-import com.softvent.finflow.customers.dto.AvailabilityResponse;
-import com.softvent.finflow.customers.dto.CustomerDetailResponse;
+import com.softvent.finflow.customers.dto.*;
 import com.softvent.finflow.customers.entity.Customer;
 
-import com.softvent.finflow.customers.dto.CustomerCreateRequest;
-import com.softvent.finflow.customers.dto.CustomerSummaryResponse;
-import com.softvent.finflow.customers.dto.CustomerUpdateRequest;
 import com.softvent.finflow.common.BusinessException;
 import jakarta.ws.rs.core.Response;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -19,7 +15,7 @@ public class CustomerService {
 
     // CREATE NEW CUSTOMER
     @Transactional
-    public CustomerSummaryResponse createCustomer(CustomerCreateRequest request) {
+    public CustomerCreateResponse createCustomer(CustomerCreateRequest request) {
         if (Customer.find("ccode", request.ccode).firstResultOptional().isPresent()) {
             throw new BusinessException(
                     "Customer code already exists",
@@ -52,7 +48,7 @@ public class CustomerService {
 
         customer.persist();
 
-        return mapToSummaryResponse(customer);
+        return new CustomerCreateResponse(customer.ccode);
     }
 
     // GET CUSTOMER DETAILS

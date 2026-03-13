@@ -25,7 +25,7 @@ import { BreadcrumbComponent } from '../../../shared/components/breadcrumb/bread
 // DTOs
 import { 
   CustomerCreateRequest, 
-  CustomerSummaryResponse 
+  CustomerCreateResponse 
 } from '../../../core/models/customer.models';
 import { Breadcrumb } from '../../../shared/components/models/breadcrumb.model';
 
@@ -229,7 +229,7 @@ export class AddCustomerComponent implements OnDestroy {
     };
 
     this.customerService.create(payload).subscribe({
-      next: (response: CustomerSummaryResponse) => {
+      next: (response: CustomerCreateResponse) => {
         this.isSubmitting.set(false);
         this.snackbar.success('Customer created successfully', 6000);
         this.router.navigate([`/customers/${response.ccode}`]);
