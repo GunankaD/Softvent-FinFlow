@@ -1,9 +1,6 @@
 package com.softvent.finflow.customers;
 
-import com.softvent.finflow.customers.dto.CustomerCreateRequest;
-import com.softvent.finflow.customers.dto.CustomerSummaryResponse;
-import com.softvent.finflow.customers.dto.CustomerDetailResponse;
-import com.softvent.finflow.customers.dto.CustomerUpdateRequest;
+import com.softvent.finflow.customers.dto.*;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -26,7 +23,7 @@ public class CustomerResource {
     @POST
     public Response createCustomer(@Valid CustomerCreateRequest request) {
 
-        CustomerSummaryResponse response =
+        CustomerCreateResponse response =
                 customerService.createCustomer(request);
 
         return Response.status(Response.Status.CREATED)
