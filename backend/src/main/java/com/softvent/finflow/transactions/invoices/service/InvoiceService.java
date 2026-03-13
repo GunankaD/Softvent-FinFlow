@@ -7,6 +7,7 @@ import com.softvent.finflow.transactions.enums.InvoiceStatus;
 import com.softvent.finflow.transactions.invoiceitems.entity.InvoiceItem;
 import com.softvent.finflow.transactions.invoices.dto.InvoiceCreateRequest;
 import com.softvent.finflow.transactions.invoices.dto.InvoiceDetailResponse;
+import com.softvent.finflow.transactions.invoices.dto.InvoiceSummaryResponse;
 import com.softvent.finflow.transactions.invoices.entity.Invoice;
 
 import com.softvent.finflow.transactions.paymentapplications.entity.PaymentApplication;
@@ -81,6 +82,43 @@ public class InvoiceService {
     }
 
     // GET INVOICE
+    public List<InvoiceSummaryResponse> getInvoices() {
+
+        List<Invoice> invoices = Invoice.list("deletedAt IS NULL ORDER BY createdAt DESC");
+
+        List<InvoiceSummaryResponse> responses = new ArrayList<>();
+
+        for (Invoice invoice : invoices) {
+
+            InvoiceSummaryResponse res = new InvoiceSummaryResponse();
+
+            res.invid = invoice.invid;
+            res.invoiceNumber = invoice.invoiceNumber;
+            res.ccode = invoice.customer.ccode;
+            res.cname = invoice.customer.cname;
+
+            res.totalAmount = invoice.totalAmount;
+            res.status = invoice.status;
+            res.invoiceDate = invoice.invoiceDate;
+            res.dueDate = invoice.dueDate;
+
+            BigDecimal paidAmount = (BigDecimal) PaymentApplication
+                    .getEntityManager()
+                    .createQuery(
+                            "SELECT COALESCE(SUM(p.appliedAmount), 0) " +
+                                    "FROM PaymentApplication p " +
+                                    "WHERE p.invoice = :invoice"
+                    )
+                    .setParameter("invoice", invoice)
+                    .getSingleResult();
+
+            res.balanceAmount = invoice.totalAmount.subtract(paidAmount);
+
+            responses.add(res);
+        }
+
+        return responses;
+    }
     public InvoiceDetailResponse getInvoiceByNumber(String invoiceNumber) {
 
         Invoice invoice = Invoice.find(
