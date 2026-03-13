@@ -26,7 +26,7 @@ import { BreadcrumbComponent } from '../../../shared/components/breadcrumb/bread
 import {
   ItemGroupResponse,
   ItemCreateRequest,
-  ItemDetailResponse
+  ItemCreateResponse
 } from '../../../core/models/item.models';
 import { Breadcrumb } from '../../../shared/components/models/breadcrumb.model';
 
@@ -80,7 +80,7 @@ export class AddItemComponent implements OnInit {
     this.creating.set(true);
 
     this.itemService.create(request).subscribe({
-      next: (response : ItemDetailResponse) => {
+      next: (response : ItemCreateResponse) => {
         this.snackbar.success('Item created successfully', 3000);
         this.router.navigate(['/items', response.icode]);
       },

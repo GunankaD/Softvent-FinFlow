@@ -9,6 +9,7 @@ import { API_ENDPOINTS } from '../../constants/api-endpoints';
 // DTOs
 import {
   ItemCreateRequest,
+ItemCreateResponse,
   ItemUpdateRequest,
   ItemSummaryResponse,
   ItemDetailResponse,
@@ -36,8 +37,8 @@ export class ItemService {
     );
   }
 
-  create(request: ItemCreateRequest): Observable<ItemDetailResponse> {
-    return this.http.post<ItemDetailResponse>(
+  create(request: ItemCreateRequest): Observable<ItemCreateResponse> {
+    return this.http.post<ItemCreateResponse>(
       `${this.baseUrl}${API_ENDPOINTS.ITEMS.BASE}`,
       request
     );

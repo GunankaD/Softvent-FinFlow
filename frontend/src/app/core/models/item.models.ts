@@ -15,6 +15,10 @@ export interface ItemCreateRequest {
   igid: number;
 }
 
+export interface ItemCreateResponse {
+  icode: string;
+}
+
 export interface ItemUpdateRequest {
   name: string;
   description: string;

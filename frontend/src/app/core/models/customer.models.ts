@@ -15,6 +15,10 @@ export interface CustomerCreateRequest {
   accountNo: string;
 }
 
+export interface CustomerCreateResponse {
+  ccode: string;
+}
+
 export interface CustomerSummaryResponse {
   cid: number;
   ccode: string;
