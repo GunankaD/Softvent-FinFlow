@@ -36,6 +36,14 @@ public class InvoiceService {
             );
         }
 
+        // Invoice Items Validation
+        if (request.items == null || request.items.isEmpty()) {
+            throw new BusinessException(
+                    "Invoice must contain at least one item.",
+                    Response.Status.BAD_REQUEST.getStatusCode()
+            );
+        }
+
         Invoice invoice = new Invoice();
         invoice.customer = customer;
         invoice.invoiceDate = request.invoiceDate;
@@ -54,6 +62,27 @@ public class InvoiceService {
                         "Invalid or inactive item.",
                         Response.Status.BAD_REQUEST.getStatusCode()
                 );
+            }
+
+            // Invoice Item Fields Validation
+            if (itemReq.quantity == null || itemReq.quantity.compareTo(BigDecimal.ZERO) <= 0) {
+                throw new BusinessException(
+                        "Item quantity must be greater than zero.",
+                        Response.Status.BAD_REQUEST.getStatusCode()
+                );
+            }
+
+            if (itemReq.discountPercent != null) {
+
+                if (itemReq.discountPercent.compareTo(BigDecimal.ZERO) < 0
+                        || itemReq.discountPercent.compareTo(BigDecimal.valueOf(100)) > 0) {
+
+                    throw new BusinessException(
+                            "Discount percent must be between 0 and 100.",
+                            Response.Status.BAD_REQUEST.getStatusCode()
+                    );
+                }
+
             }
 
             InvoiceItem invoiceItem = new InvoiceItem();
