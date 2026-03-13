@@ -22,6 +22,8 @@ import java.math.BigDecimal;
  gst_rate         | numeric(5,2)           |           | not null |
  line_total       | numeric(12,2)          |           | not null |
  discount_percent | numeric(5,2)           |           |          | 0
+ line_amount      | numeric(12,2)          |           | not null | 0
+ gst_amount       | numeric(12,2)          |           | not null | 0
 Indexes:
     "invoice_items_pkey" PRIMARY KEY, btree (iviid)
     "idx_invoice_items_invid" btree (invid)
@@ -72,6 +74,4 @@ public class InvoiceItem extends PanacheEntityBase {
 
     @Column(name="line_amount", nullable=false, precision=12, scale=2)
     public BigDecimal lineAmount = BigDecimal.ZERO;
-
-
 }

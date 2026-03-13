@@ -1,27 +1,32 @@
 softvent_finflow=# \d
                         List of relations
+                        List of relations
  Schema |               Name               |   Type   |  Owner
 --------+----------------------------------+----------+----------
  public | auth                             | table    | postgres
  public | auth_uid_seq                     | sequence | postgres
  public | customers                        | table    | postgres
  public | customers_cid_seq                | sequence | postgres
+ public | invoice_items                    | table    | postgres
+ public | invoice_items_iviid_seq          | sequence | postgres
+ public | invoice_number_seq               | sequence | postgres
+ public | invoices                         | table    | postgres
+ public | invoices_invid_seq               | sequence | postgres
  public | item_groups                      | table    | postgres
  public | item_groups_igid_seq             | sequence | postgres
  public | items                            | table    | postgres
  public | items_iid_seq                    | sequence | postgres
- public | outstanding_summary              | table    | postgres
  public | password_reset                   | table    | postgres
  public | password_reset_id_seq            | sequence | postgres
+ public | payment_applications             | table    | postgres
+ public | payment_applications_paid_seq    | sequence | postgres
+ public | receipts                         | table    | postgres
+ public | receipts_rid_seq                 | sequence | postgres
  public | refresh_tokens                   | table    | postgres
  public | refresh_tokens_id_seq            | sequence | postgres
  public | signup_email_verification        | table    | postgres
  public | signup_email_verification_id_seq | sequence | postgres
- public | transaction_items                | table    | postgres
- public | transaction_items_tiid_seq       | sequence | postgres
- public | transactions                     | table    | postgres
- public | transactions_tid_seq             | sequence | postgres
-(19 rows)
+(23 rows)
 
 
                                            Table "public.auth"
@@ -187,6 +192,8 @@ Referenced by:
  gst_rate         | numeric(5,2)           |           | not null |
  line_total       | numeric(12,2)          |           | not null |
  discount_percent | numeric(5,2)           |           |          | 0
+ line_amount      | numeric(12,2)          |           | not null | 0
+ gst_amount       | numeric(12,2)          |           | not null | 0
 Indexes:
     "invoice_items_pkey" PRIMARY KEY, btree (iviid)
     "idx_invoice_items_invid" btree (invid)
