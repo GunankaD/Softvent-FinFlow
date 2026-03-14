@@ -106,6 +106,7 @@ public class InvoiceService {
         }
 
         invoice.totalAmount = invoiceTotal;
+        invoice.balanceDue = invoiceTotal;
         invoice.persist();
 
         return new InvoiceCreateResponse(invoice.invoiceNumber);
@@ -131,18 +132,7 @@ public class InvoiceService {
             res.status = invoice.status;
             res.invoiceDate = invoice.invoiceDate;
             res.dueDate = invoice.dueDate;
-
-            BigDecimal paidAmount = (BigDecimal) PaymentApplication
-                    .getEntityManager()
-                    .createQuery(
-                            "SELECT COALESCE(SUM(p.appliedAmount), 0) " +
-                                    "FROM PaymentApplication p " +
-                                    "WHERE p.invoice = :invoice"
-                    )
-                    .setParameter("invoice", invoice)
-                    .getSingleResult();
-
-            res.balanceAmount = invoice.totalAmount.subtract(paidAmount);
+            res.balanceAmount = invoice.balanceDue;
 
             responses.add(res);
         }
@@ -199,20 +189,8 @@ public class InvoiceService {
         }
 
         response.items = itemResponses;
-
-        // Calculate payments
-        BigDecimal paidAmount = (BigDecimal) PaymentApplication
-                .getEntityManager()
-                .createQuery(
-                        "SELECT COALESCE(SUM(p.appliedAmount), 0) " +
-                                "FROM PaymentApplication p " +
-                                "WHERE p.invoice = :invoice"
-                )
-                .setParameter("invoice", invoice)
-                .getSingleResult();
-
-        response.paidAmount = paidAmount;
-        response.balanceAmount = invoice.totalAmount.subtract(paidAmount);
+        response.balanceAmount = invoice.balanceDue;
+        response.paidAmount = invoice.totalAmount.subtract(invoice.balanceDue);
 
         return response;
     }

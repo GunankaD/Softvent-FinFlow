@@ -24,10 +24,13 @@ import java.time.LocalDate;
  status         | invoice_status_enum      |           | not null | 'DRAFT'::invoice_status_enum
  created_at     | timestamp with time zone |           | not null | CURRENT_TIMESTAMP
  deleted_at     | timestamp with time zone |           |          |
+ balance_due    | numeric(12,2)            |           | not null | 0
 Indexes:
     "invoices_pkey" PRIMARY KEY, btree (invid)
     "idx_invoices_cid" btree (cid)
     "invoices_invoice_number_key" UNIQUE CONSTRAINT, btree (invoice_number)
+Check constraints:
+    "chk_invoice_balance_due_nonnegative" CHECK (balance_due >= 0::numeric)
 Foreign-key constraints:
     "fk_invoice_customer" FOREIGN KEY (cid) REFERENCES customers(cid) ON DELETE RESTRICT
 Referenced by:
@@ -52,6 +55,9 @@ public class Invoice extends PanacheEntityBase {
 
     @Column(name = "total_amount", nullable = false, precision = 12, scale = 2)
     public BigDecimal totalAmount = BigDecimal.ZERO;
+
+    @Column(name = "balance_due", nullable = false, precision = 12, scale = 2)
+    public BigDecimal balanceDue;
 
     @Column(name = "invoice_date", nullable = false)
     public LocalDate invoiceDate;
