@@ -6,6 +6,7 @@ import com.softvent.finflow.items.entity.Item;
 import com.softvent.finflow.transactions.enums.InvoiceStatus;
 import com.softvent.finflow.transactions.invoiceitems.entity.InvoiceItem;
 import com.softvent.finflow.transactions.invoices.dto.InvoiceCreateRequest;
+import com.softvent.finflow.transactions.invoices.dto.InvoiceCreateResponse;
 import com.softvent.finflow.transactions.invoices.dto.InvoiceDetailResponse;
 import com.softvent.finflow.transactions.invoices.dto.InvoiceSummaryResponse;
 import com.softvent.finflow.transactions.invoices.entity.Invoice;
@@ -26,7 +27,7 @@ public class InvoiceService {
 
     // CREATE INVOICE
     @Transactional
-    public String createInvoice(InvoiceCreateRequest request) {
+    public InvoiceCreateResponse createInvoice(InvoiceCreateRequest request) {
 
         Customer customer = Customer.findById(request.cid);
         if (customer == null) {
@@ -107,7 +108,7 @@ public class InvoiceService {
         invoice.totalAmount = invoiceTotal;
         invoice.persist();
 
-        return invoice.invoiceNumber;
+        return new InvoiceCreateResponse(invoice.invoiceNumber);
     }
 
     // GET INVOICE

@@ -1,6 +1,7 @@
 package com.softvent.finflow.transactions.invoices.resource;
 
 import com.softvent.finflow.transactions.invoices.dto.InvoiceCreateRequest;
+import com.softvent.finflow.transactions.invoices.dto.InvoiceCreateResponse;
 import com.softvent.finflow.transactions.invoices.dto.InvoiceDetailResponse;
 import com.softvent.finflow.transactions.invoices.dto.InvoiceSummaryResponse;
 import com.softvent.finflow.transactions.invoices.service.InvoiceService;
@@ -26,7 +27,7 @@ public class InvoiceResource {
     @POST
     public Response create(InvoiceCreateRequest request) {
 
-        String response = invoiceService.createInvoice(request);
+        InvoiceCreateResponse response = invoiceService.createInvoice(request);
 
         return Response
                 .status(Response.Status.CREATED)
