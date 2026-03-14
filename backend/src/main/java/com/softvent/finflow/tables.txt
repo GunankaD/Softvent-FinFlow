@@ -168,10 +168,13 @@ Referenced by:
  status         | invoice_status_enum      |           | not null | 'DRAFT'::invoice_status_enum
  created_at     | timestamp with time zone |           | not null | CURRENT_TIMESTAMP
  deleted_at     | timestamp with time zone |           |          |
+ balance_due    | numeric(12,2)            |           | not null | 0
 Indexes:
     "invoices_pkey" PRIMARY KEY, btree (invid)
     "idx_invoices_cid" btree (cid)
     "invoices_invoice_number_key" UNIQUE CONSTRAINT, btree (invoice_number)
+Check constraints:
+    "chk_invoice_balance_due_nonnegative" CHECK (balance_due >= 0::numeric)
 Foreign-key constraints:
     "fk_invoice_customer" FOREIGN KEY (cid) REFERENCES customers(cid) ON DELETE RESTRICT
 Referenced by:
@@ -214,10 +217,13 @@ Foreign-key constraints:
  receipt_date     | date                     |           | not null |
  created_at       | timestamp with time zone |           | not null | CURRENT_TIMESTAMP
  deleted_at       | timestamp with time zone |           |          |
+ unapplied_amount | numeric(12,2)            |           | not null | 0
 Indexes:
     "receipts_pkey" PRIMARY KEY, btree (rid)
     "idx_receipts_cid" btree (cid)
     "receipts_receipt_number_key" UNIQUE CONSTRAINT, btree (receipt_number)
+Check constraints:
+    "chk_receipt_unapplied_nonnegative" CHECK (unapplied_amount >= 0::numeric)
 Foreign-key constraints:
     "fk_receipt_customer" FOREIGN KEY (cid) REFERENCES customers(cid) ON DELETE RESTRICT
 Referenced by:

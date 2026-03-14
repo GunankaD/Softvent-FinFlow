@@ -24,10 +24,13 @@ import java.time.LocalDate;
  receipt_date     | date                     |           | not null |
  created_at       | timestamp with time zone |           | not null | CURRENT_TIMESTAMP
  deleted_at       | timestamp with time zone |           |          |
+ unapplied_amount | numeric(12,2)            |           | not null | 0
 Indexes:
     "receipts_pkey" PRIMARY KEY, btree (rid)
     "idx_receipts_cid" btree (cid)
     "receipts_receipt_number_key" UNIQUE CONSTRAINT, btree (receipt_number)
+Check constraints:
+    "chk_receipt_unapplied_nonnegative" CHECK (unapplied_amount >= 0::numeric)
 Foreign-key constraints:
     "fk_receipt_customer" FOREIGN KEY (cid) REFERENCES customers(cid) ON DELETE RESTRICT
 Referenced by:
@@ -58,6 +61,9 @@ public class Receipt extends PanacheEntityBase {
 
     @Column(name = "total_received", nullable = false, precision = 12, scale = 2)
     public BigDecimal totalReceived;
+
+    @Column(name = "unapplied_amount", nullable = false, precision = 12, scale = 2)
+    public BigDecimal unappliedAmount;
 
     @Column(name = "receipt_date", nullable = false)
     public LocalDate receiptDate;
