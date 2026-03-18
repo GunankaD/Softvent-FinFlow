@@ -9,6 +9,7 @@ import com.softvent.finflow.transactions.invoices.dto.*;
 import com.softvent.finflow.transactions.invoices.entity.Invoice;
 
 import com.softvent.finflow.transactions.paymentapplications.entity.PaymentApplication;
+import io.quarkus.panache.common.Parameters;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
@@ -16,8 +17,8 @@ import jakarta.ws.rs.core.Response;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class InvoiceService {
@@ -34,54 +35,60 @@ public class InvoiceService {
             );
         }
 
-        // Invoice Items Validation
-        if (request.items == null || request.items.isEmpty()) {
-            throw new BusinessException(
-                    "Invoice must contain at least one item.",
-                    Response.Status.BAD_REQUEST.getStatusCode()
-            );
+        // --- Bulk Fetch Items (N+1 Fix) ---
+        // Extract all requested item IDs
+        List<Long> itemIds = request.items.stream()
+                .map(item -> item.iid)
+                .collect(Collectors.toList());
+
+        // Fetch all matching active items in one query
+        List<Item> fetchedItems = Item.find(
+                "iid IN (:ids) " +
+                "AND isActive = true",
+                Parameters.with("ids", itemIds)
+        ).list();
+
+        // Map them for O(1) lookups: Map<iid, Item>
+        Map<Long, Item> itemMap = fetchedItems.stream()
+                .collect(Collectors.toMap(item -> item.iid, item -> item));
+
+        // --- Validate all items BEFORE persisting anything ---
+        Set<Long> uniqueItems = new HashSet<>();
+        for (InvoiceCreateRequest.InvoiceItemRequest itemReq : request.items) {
+
+            // INVALID ITEM CHECK
+            if (!itemMap.containsKey(itemReq.iid)) {
+                throw new BusinessException(
+                        "Invalid or inactive item ID: " + itemReq.iid,
+                        Response.Status.BAD_REQUEST.getStatusCode()
+                );
+            }
+
+            // DUPLICATE ITEM CHECK
+            if (!uniqueItems.add(itemReq.iid)) {
+                throw new BusinessException(
+                        "Duplicate item in invoice: " + itemReq.iid,
+                        Response.Status.BAD_REQUEST.getStatusCode()
+                );
+            }
         }
 
+        // --- Setup the invoice ---
         Invoice invoice = new Invoice();
         invoice.customer = customer;
         invoice.invoiceDate = request.invoiceDate;
         invoice.dueDate = request.dueDate;
         invoice.invoiceNumber = generateInvoiceNumber();
+
+        // We need it persisted here so it generates an ID for the InvoiceItems to reference.
         invoice.persist();
 
         BigDecimal invoiceTotal = BigDecimal.ZERO;
 
-        // Create new row in InvoiceItem for each item
+        // Loop over all line items, process and persist them
         for (InvoiceCreateRequest.InvoiceItemRequest itemReq : request.items) {
 
-            Item item = Item.findById(itemReq.iid);
-            if (item == null || !item.isActive) {
-                throw new BusinessException(
-                        "Invalid or inactive item.",
-                        Response.Status.BAD_REQUEST.getStatusCode()
-                );
-            }
-
-            // Invoice Item Fields Validation
-            if (itemReq.quantity == null || itemReq.quantity.compareTo(BigDecimal.ZERO) <= 0) {
-                throw new BusinessException(
-                        "Item quantity must be greater than zero.",
-                        Response.Status.BAD_REQUEST.getStatusCode()
-                );
-            }
-
-            if (itemReq.discountPercent != null) {
-
-                if (itemReq.discountPercent.compareTo(BigDecimal.ZERO) < 0
-                        || itemReq.discountPercent.compareTo(BigDecimal.valueOf(100)) > 0) {
-
-                    throw new BusinessException(
-                            "Discount percent must be between 0 and 100.",
-                            Response.Status.BAD_REQUEST.getStatusCode()
-                    );
-                }
-
-            }
+            Item item = itemMap.get(itemReq.iid);
 
             InvoiceItem invoiceItem = new InvoiceItem();
             invoiceItem.invoice = invoice;
@@ -93,8 +100,7 @@ public class InvoiceService {
             invoiceItem.quantity = itemReq.quantity;
             invoiceItem.rate = item.salesRate;
             invoiceItem.gstRate = item.gstRate;
-            invoiceItem.discountPercent = itemReq.discountPercent;
-
+            invoiceItem.discountPercent = itemReq.discountPercent != null ? itemReq.discountPercent : BigDecimal.ZERO;
             calculateAmounts(invoiceItem);
 
             invoiceTotal = invoiceTotal.add(invoiceItem.lineTotal);
@@ -104,24 +110,37 @@ public class InvoiceService {
 
         invoice.totalAmount = invoiceTotal;
         invoice.balanceDue = invoiceTotal;
-        invoice.persist();
+        // No need to call persist() again;
+        // Hibernate automatically flushes changes to managed entities at the end of the transaction!
 
         return new InvoiceCreateResponse(invoice.invoiceNumber);
     }
 
-    // GET INVOICE
+
+    // GET INVOICES
     public List<InvoiceSummaryResponse> getInvoices() {
 
-        List<Invoice> invoices = Invoice.list("deletedAt IS NULL ORDER BY createdAt DESC");
+        // 1. Fetch Invoices and Customers together in exactly 1 query (N+1 Fix)
+        List<Invoice> invoices = Invoice.find(
+                "SELECT i " +
+                        "FROM Invoice i " +
+                        "JOIN FETCH i.customer " +
+                        "WHERE i.deletedAt IS NULL " +
+                        "ORDER BY i.createdAt DESC"
+        ).list();
 
+        // 2. Initialize the empty response list
         List<InvoiceSummaryResponse> responses = new ArrayList<>();
 
+        // 3. Loop and map the data
         for (Invoice invoice : invoices) {
 
             InvoiceSummaryResponse res = new InvoiceSummaryResponse();
 
             res.invid = invoice.invid;
             res.invoiceNumber = invoice.invoiceNumber;
+
+            // This is safe and fast because the customer was already fetched!
             res.ccode = invoice.customer.ccode;
             res.cname = invoice.customer.cname;
 
@@ -138,9 +157,14 @@ public class InvoiceService {
     }
     public InvoiceDetailResponse getInvoiceByNumber(String invoiceNumber) {
 
+        // --- Fetch Invoice + Customer in 1 query ---
         Invoice invoice = Invoice.find(
-                "invoiceNumber = ?1 AND deletedAt IS NULL",
-                invoiceNumber
+                "SELECT i " +
+                        "FROM Invoice i " +
+                        "JOIN FETCH i.customer " +
+                        "WHERE i.invoiceNumber = :invoiceNumber " +
+                        "AND i.deletedAt IS NULL",
+                Parameters.with("invoiceNumber", invoiceNumber)
         ).firstResult();
 
         if (invoice == null) {
@@ -154,27 +178,31 @@ public class InvoiceService {
 
         response.invid = invoice.invid;
         response.invoiceNumber = invoice.invoiceNumber;
-        response.ccode = invoice.customer.ccode;
+        response.ccode = invoice.customer.ccode; // No extra query!
         response.cname = invoice.customer.cname;
 
         response.invoiceDate = invoice.invoiceDate;
         response.dueDate = invoice.dueDate;
         response.status = invoice.status;
-
         response.totalAmount = invoice.totalAmount;
 
-        // Fetch invoice items
-        List<InvoiceItem> items = InvoiceItem.list("invoice = ?1", invoice);
+        // --- Fetch Items + Master Items in 1 query ---
+        List<InvoiceItem> items = InvoiceItem.find(
+                "SELECT ii " +
+                        "FROM InvoiceItem ii " +
+                        "JOIN FETCH ii.item " +
+                        "WHERE ii.invoice = :invoice",
+                Parameters.with("invoice", invoice)
+        ).list();
 
         List<InvoiceDetailResponse.InvoiceItemResponse> itemResponses = new ArrayList<>();
 
-        // Fetch all invoice items
         for (InvoiceItem item : items) {
 
             InvoiceDetailResponse.InvoiceItemResponse itemRes =
                     new InvoiceDetailResponse.InvoiceItemResponse();
 
-            itemRes.iid = item.item.iid;
+            itemRes.iid = item.item.iid; // No extra query!
             itemRes.itemCode = item.itemCode;
             itemRes.itemName = item.itemName;
             itemRes.quantity = item.quantity;
