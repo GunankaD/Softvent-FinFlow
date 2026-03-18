@@ -1,4 +1,4 @@
-package com.softvent.finflow.transactions.receipts.service;
+package com.softvent.finflow.transactions.receipts;
 
 import com.softvent.finflow.common.BusinessException;
 import com.softvent.finflow.customers.entity.Customer;

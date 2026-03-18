@@ -1,10 +1,9 @@
-package com.softvent.finflow.transactions.receipts.resource;
+package com.softvent.finflow.transactions.receipts;
 
 import com.softvent.finflow.transactions.receipts.dto.ReceiptCreateRequest;
 import com.softvent.finflow.transactions.receipts.dto.ReceiptCreateResponse;
 import com.softvent.finflow.transactions.receipts.dto.ReceiptDetailResponse;
 import com.softvent.finflow.transactions.receipts.dto.ReceiptSummaryResponse;
-import com.softvent.finflow.transactions.receipts.service.ReceiptService;
 
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;

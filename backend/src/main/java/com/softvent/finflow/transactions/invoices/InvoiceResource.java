@@ -1,10 +1,9 @@
-package com.softvent.finflow.transactions.invoices.resource;
+package com.softvent.finflow.transactions.invoices;
 
 import com.softvent.finflow.transactions.invoices.dto.InvoiceCreateRequest;
 import com.softvent.finflow.transactions.invoices.dto.InvoiceCreateResponse;
 import com.softvent.finflow.transactions.invoices.dto.InvoiceDetailResponse;
 import com.softvent.finflow.transactions.invoices.dto.InvoiceSummaryResponse;
-import com.softvent.finflow.transactions.invoices.service.InvoiceService;
 
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
