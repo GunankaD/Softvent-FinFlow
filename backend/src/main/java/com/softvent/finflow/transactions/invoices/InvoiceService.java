@@ -116,7 +116,6 @@ public class InvoiceService {
         return new InvoiceCreateResponse(invoice.invoiceNumber);
     }
 
-
     // GET INVOICES
     public List<InvoiceSummaryResponse> getInvoices() {
 
@@ -185,6 +184,8 @@ public class InvoiceService {
         response.dueDate = invoice.dueDate;
         response.status = invoice.status;
         response.totalAmount = invoice.totalAmount;
+        response.balanceAmount = invoice.balanceDue;
+        response.paidAmount = invoice.totalAmount.subtract(invoice.balanceDue);
 
         // --- Fetch Items + Master Items in 1 query ---
         List<InvoiceItem> items = InvoiceItem.find(
@@ -195,12 +196,10 @@ public class InvoiceService {
                 Parameters.with("invoice", invoice)
         ).list();
 
-        List<InvoiceDetailResponse.InvoiceItemResponse> itemResponses = new ArrayList<>();
-
+        List<InvoiceItemResponse> itemResponses = new ArrayList<>();
         for (InvoiceItem item : items) {
 
-            InvoiceDetailResponse.InvoiceItemResponse itemRes =
-                    new InvoiceDetailResponse.InvoiceItemResponse();
+            InvoiceItemResponse itemRes = new InvoiceItemResponse();
 
             itemRes.iid = item.item.iid; // No extra query!
             itemRes.itemCode = item.itemCode;
@@ -212,10 +211,31 @@ public class InvoiceService {
 
             itemResponses.add(itemRes);
         }
-
         response.items = itemResponses;
-        response.balanceAmount = invoice.balanceDue;
-        response.paidAmount = invoice.totalAmount.subtract(invoice.balanceDue);
+
+        // --- Fetch Payment Applications & Receipts ---
+        List<PaymentApplication> payments = PaymentApplication.find(
+                "SELECT p " +
+                        "FROM PaymentApplication p " +
+                        "JOIN FETCH p.receipt " +
+                        "WHERE p.invoice = :invoice" +
+                        "ORDER BY p.appliedAt ASC",
+
+                Parameters.with("invoice", invoice)
+        ).list();
+
+        List<InvoicePaymentResponse> paymentResponses = new ArrayList<>();
+        for (PaymentApplication p : payments) {
+
+            InvoicePaymentResponse payRes = new InvoicePaymentResponse();
+
+            payRes.receiptNumber = p.receipt.receiptNumber;
+            payRes.appliedAmount = p.appliedAmount;
+            payRes.appliedAt = p.appliedAt;
+
+            paymentResponses.add(payRes);
+        }
+        response.payments = paymentResponses;
 
         return response;
     }

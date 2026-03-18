@@ -18,13 +18,5 @@ public class InvoiceDetailResponse {
     public BigDecimal paidAmount;
     public BigDecimal balanceAmount;
     public List<InvoiceItemResponse> items;
-    public static class InvoiceItemResponse {
-        public Long iid;
-        public String itemCode;
-        public String itemName;
-        public BigDecimal quantity;
-        public BigDecimal rate;
-        public BigDecimal gstRate;
-        public BigDecimal lineTotal;
-    }
+    public List<InvoicePaymentResponse> payments;
 }
