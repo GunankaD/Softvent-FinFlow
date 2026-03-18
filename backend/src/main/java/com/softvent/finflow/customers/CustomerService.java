@@ -4,11 +4,18 @@ import com.softvent.finflow.customers.dto.*;
 import com.softvent.finflow.customers.entity.Customer;
 
 import com.softvent.finflow.common.BusinessException;
+import com.softvent.finflow.transactions.enums.InvoiceStatus;
+import com.softvent.finflow.transactions.invoices.dto.InvoiceSummaryResponse;
+import com.softvent.finflow.transactions.invoices.entity.Invoice;
+import com.softvent.finflow.transactions.receipts.dto.ReceiptSummaryResponse;
+import com.softvent.finflow.transactions.receipts.entity.Receipt;
+import io.quarkus.panache.common.Parameters;
 import jakarta.ws.rs.core.Response;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class CustomerService {
@@ -83,6 +90,77 @@ public class CustomerService {
                 .stream()
                 .map(this::mapToSummaryResponse)
                 .toList();
+    }
+
+    // GET TRANSACTION DETAILS
+    public List<InvoiceSummaryResponse> getInvoicesByCustomer(String ccode, String filter) {
+
+        Customer customer = Customer.find(
+                "ccode = :ccode AND deletedAt IS NULL",
+                Parameters.with("ccode", ccode)
+        ).firstResult();
+
+        if (customer == null) {
+            throw new BusinessException(
+                    "Customer not found.",
+                    Response.Status.NOT_FOUND.getStatusCode()
+            );
+        }
+
+        String baseQuery = "i.customer = :customer AND i.deletedAt IS NULL AND i.status != :voidStatus";
+        String finalQuery = switch (filter != null ? filter.toLowerCase() : "pending") {
+            case "all" -> baseQuery;
+            case "paid" -> baseQuery + " AND i.balanceDue = 0";
+            default -> baseQuery + " AND i.balanceDue > 0";
+        };
+
+        // 3. Execute Query
+        List<Invoice> invoices = Invoice.find(
+                "SELECT i " +
+                        "FROM Invoice i " +
+                        "JOIN FETCH i.customer " +
+                        "WHERE " + finalQuery + " " +
+                        "ORDER BY i.createdAt DESC",
+                Parameters.with("customer", customer).and("voidStatus", InvoiceStatus.VOID)
+        ).list();
+
+        // 4. Map and Return using Method Reference
+        return invoices.stream()
+                .map(this::mapToInvoiceResponse)
+                .collect(Collectors.toList());
+    }
+    public List<ReceiptSummaryResponse> getReceiptsByCustomer(String ccode, String filter) {
+
+        Customer customer = Customer.find(
+                "ccode = :ccode AND deletedAt IS NULL",
+                Parameters.with("ccode", ccode)
+        ).firstResult();
+
+        if (customer == null) {
+            throw new BusinessException(
+                    "Customer not found.",
+                    Response.Status.NOT_FOUND.getStatusCode()
+            );
+        }
+
+        String baseQuery = "r.customer = :customer AND r.deletedAt IS NULL";
+        String finalQuery = switch (filter != null ? filter.toLowerCase() : "available") {
+            case "all" -> baseQuery;
+            default -> baseQuery + " AND r.unappliedAmount > 0";
+        };
+
+        List<Receipt> receipts = Receipt.find(
+                "SELECT r " +
+                        "FROM Receipt r " +
+                        "JOIN FETCH r.customer " +
+                        "WHERE " + finalQuery + " " +
+                        "ORDER BY r.createdAt DESC",
+                Parameters.with("customer", customer)
+        ).list();
+
+        return receipts.stream()
+                .map(this::mapToReceiptResponse)
+                .collect(Collectors.toList());
     }
 
     // UPDATE CUSTOMER DETAILS
@@ -194,5 +272,36 @@ public class CustomerService {
         dto.createdAt = customer.createdAt;
 
         return dto;
+    }
+    private InvoiceSummaryResponse mapToInvoiceResponse(Invoice invoice) {
+
+        InvoiceSummaryResponse res = new InvoiceSummaryResponse();
+
+        res.invid = invoice.invid;
+        res.invoiceNumber = invoice.invoiceNumber;
+        res.ccode = invoice.customer.ccode;
+        res.cname = invoice.customer.cname;
+
+        res.totalAmount = invoice.totalAmount;
+        res.balanceAmount = invoice.balanceDue;
+        res.status = invoice.status;
+        res.invoiceDate = invoice.invoiceDate;
+        res.dueDate = invoice.dueDate;
+
+        return res;
+    }
+    private ReceiptSummaryResponse mapToReceiptResponse(Receipt receipt) {
+
+        ReceiptSummaryResponse res = new ReceiptSummaryResponse();
+
+        res.receiptNumber = receipt.receiptNumber;
+        res.ccode = receipt.customer.ccode;
+        res.cname = receipt.customer.cname;
+        res.paymentMode = receipt.paymentMode;
+        res.totalReceived = receipt.totalReceived;
+        res.unappliedAmount = receipt.unappliedAmount;
+        res.receiptDate = receipt.receiptDate;
+
+        return res;
     }
 }

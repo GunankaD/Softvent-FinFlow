@@ -1,6 +1,8 @@
 package com.softvent.finflow.customers;
 
 import com.softvent.finflow.customers.dto.*;
+import com.softvent.finflow.transactions.invoices.dto.InvoiceSummaryResponse;
+import com.softvent.finflow.transactions.receipts.dto.ReceiptSummaryResponse;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -19,7 +21,7 @@ public class CustomerResource {
     @Inject
     CustomerService customerService;
 
-    // CREATE CUSTOMER ENTRY
+    // CREATE
     @POST
     public Response createCustomer(@Valid CustomerCreateRequest request) {
 
@@ -31,7 +33,20 @@ public class CustomerResource {
                 .build();
     }
 
-    // GET CUSTOMER INFO FUNCTIONS
+    // GETTERS
+    @GET
+    public Response getAllCustomers() {
+        List<CustomerSummaryResponse> customers = customerService.getAllCustomers();
+        return Response.ok(customers).build();
+    }
+
+    @GET
+    @Path("/{ccode}")
+    public Response getCustomerByCcode(@PathParam("ccode") String ccode) {
+        CustomerDetailResponse response = customerService.getCustomerByCcode(ccode);
+        return Response.ok(response).build();
+    }
+
     @GET
     @Path("/id/{id}")
     public Response getCustomerById(@PathParam("id") Long id) {
@@ -39,30 +54,44 @@ public class CustomerResource {
         return Response.ok(response).build();
     }
 
+    // GET TRANSACTION DETAILS
     @GET
-    @Path("/ccode/{ccode}")
-    public Response getCustomerByCcode(@PathParam("ccode") String ccode) {
-        CustomerDetailResponse response = customerService.getCustomerByCcode(ccode);
-        return Response.ok(response).build();
+    @Path("/{ccode}/invoices")
+    public Response getInvoicesByCustomer(
+            @PathParam("ccode") String ccode,
+            @QueryParam("filter") String filter
+    ) {
+
+        List<InvoiceSummaryResponse> response =
+                customerService.getInvoicesByCustomer(ccode, filter);
+
+        return Response.ok(response).build(); // 200
     }
 
     @GET
-    public Response getAllCustomers() {
-        List<CustomerSummaryResponse> customers = customerService.getAllCustomers();
-        return Response.ok(customers).build();
+    @Path("/{ccode}/receipts")
+    public Response getReceiptsByCustomer(
+            @PathParam("ccode") String ccode,
+            @QueryParam("filter") String filter
+    ) {
+
+        List<ReceiptSummaryResponse> response =
+                customerService.getReceiptsByCustomer(ccode, filter);
+
+        return Response.ok(response).build(); // 200
     }
 
-    // UPDATE CUSTOMER INFO
+    // UPDATE
     @PUT
-    @Path("/ccode/{ccode}")
+    @Path("/{ccode}")
     public Response updateCustomer(@PathParam("ccode") String ccode, @Valid CustomerUpdateRequest request) {
         CustomerDetailResponse response = customerService.updateCustomer(ccode, request);
         return Response.ok(response).build(); // 200 SUCCESS
     }
 
-    // DELETE CUSTOMER
+    // DELETE
     @DELETE
-    @Path("/ccode/{ccode}")
+    @Path("/{ccode}")
     public Response deleteCustomer(@PathParam("ccode") String ccode) {
         customerService.deleteCustomer(ccode);
         return Response.status(Response.Status.NO_CONTENT).build(); // 204
