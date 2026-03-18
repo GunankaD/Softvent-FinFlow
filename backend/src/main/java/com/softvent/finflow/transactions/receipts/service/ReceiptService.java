@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @ApplicationScoped
 public class ReceiptService {
 
-    // CREATE
+    // CREATE RECEIPT
     @Transactional
     public ReceiptCreateResponse createReceipt(ReceiptCreateRequest request) {
 
@@ -229,6 +229,37 @@ public class ReceiptService {
         response.applications = appResponses;
 
         return response;
+    }
+
+    // DELETE RECEIPTS
+    @Transactional
+    public void deleteReceiptByNumber(String receiptNumber) {
+
+        Receipt receipt = Receipt.find(
+                "receiptNumber = ?1 AND deletedAt IS NULL",
+                receiptNumber
+        ).firstResult();
+
+        if (receipt == null) {
+            throw new BusinessException(
+                    "Receipt not found.",
+                    Response.Status.NOT_FOUND.getStatusCode() // 404
+            );
+        }
+
+        // Check if any payments applied
+        long applicationCount = PaymentApplication.count(
+                "receipt = :receipt",
+                Parameters.with("receipt", receipt));
+
+        if (applicationCount > 0) {
+            throw new BusinessException(
+                    "Cannot delete receipt with applied payments.",
+                    Response.Status.BAD_REQUEST.getStatusCode() // 400
+            );
+        }
+
+        receipt.deletedAt = java.time.Instant.now();
     }
 
     private void updateInvoiceStatus(Invoice invoice) {
