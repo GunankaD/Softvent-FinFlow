@@ -25,6 +25,7 @@ import java.time.LocalDate;
  created_at     | timestamp with time zone |           | not null | CURRENT_TIMESTAMP
  deleted_at     | timestamp with time zone |           |          |
  balance_due    | numeric(12,2)            |           | not null | 0
+ version        | integer                  |           | not null | 0
 Indexes:
     "invoices_pkey" PRIMARY KEY, btree (invid)
     "idx_invoices_cid" btree (cid)
@@ -75,6 +76,10 @@ public class Invoice extends PanacheEntityBase {
 
     @Column(name = "deleted_at")
     public Instant deletedAt;
+
+    @Version
+    @Column(name = "version", nullable = false)
+    public Integer version = 0;
 
     @PrePersist
     public void prePersist() {

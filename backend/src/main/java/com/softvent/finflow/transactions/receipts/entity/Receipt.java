@@ -25,6 +25,7 @@ import java.time.LocalDate;
  created_at       | timestamp with time zone |           | not null | CURRENT_TIMESTAMP
  deleted_at       | timestamp with time zone |           |          |
  unapplied_amount | numeric(12,2)            |           | not null | 0
+ version          | integer                  |           | not null | 0
 Indexes:
     "receipts_pkey" PRIMARY KEY, btree (rid)
     "idx_receipts_cid" btree (cid)
@@ -73,6 +74,10 @@ public class Receipt extends PanacheEntityBase {
 
     @Column(name = "deleted_at")
     public Instant deletedAt;
+
+    @Version
+    @Column(name = "version", nullable = false)
+    public Integer version = 0;
 
     @PrePersist
     public void prePersist() {
