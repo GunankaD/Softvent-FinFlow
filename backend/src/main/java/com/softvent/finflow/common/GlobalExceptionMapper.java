@@ -55,7 +55,7 @@ public class GlobalExceptionMapper implements ExceptionMapper<Throwable> {
                     .entity(error)
                     .build();
         }
-        
+
         LOG.error("Unhandled exception caught in REST API", exception);
         ApiError error = new ApiError(
                 Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), // 500

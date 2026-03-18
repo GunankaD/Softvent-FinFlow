@@ -225,20 +225,25 @@ public class InvoiceService {
     public void deleteInvoiceByNumber(String invoiceNumber) {
 
         Invoice invoice = Invoice.find(
-                "invoiceNumber = ?1 AND deletedAt IS NULL",
-                invoiceNumber
+                "invoiceNumber = :invoiceNumber AND deletedAt IS NULL",
+                Parameters.with("invoiceNumber", invoiceNumber)
         ).firstResult();
 
-        if (invoice == null || invoice.deletedAt != null) {
+        if (invoice == null) {
             throw new BusinessException(
                     "Invoice not found.",
-                    Response.Status.NOT_FOUND.getStatusCode()
+                    Response.Status.NOT_FOUND.getStatusCode() // 404
             );
         }
-        if (!PaymentApplication.list("invoice = ?1", invoice).isEmpty()) {
+
+        long paymentCount = PaymentApplication.count(
+                "invoice = :invoice",
+                Parameters.with("invoice", invoice)
+        );
+        if (paymentCount > 0) {
             throw new BusinessException(
                     "Cannot void invoice with applied payments.",
-                    Response.Status.BAD_REQUEST.getStatusCode()
+                    Response.Status.BAD_REQUEST.getStatusCode() // 400
             );
         }
 
