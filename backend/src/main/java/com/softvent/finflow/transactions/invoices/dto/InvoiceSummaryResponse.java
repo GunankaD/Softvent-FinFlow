@@ -7,12 +7,15 @@ import java.time.LocalDate;
 public class InvoiceSummaryResponse {
 
     public Long invid;
+
     public String invoiceNumber;
     public String ccode;
     public String cname;
+
     public BigDecimal totalAmount;
     public BigDecimal balanceAmount;
     public InvoiceStatus status;
+
     public LocalDate invoiceDate;
     public LocalDate dueDate;
 }
