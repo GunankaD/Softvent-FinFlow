@@ -169,6 +169,7 @@ Referenced by:
  created_at     | timestamp with time zone |           | not null | CURRENT_TIMESTAMP
  deleted_at     | timestamp with time zone |           |          |
  balance_due    | numeric(12,2)            |           | not null | 0
+ version        | integer                  |           | not null | 0
 Indexes:
     "invoices_pkey" PRIMARY KEY, btree (invid)
     "idx_invoices_cid" btree (cid)
@@ -218,6 +219,7 @@ Foreign-key constraints:
  created_at       | timestamp with time zone |           | not null | CURRENT_TIMESTAMP
  deleted_at       | timestamp with time zone |           |          |
  unapplied_amount | numeric(12,2)            |           | not null | 0
+ version          | integer                  |           | not null | 0
 Indexes:
     "receipts_pkey" PRIMARY KEY, btree (rid)
     "idx_receipts_cid" btree (cid)
@@ -228,7 +230,6 @@ Foreign-key constraints:
     "fk_receipt_customer" FOREIGN KEY (cid) REFERENCES customers(cid) ON DELETE RESTRICT
 Referenced by:
     TABLE "payment_applications" CONSTRAINT "fk_payment_application_receipt" FOREIGN KEY (rid) REFERENCES receipts(rid) ON DELETE RESTRICT
-
 
 
                                Table "public.payment_applications"
