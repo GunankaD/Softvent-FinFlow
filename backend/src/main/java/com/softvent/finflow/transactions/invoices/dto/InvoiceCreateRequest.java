@@ -12,9 +12,10 @@ public class InvoiceCreateRequest {
     @NotBlank(message = "Customer code (ccode) is required.")
     public String ccode;
 
-    @NotNull(message = "Invoice date is required.")
+    @NotNull(message = "Invoice creation date is required.")
     public LocalDate invoiceDate;
 
+    @NotNull(message = "Invoice due date is required.")
     public LocalDate dueDate;
 
     @NotEmpty(message = "An invoice must contain at least one item.")
