@@ -97,4 +97,8 @@ export const routes: Routes = [
             .then(m => m.ItemDetailsComponent),
         canActivate: [AuthGuard]
     },
+    {
+        path: '**',
+        redirectTo: ''
+    }
 ];
