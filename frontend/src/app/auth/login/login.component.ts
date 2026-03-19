@@ -4,7 +4,7 @@ import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import { Router, RouterModule } from '@angular/router';
 
 // RxJS
-import { merge } from 'rxjs';
+import { merge, Subject, takeUntil } from 'rxjs';
 
 // MATERIAL UI
 import { MatCardModule } from '@angular/material/card';
@@ -15,8 +15,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { 
   ReactiveFormsModule, 
-  FormsModule,
-  FormGroup, 
+  FormsModule, 
   FormControl,
   Validators,
 } from '@angular/forms';
@@ -87,6 +86,27 @@ export class LoginComponent {
     )
     .pipe(takeUntilDestroyed())
     .subscribe(() => this.updatePasswordError());
+  }
+
+  private destroy$ = new Subject<void>();
+  ngOnInit(): void {
+    // Removes invalidAuth error when user updates either email or pwd
+    const clearInvalidAuth = () => {
+      [this.email, this.password].forEach(control => {
+        if (control.hasError('invalidAuth')) {
+          const errors = { ...control.errors };
+          delete errors['invalidAuth'];
+          control.setErrors(Object.keys(errors).length ? errors : null);
+        }
+      });
+    };
+
+    this.email.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(clearInvalidAuth);
+  this.password.valueChanges.pipe(takeUntil(this.destroy$)).subscribe(clearInvalidAuth);
+  }
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   // UPDATE FXS
