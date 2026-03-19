@@ -24,13 +24,12 @@ public class ReceiptService {
     @Transactional
     public ReceiptCreateResponse createReceipt(ReceiptCreateRequest request) {
 
-        Customer customer = Customer.findById(request.cid);
-        if (customer == null) {
-            throw new BusinessException(
-                    "Customer not found.",
-                    Response.Status.NOT_FOUND.getStatusCode() // 404
-            );
-        }
+        Customer customer = Customer.<Customer>find("ccode", request.ccode)
+                .firstResultOptional()
+                .orElseThrow(() -> new BusinessException(
+                        "Customer not found: " + request.ccode,
+                        Response.Status.NOT_FOUND.getStatusCode() // 404
+                ));
 
         // --- Pre-validate total applied amount ---
         // Sum up all applied amounts before hitting the database or creating the receipt.

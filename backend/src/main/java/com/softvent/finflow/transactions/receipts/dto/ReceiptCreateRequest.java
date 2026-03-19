@@ -2,6 +2,7 @@ package com.softvent.finflow.transactions.receipts.dto;
 
 import com.softvent.finflow.transactions.enums.PaymentMode;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
@@ -11,8 +12,8 @@ import java.util.List;
 
 public class ReceiptCreateRequest {
 
-    @NotNull(message = "Customer ID is required.")
-    public Long cid;
+    @NotBlank(message = "Customer code (ccode) is required.")
+    public String ccode;
 
     @NotNull(message = "Payment mode is required.")
     public PaymentMode paymentMode;
@@ -26,6 +27,5 @@ public class ReceiptCreateRequest {
     @NotNull(message = "Receipt date is required.")
     public LocalDate receiptDate;
 
-    @Valid
-    public List<ReceiptApplicationRequest> applications;
+    public List<@Valid ReceiptApplicationRequest> applications;
 }
