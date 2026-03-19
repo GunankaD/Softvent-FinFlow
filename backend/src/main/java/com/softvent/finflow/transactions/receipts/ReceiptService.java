@@ -223,6 +223,7 @@ public class ReceiptService {
 
             res.invoiceNumber = app.invoice.invoiceNumber;
             res.appliedAmount = app.appliedAmount;
+            res.appliedAt = app.appliedAt;
 
             appResponses.add(res);
         }
