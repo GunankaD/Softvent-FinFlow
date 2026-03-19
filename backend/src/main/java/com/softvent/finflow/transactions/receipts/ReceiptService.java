@@ -24,6 +24,7 @@ public class ReceiptService {
     @Transactional
     public ReceiptCreateResponse createReceipt(ReceiptCreateRequest request) {
 
+        // --- 1. Fetch Customer ---
         Customer customer = Customer.<Customer>find("ccode", request.ccode)
                 .firstResultOptional()
                 .orElseThrow(() -> new BusinessException(
@@ -31,24 +32,12 @@ public class ReceiptService {
                         Response.Status.NOT_FOUND.getStatusCode() // 404
                 ));
 
-        // --- Pre-validate total applied amount ---
-        // Sum up all applied amounts before hitting the database or creating the receipt.
+
+        // --- 2. Validate Applications (if present) ---
+        Map<String, Invoice> invoiceMap = new HashMap<>();
         if (request.applications != null && !request.applications.isEmpty()) {
-            BigDecimal totalApplied = request.applications.stream()
-                    .map(
-                            app -> app.appliedAmount == null
-                                    ? BigDecimal.ZERO
-                                    : app.appliedAmount
-                    )
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
 
-            if (totalApplied.compareTo(request.totalReceived) > 0) {
-                throw new BusinessException(
-                        "Total applied amount across all invoices cannot exceed the receipt total.",
-                        Response.Status.BAD_REQUEST.getStatusCode() // 400
-                );
-            }
-
+            // --- Duplicate Invoice Check ---
             Set<String> uniqueInvoices = new HashSet<>();
             for (ReceiptApplicationRequest app : request.applications) {
                 if (!uniqueInvoices.add(app.invoiceNumber)) {
@@ -58,44 +47,39 @@ public class ReceiptService {
                     );
                 }
             }
-        }
 
-        Receipt receipt = new Receipt();
-        receipt.customer = customer;
-        receipt.paymentMode = request.paymentMode;
-        receipt.referenceNumber = request.referenceNumber;
-        receipt.totalReceived = request.totalReceived;
-        receipt.unappliedAmount = request.totalReceived;
-        receipt.receiptDate = request.receiptDate;
-        receipt.receiptNumber = generateReceiptNumber();
-
-        receipt.persist();
-
-        // Loop over each invoice application and apply
-        if (request.applications != null && !request.applications.isEmpty()) {
+            // --- Total Applied Check ---
+            BigDecimal totalApplied = request.applications.stream()
+                    .map(app -> app.appliedAmount == null
+                                    ? BigDecimal.ZERO
+                                    : app.appliedAmount
+                    )
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+            if (totalApplied.compareTo(request.totalReceived) > 0) {
+                throw new BusinessException(
+                        "Total applied amount across all invoices cannot exceed the receipt total.",
+                        Response.Status.BAD_REQUEST.getStatusCode() // 400
+                );
+            }
 
             // --- Bulk Fetch to fix N+1 Query Problem ---
-            // 1. Extract all invoice numbers into a list
             List<String> invoiceNumbers = request.applications.stream()
                     .map(app -> app.invoiceNumber)
-                    .collect(Collectors.toList());
+                    .toList();
 
-            // 2. Fetch all matching invoices in a single database round-trip
             List<Invoice> fetchedInvoices = Invoice.find(
                     "invoiceNumber IN (:invoiceNumbers) AND deletedAt IS NULL",
                     Parameters.with("invoiceNumbers", invoiceNumbers)
             ).list();
 
-            // 3. Convert the list to a Map for lightning-fast O(1) lookups inside the loop
-            Map<String, Invoice> invoiceMap = fetchedInvoices.stream()
+            invoiceMap = fetchedInvoices.stream()
                     .collect(Collectors.toMap(inv -> inv.invoiceNumber, inv -> inv));
 
+            // --- Validation Loop (NO DB WRITES) ---
             for (ReceiptApplicationRequest appReq : request.applications) {
 
-                // Grab the invoice from our pre-fetched map instead of querying the DB
                 Invoice invoice = invoiceMap.get(appReq.invoiceNumber);
 
-                // --- Validity Checks ---
                 if (invoice == null) {
                     throw new BusinessException(
                             "Invoice not found: " + appReq.invoiceNumber,
@@ -120,12 +104,29 @@ public class ReceiptService {
                             Response.Status.BAD_REQUEST.getStatusCode()
                     );
                 }
-                if (appReq.appliedAmount.compareTo(receipt.unappliedAmount) > 0) {
-                    throw new BusinessException(
-                            "Applied amount exceeds remaining receipt balance.",
-                            Response.Status.BAD_REQUEST.getStatusCode()
-                    );
-                }
+            }
+        }
+
+
+        // --- 3. Create Receipt ---
+        Receipt receipt = new Receipt();
+        receipt.customer = customer;
+        receipt.paymentMode = request.paymentMode;
+        receipt.referenceNumber = request.referenceNumber;
+        receipt.totalReceived = request.totalReceived;
+        receipt.unappliedAmount = request.totalReceived;
+        receipt.receiptDate = request.receiptDate;
+        receipt.receiptNumber = generateReceiptNumber();
+
+        receipt.persist();
+
+
+        // --- 4. Apply Payments ---
+        if (request.applications != null && !request.applications.isEmpty()) {
+
+            for (ReceiptApplicationRequest appReq : request.applications) {
+
+                Invoice invoice = invoiceMap.get(appReq.invoiceNumber);
 
                 PaymentApplication payment = new PaymentApplication();
                 payment.invoice = invoice;
@@ -134,6 +135,7 @@ public class ReceiptService {
 
                 payment.persist();
 
+                // Update balances
                 invoice.balanceDue = invoice.balanceDue.subtract(appReq.appliedAmount);
                 receipt.unappliedAmount = receipt.unappliedAmount.subtract(appReq.appliedAmount);
 
