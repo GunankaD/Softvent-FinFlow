@@ -68,7 +68,11 @@ public class ReceiptService {
                     .toList();
 
             List<Invoice> fetchedInvoices = Invoice.find(
-                    "invoiceNumber IN (:invoiceNumbers) AND deletedAt IS NULL",
+                    "SELECT i " +
+                            "FROM Invoice i " +
+                            "JOIN FETCH i.customer " +
+                            "WHERE i.invoiceNumber IN (:invoiceNumbers) " +
+                            "AND i.deletedAt IS NULL",
                     Parameters.with("invoiceNumbers", invoiceNumbers)
             ).list();
 
@@ -238,8 +242,8 @@ public class ReceiptService {
     public void deleteReceiptByNumber(String receiptNumber) {
 
         Receipt receipt = Receipt.find(
-                "receiptNumber = ?1 AND deletedAt IS NULL",
-                receiptNumber
+                "receiptNumber = :receiptNumber AND deletedAt IS NULL",
+                Parameters.with("receiptNumber", receiptNumber)
         ).firstResult();
 
         if (receipt == null) {
