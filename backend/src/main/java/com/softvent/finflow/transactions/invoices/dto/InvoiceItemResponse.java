@@ -8,6 +8,8 @@ public class InvoiceItemResponse {
     public String itemName;
     public BigDecimal quantity;
     public BigDecimal rate;
+    public BigDecimal discountPercent;
+    public BigDecimal lineAmount;
     public BigDecimal gstRate;
     public BigDecimal lineTotal;
 }

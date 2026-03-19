@@ -209,6 +209,8 @@ public class InvoiceService {
             itemRes.itemName = item.itemName;
             itemRes.quantity = item.quantity;
             itemRes.rate = item.rate;
+            itemRes.discountPercent = item.discountPercent;
+            itemRes.lineAmount = item.lineAmount;
             itemRes.gstRate = item.gstRate;
             itemRes.lineTotal = item.lineTotal;
 
