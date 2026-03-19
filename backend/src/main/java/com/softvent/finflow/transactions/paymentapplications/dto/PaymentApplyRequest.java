@@ -14,6 +14,5 @@ public class PaymentApplyRequest {
 
     @NotNull(message = "Applications list is required.")
     @NotEmpty(message = "At least one invoice must be provided.")
-    @Valid
-    public List<PaymentApplicationRequest> applications;
+    public List<@Valid PaymentApplicationRequest> applications;
 }
