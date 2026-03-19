@@ -1,11 +1,7 @@
 package com.softvent.finflow.transactions.invoices.dto;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -13,8 +9,8 @@ import java.util.List;
 
 public class InvoiceCreateRequest {
 
-    @NotNull(message = "Customer ID (cid) is required.")
-    public Long cid;
+    @NotBlank(message = "Customer code (ccode) is required.")
+    public String ccode;
 
     @NotNull(message = "Invoice date is required.")
     public LocalDate invoiceDate;
@@ -22,13 +18,12 @@ public class InvoiceCreateRequest {
     public LocalDate dueDate;
 
     @NotEmpty(message = "An invoice must contain at least one item.")
-    @Valid // CRITICAL: This ensures the constraints inside InvoiceItemRequest are checked!
-    public List<InvoiceItemRequest> items;
+    public List<@Valid InvoiceItemRequest> items;
 
     public static class InvoiceItemRequest {
 
-        @NotNull(message = "Item ID (iid) is required.")
-        public Long iid;
+        @NotBlank(message = "Item code (icode) is required.")
+        public String icode;
 
         @NotNull(message = "Quantity is required.")
         @Positive(message = "Quantity must be greater than zero.")

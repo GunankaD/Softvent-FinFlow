@@ -27,48 +27,47 @@ public class InvoiceService {
     @Transactional
     public InvoiceCreateResponse createInvoice(InvoiceCreateRequest request) {
 
-        Customer customer = Customer.findById(request.cid);
-        if (customer == null) {
-            throw new BusinessException(
-                    "Customer not found.",
-                    Response.Status.NOT_FOUND.getStatusCode()
-            );
-        }
+        Customer customer = Customer.<Customer>find("ccode", request.ccode)
+                .firstResultOptional()
+                .orElseThrow(() -> new BusinessException(
+                        "Customer not found: " + request.ccode,
+                        Response.Status.NOT_FOUND.getStatusCode()
+                ));
 
         // --- Bulk Fetch Items (N+1 Fix) ---
         // Extract all requested item IDs
-        List<Long> itemIds = request.items.stream()
-                .map(item -> item.iid)
-                .collect(Collectors.toList());
+        List<String> itemCodes = request.items.stream()
+                .map(item -> item.icode)
+                .toList();
 
         // Fetch all matching active items in one query
         List<Item> fetchedItems = Item.find(
-                "iid IN (:ids) " +
+                "icode IN (:codes) " +
                 "AND isActive = true",
-                Parameters.with("ids", itemIds)
+                Parameters.with("codes", itemCodes)
         ).list();
 
-        // Map them for O(1) lookups: Map<iid, Item>
-        Map<Long, Item> itemMap = fetchedItems.stream()
-                .collect(Collectors.toMap(item -> item.iid, item -> item));
+        // Map them for O(1) lookups: Map<String, Item>
+        Map<String, Item> itemMap = fetchedItems.stream()
+                .collect(Collectors.toMap(item -> item.icode, item -> item));
 
         // --- Validate all items BEFORE persisting anything ---
-        Set<Long> uniqueItems = new HashSet<>();
+        Set<String> uniqueItems = new HashSet<>();
         for (InvoiceCreateRequest.InvoiceItemRequest itemReq : request.items) {
 
             // INVALID ITEM CHECK
-            if (!itemMap.containsKey(itemReq.iid)) {
+            if (!itemMap.containsKey(itemReq.icode)) {
                 throw new BusinessException(
-                        "Invalid or inactive item ID: " + itemReq.iid,
-                        Response.Status.BAD_REQUEST.getStatusCode()
+                        "Invalid or inactive item ID: " + itemReq.icode,
+                        Response.Status.BAD_REQUEST.getStatusCode() // 400
                 );
             }
 
             // DUPLICATE ITEM CHECK
-            if (!uniqueItems.add(itemReq.iid)) {
+            if (!uniqueItems.add(itemReq.icode)) {
                 throw new BusinessException(
-                        "Duplicate item in invoice: " + itemReq.iid,
-                        Response.Status.BAD_REQUEST.getStatusCode()
+                        "Duplicate item in invoice: " + itemReq.icode,
+                        Response.Status.BAD_REQUEST.getStatusCode() // 400
                 );
             }
         }
@@ -88,7 +87,7 @@ public class InvoiceService {
         // Loop over all line items, process and persist them
         for (InvoiceCreateRequest.InvoiceItemRequest itemReq : request.items) {
 
-            Item item = itemMap.get(itemReq.iid);
+            Item item = itemMap.get(itemReq.icode);
 
             InvoiceItem invoiceItem = new InvoiceItem();
             invoiceItem.invoice = invoice;
@@ -218,7 +217,7 @@ public class InvoiceService {
                 "SELECT p " +
                         "FROM PaymentApplication p " +
                         "JOIN FETCH p.receipt " +
-                        "WHERE p.invoice = :invoice" +
+                        "WHERE p.invoice = :invoice " +
                         "ORDER BY p.appliedAt ASC",
 
                 Parameters.with("invoice", invoice)
