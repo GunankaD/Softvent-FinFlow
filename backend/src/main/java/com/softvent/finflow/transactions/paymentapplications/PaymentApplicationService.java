@@ -24,8 +24,13 @@ public class PaymentApplicationService {
     @Transactional
     public PaymentApplyResponse applyPayment(PaymentApplyRequest request) {
 
+        // --- 1. Fetch Receipt ---
         Receipt receipt = Receipt.find(
-                "receiptNumber = :receiptNumber AND deletedAt IS NULL",
+                "SELECT r " +
+                        "FROM Receipt r " +
+                        "JOIN FETCH r.customer " +
+                        "WHERE r.receiptNumber = :receiptNumber " +
+                        "AND r.deletedAt IS NULL",
                 Parameters.with("receiptNumber", request.receiptNumber)
         ).firstResult();
 
@@ -42,79 +47,92 @@ public class PaymentApplicationService {
             );
         }
 
-        // --- Duplicate invoice check ---
-        Set<String> uniqueInvoices = new HashSet<>();
-        for (PaymentApplicationRequest app : request.applications) {
-            if (!uniqueInvoices.add(app.invoiceNumber)) {
+        // --- 2. Validate Applications ---
+        Map<String, Invoice> invoiceMap = new HashMap<>();
+        BigDecimal totalApplied = BigDecimal.ZERO;
+        {
+            // --- Duplicate Invoice Check ---
+            Set<String> uniqueInvoices = new HashSet<>();
+            for (PaymentApplicationRequest app : request.applications) {
+                if (!uniqueInvoices.add(app.invoiceNumber)) {
+                    throw new BusinessException(
+                            "Duplicate invoice in request: " + app.invoiceNumber,
+                            Response.Status.BAD_REQUEST.getStatusCode()
+                    );
+                }
+            }
+
+            // --- Total Applied Check (Null Safe) ---
+            totalApplied = request.applications.stream()
+                    .map(app -> app.appliedAmount == null
+                            ? BigDecimal.ZERO
+                            : app.appliedAmount
+                    )
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+            if (totalApplied.compareTo(receipt.unappliedAmount) > 0) {
                 throw new BusinessException(
-                        "Duplicate invoice in request: " + app.invoiceNumber,
+                        "Total applied amount exceeds receipt balance.",
                         Response.Status.BAD_REQUEST.getStatusCode()
                 );
             }
+
+            // --- Bulk Fetch to fix N+1 Query Problem ---
+            List<String> invoiceNumbers = request.applications.stream()
+                    .map(app -> app.invoiceNumber)
+                    .toList();
+
+            List<Invoice> fetchedInvoices = Invoice.find(
+                    "SELECT i " +
+                            "FROM Invoice i " +
+                            "JOIN FETCH i.customer " +
+                            "WHERE i.invoiceNumber IN (:invoiceNumbers) " +
+                            "AND i.deletedAt IS NULL",
+                    Parameters.with("invoiceNumbers", invoiceNumbers)
+            ).list();
+
+            invoiceMap = fetchedInvoices.stream()
+                    .collect(Collectors.toMap(inv -> inv.invoiceNumber, inv -> inv));
+
+            // --- Validation Loop (NO DB WRITES) ---
+            for (PaymentApplicationRequest appReq : request.applications) {
+
+                Invoice invoice = invoiceMap.get(appReq.invoiceNumber);
+
+                if (invoice == null) {
+                    throw new BusinessException(
+                            "Invoice not found: " + appReq.invoiceNumber,
+                            Response.Status.NOT_FOUND.getStatusCode() // 404
+                    );
+                }
+                if (!invoice.customer.cid.equals(receipt.customer.cid)) {
+                    throw new BusinessException(
+                            "Invoice does not belong to receipt customer: " + appReq.invoiceNumber,
+                            Response.Status.BAD_REQUEST.getStatusCode() // 400
+                    );
+                }
+                if (invoice.status == InvoiceStatus.VOID) {
+                    throw new BusinessException(
+                            "Cannot apply to void invoice: " + appReq.invoiceNumber,
+                            Response.Status.BAD_REQUEST.getStatusCode() // 400
+                    );
+                }
+                if (appReq.appliedAmount.compareTo(invoice.balanceDue) > 0) {
+                    throw new BusinessException(
+                            "Applied amount exceeds invoice balance: " + appReq.invoiceNumber,
+                            Response.Status.BAD_REQUEST.getStatusCode() // 400
+                    );
+                }
+            }
         }
 
-        // --- Pre-calc total applied ---
-        BigDecimal totalApplied = request.applications.stream()
-                .map(a -> a.appliedAmount)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-
-        if (totalApplied.compareTo(receipt.unappliedAmount) > 0) {
-            throw new BusinessException(
-                    "Total applied amount exceeds receipt balance.",
-                    Response.Status.BAD_REQUEST.getStatusCode()
-            );
-        }
-
-        // Bulk fetch invoices
-        List<String> invoiceNumbers = request.applications.stream()
-                .map(a -> a.invoiceNumber)
-                .collect(Collectors.toList());
-
-        List<Invoice> invoices = Invoice.find(
-                "invoiceNumber IN (:invNumbers) AND deletedAt IS NULL",
-                Parameters.with("invNumbers", invoiceNumbers)
-        ).list();
-
-        Map<String, Invoice> invoiceMap = invoices.stream()
-                .collect(Collectors.toMap(i -> i.invoiceNumber, i -> i));
 
         List<ReceiptApplicationResponse> responses = new ArrayList<>();
 
-        // Loop and process each invoice
+        // --- 3. Execution Loop (Apply Payments) ---
         for (PaymentApplicationRequest appReq : request.applications) {
 
             Invoice invoice = invoiceMap.get(appReq.invoiceNumber);
-
-            if (invoice == null) {
-                throw new BusinessException(
-                        "Invoice not found: " + appReq.invoiceNumber,
-                        Response.Status.NOT_FOUND.getStatusCode() // 404
-                );
-            }
-            if (!invoice.customer.cid.equals(receipt.customer.cid)) {
-                throw new BusinessException(
-                        "Invoice does not belong to receipt customer: " + appReq.invoiceNumber,
-                        Response.Status.BAD_REQUEST.getStatusCode() // 400
-                );
-            }
-            if (invoice.status == InvoiceStatus.VOID) {
-                throw new BusinessException(
-                        "Cannot apply to void invoice: " + appReq.invoiceNumber,
-                        Response.Status.BAD_REQUEST.getStatusCode() // 400
-                );
-            }
-            if (appReq.appliedAmount.compareTo(invoice.balanceDue) > 0) {
-                throw new BusinessException(
-                        "Applied amount exceeds invoice balance: " + appReq.invoiceNumber,
-                        Response.Status.BAD_REQUEST.getStatusCode() // 400
-                );
-            }
-            if (appReq.appliedAmount.compareTo(receipt.unappliedAmount) > 0) {
-                throw new BusinessException(
-                        "Applied amount exceeds receipt balance.",
-                        Response.Status.BAD_REQUEST.getStatusCode() // 400
-                );
-            }
 
             // Persist application
             PaymentApplication payment = new PaymentApplication();
@@ -124,7 +142,7 @@ public class PaymentApplicationService {
 
             payment.persist();
 
-            // map response
+            // Map response
             ReceiptApplicationResponse res = new ReceiptApplicationResponse();
             res.invoiceNumber = invoice.invoiceNumber;
             res.appliedAmount = payment.appliedAmount;
@@ -139,6 +157,8 @@ public class PaymentApplicationService {
             updateInvoiceStatus(invoice);
         }
 
+
+        // --- 4. Return Application Response ---
         return new PaymentApplyResponse(
                 receipt.receiptNumber,
                 totalApplied,
