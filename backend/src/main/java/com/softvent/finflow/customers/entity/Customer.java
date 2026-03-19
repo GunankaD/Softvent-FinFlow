@@ -45,7 +45,7 @@ public class Customer extends PanacheEntityBase {
     @Column(nullable = false, length = 100)
     public String cname;
 
-    @Column(nullable = false)
+    @Column(columnDefinition = "TEXT", nullable = false)
     public String address;
 
     @Column(nullable = false, length = 50)
