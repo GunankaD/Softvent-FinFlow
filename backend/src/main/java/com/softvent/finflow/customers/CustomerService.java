@@ -96,7 +96,7 @@ public class CustomerService {
     public List<InvoiceSummaryResponse> getInvoicesByCustomer(String ccode, String filter) {
 
         Customer customer = Customer.find(
-                "ccode = :ccode AND deletedAt IS NULL",
+                "ccode = :ccode",
                 Parameters.with("ccode", ccode)
         ).firstResult();
 
@@ -132,7 +132,7 @@ public class CustomerService {
     public List<ReceiptSummaryResponse> getReceiptsByCustomer(String ccode, String filter) {
 
         Customer customer = Customer.find(
-                "ccode = :ccode AND deletedAt IS NULL",
+                "ccode = :ccode",
                 Parameters.with("ccode", ccode)
         ).firstResult();
 
