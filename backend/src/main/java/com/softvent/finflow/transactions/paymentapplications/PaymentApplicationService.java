@@ -5,6 +5,7 @@ import com.softvent.finflow.transactions.enums.InvoiceStatus;
 import com.softvent.finflow.transactions.invoices.entity.Invoice;
 import com.softvent.finflow.transactions.paymentapplications.dto.*;
 import com.softvent.finflow.transactions.paymentapplications.entity.PaymentApplication;
+import com.softvent.finflow.transactions.receipts.dto.ReceiptApplicationResponse;
 import com.softvent.finflow.transactions.receipts.entity.Receipt;
 
 import io.quarkus.panache.common.Parameters;
@@ -77,6 +78,8 @@ public class PaymentApplicationService {
         Map<String, Invoice> invoiceMap = invoices.stream()
                 .collect(Collectors.toMap(i -> i.invoiceNumber, i -> i));
 
+        List<ReceiptApplicationResponse> responses = new ArrayList<>();
+
         // Loop and process each invoice
         for (PaymentApplicationRequest appReq : request.applications) {
 
@@ -121,6 +124,14 @@ public class PaymentApplicationService {
 
             payment.persist();
 
+            // map response
+            ReceiptApplicationResponse res = new ReceiptApplicationResponse();
+            res.invoiceNumber = invoice.invoiceNumber;
+            res.appliedAmount = payment.appliedAmount;
+            res.appliedAt = payment.appliedAt;
+
+            responses.add(res);
+
             // Update cached balances
             invoice.balanceDue = invoice.balanceDue.subtract(appReq.appliedAmount);
             receipt.unappliedAmount = receipt.unappliedAmount.subtract(appReq.appliedAmount);
@@ -131,7 +142,8 @@ public class PaymentApplicationService {
         return new PaymentApplyResponse(
                 receipt.receiptNumber,
                 totalApplied,
-                receipt.unappliedAmount
+                receipt.unappliedAmount,
+                responses
         );
     }
 
