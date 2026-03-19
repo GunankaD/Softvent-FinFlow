@@ -79,6 +79,10 @@ public class InvoiceService {
         invoice.dueDate = request.dueDate;
         invoice.invoiceNumber = generateInvoiceNumber();
 
+        // Needed: below fields cannot be null before persisting
+        invoice.totalAmount = BigDecimal.ZERO;
+        invoice.balanceDue = BigDecimal.ZERO;
+
         // We need it persisted here so it generates an ID for the InvoiceItems to reference.
         invoice.persist();
 
