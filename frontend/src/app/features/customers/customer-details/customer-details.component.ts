@@ -9,6 +9,7 @@ import { CustomerService } from '../../../core/services/customer/customer.servic
 import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 import { SnackbarService } from '../../../core/services/snackbar/snackbar.service';
 import { BreadcrumbComponent } from '../../../shared/components/breadcrumb/breadcrumb.component';
+import { GridTableComponent } from '../../../shared/components/grid-table/grid-table.component';
 
 // MATERIAL UI
 import { MatDialog } from '@angular/material/dialog';
@@ -17,9 +18,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatDividerModule } from '@angular/material/divider';
 
 // DTOs
 import { CustomerDetailResponse, CustomerUpdateRequest } from '../../../core/models/customer.models';
+import { InvoiceSummaryResponse } from '../../../core/models/invoice.models';
+import { ReceiptSummaryResponse } from '../../../core/models/receipt.models';
+import { TableColumn } from '../../../shared/components/models/table-column.model'
 import { Breadcrumb } from '../../../shared/components/models/breadcrumb.model';
 
 @Component({
@@ -36,6 +41,8 @@ import { Breadcrumb } from '../../../shared/components/models/breadcrumb.model';
     MatIconModule,
     MatProgressSpinnerModule,
     BreadcrumbComponent,
+    GridTableComponent,
+    MatDividerModule
   ],
 })
 export class CustomerDetailsComponent implements OnInit {
@@ -47,6 +54,14 @@ export class CustomerDetailsComponent implements OnInit {
   private readonly snackbar = inject(SnackbarService);
   private readonly dialog = inject(MatDialog);
 
+    public breadcrumbs(): Breadcrumb[] {
+    return [
+      { label: 'Customers', route: '/customers' },
+      { label: 'All', route: '/customers/show-customers' },
+      { label: this.customer()?.cname ?? '' }
+    ];
+  }
+
   readonly customer = signal<CustomerDetailResponse | null>(null);
   form!: FormGroup;
 
@@ -55,13 +70,30 @@ export class CustomerDetailsComponent implements OnInit {
   isLoadingCustomer = signal(true);
   protected isEditMode = signal(false);
 
-  public breadcrumbs(): Breadcrumb[] {
-    return [
-      { label: 'Customers', route: '/customers' },
-      { label: 'All', route: '/customers/show-customers' },
-      { label: this.customer()?.cname ?? '' }
-    ];
-  }
+  readonly invoices = signal<InvoiceSummaryResponse[]>([]);
+  readonly receipts = signal<ReceiptSummaryResponse[]>([]);
+
+  readonly loadingInvoices = signal(false);
+  readonly loadingReceipts = signal(false);
+
+  readonly invoiceColumns: TableColumn[] = [
+  { key: 'invoiceNumber', label: 'Invoice No',   flex: 1.2, minWidth: 140, type: 'text'     },
+  { key: 'totalAmount',   label: 'Total',        flex: 1,   minWidth: 120, type: 'currency' },
+  { key: 'balanceAmount', label: 'Balance',      flex: 1,   minWidth: 120, type: 'currency' },
+  { key: 'status',        label: 'Status',       flex: 1,   minWidth: 120, type: 'text'     },
+  { key: 'invoiceDate',   label: 'Invoice Date', flex: 1.5, minWidth: 160, type: 'date'     },
+  { key: 'dueDate',       label: 'Due Date',     flex: 1.5, minWidth: 160, type: 'date'     },
+  { key: 'viewIcon',      label: 'View',         flex: 0.5, minWidth: 70,  type: 'icon'     }
+];
+
+readonly receiptColumns: TableColumn[] = [
+  { key: 'receiptNumber',  label: 'Receipt No', flex: 1.2, minWidth: 140, type: 'text'     },
+  { key: 'paymentMode',    label: 'Mode',       flex: 1,   minWidth: 120, type: 'text'     },
+  { key: 'totalReceived',  label: 'Total',      flex: 1,   minWidth: 120, type: 'currency' },
+  { key: 'unappliedAmount',label: 'Unapplied',  flex: 1,   minWidth: 120, type: 'currency' },
+  { key: 'receiptDate',    label: 'Date',       flex: 1.5, minWidth: 160, type: 'date'     },
+  { key: 'viewIcon',       label: 'View',       flex: 0.5, minWidth: 70,  type: 'icon'     }
+];
 
   private ccode!: string;
 
@@ -69,6 +101,8 @@ export class CustomerDetailsComponent implements OnInit {
     this.ccode = this.route.snapshot.paramMap.get('ccode')!;
     this.initializeForm();
     this.loadCustomer();
+    this.loadInvoices();
+    this.loadReceipts();
   }
 
   private initializeForm(): void {
@@ -95,7 +129,7 @@ export class CustomerDetailsComponent implements OnInit {
     this.isLoadingCustomer.set(true);
 
     this.customerService.getByCode(this.ccode).subscribe({
-      next: (response) => {
+      next: (response: CustomerDetailResponse) => {
         this.customer.set(response);
         this.form.patchValue(response);
         this.isLoadingCustomer.set(false);
@@ -106,6 +140,44 @@ export class CustomerDetailsComponent implements OnInit {
         this.router.navigate(['/customers']);
       }
     });
+  }
+
+  loadInvoices(): void {
+    this.loadingInvoices.set(true);
+
+    this.customerService.getCustomerInvoices(this.ccode).subscribe({
+      next: (response: InvoiceSummaryResponse[]) => {
+        this.invoices.set(response);
+        this.loadingInvoices.set(false);
+      },
+      error: () => {
+        this.loadingInvoices.set(false);
+        this.snackbar.error('Failed to load invoices');
+      }
+    });
+  }
+
+  loadReceipts(): void {
+    this.loadingReceipts.set(true);
+
+    this.customerService.getCustomerReceipts(this.ccode).subscribe({
+      next: (response: ReceiptSummaryResponse[]) => {
+        this.receipts.set(response);
+        this.loadingReceipts.set(false);
+      },
+      error: () => {
+        this.loadingReceipts.set(false);
+        this.snackbar.error('Failed to load receipts');
+      }
+    });
+  }
+
+  onInvoiceClick(row: any): void {
+    this.router.navigate(['/transactions/invoices', row.invoiceNumber]);
+  }
+
+  onReceiptClick(row: any): void {
+    this.router.navigate(['/transactions/receipts', row.receiptNumber]);
   }
 
   enableEdit(): void {
@@ -154,10 +226,10 @@ export class CustomerDetailsComponent implements OnInit {
     this.isSaving.set(true);
     this.form.disable();
 
-    const request = this.form.value;
+    const request: CustomerUpdateRequest = this.form.value;
 
     this.customerService.updateByCode(this.ccode, request).subscribe({
-      next: (response) => {
+      next: (response: CustomerDetailResponse) => {
         this.customer.set(response);
         this.form.patchValue(response);
         this.isEditMode.set(false);

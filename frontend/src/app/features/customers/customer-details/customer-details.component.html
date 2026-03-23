@@ -214,6 +214,40 @@
         </div>
       </section>
     </form>
+
+    <mat-divider class="section-divider"></mat-divider>
+
+    <div class="transactions-header">
+      <h1>Transactions</h1>
+    </div>
+
+    <section class="table">
+      <h2>Invoices</h2>
+
+      <app-grid-table
+        [columns]="invoiceColumns"
+        [data]="invoices()"
+        [loading]="loadingInvoices()"
+        [gridHeight]="'400px'"
+        [paginationPageSize]="10"
+        (refresh)="loadInvoices()"
+        (view)="onInvoiceClick($event)">
+      </app-grid-table>
+    </section>
+
+    <section class="table">
+      <h2>Receipts</h2>
+
+      <app-grid-table
+        [columns]="receiptColumns"
+        [data]="receipts()"
+        [loading]="loadingReceipts()"
+        [gridHeight]="'400px'"
+        [paginationPageSize]="10"
+        (refresh)="loadReceipts()"
+        (view)="onReceiptClick($event)">
+      </app-grid-table>
+    </section>
   }
   @else{
     <div class="page-loading-container">

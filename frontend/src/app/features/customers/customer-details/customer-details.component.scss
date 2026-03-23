@@ -146,7 +146,7 @@
 .details-form {
   display: flex;
   flex-direction: column;
-  row-gap: 32px;
+  row-gap: 18px;
 }
 
 .details-section {
@@ -158,7 +158,7 @@
 
 .details-section h2 {
   margin: 0 0 20px 0;
-  font-size: 18px;
+  font-size: 22px;
   font-weight: 400;
 }
 
@@ -180,7 +180,7 @@ button:disabled {
 .details-row {
   display: grid;
   grid-template-columns: 2fr 1fr;
-  gap: 20px;
+  gap: 18px;
   align-items: stretch;
 }
 
@@ -194,4 +194,23 @@ button:disabled {
   display: grid;
   grid-template-columns: 1fr;
   gap: 20px;
+}
+
+.section-divider {
+  margin: 32px 0;
+  opacity: 0.2;
+}
+
+.table {
+  padding: 24px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  margin-bottom: 18px;
+}
+
+.table h2 {
+  margin: 0 0 20px 0;
+  font-size: 22px;
+  font-weight: 400;
 }
