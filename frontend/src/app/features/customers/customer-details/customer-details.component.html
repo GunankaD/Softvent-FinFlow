@@ -114,44 +114,51 @@
   @if(customer()){
     <!-- FORM -->
     <form [formGroup]="form" class="details-form">
-      <!-- BUSINESS DETAILS -->
-      <section class="details-section">
-        <h2>Business Details</h2>
+      <!-- BUSINESS + CONTACT ROW -->
+      <div class="details-row">
 
-        <div class="grid">
-          <mat-form-field appearance="outline">
-            <mat-label>Customer Name</mat-label>
-            <input matInput formControlName="cname" />
-          </mat-form-field>
+        <!-- BUSINESS DETAILS -->
+        <section class="details-section business">
+          <h2>Business Details</h2>
 
-          <mat-form-field appearance="outline">
-            <mat-label>GST No</mat-label>
-            <input matInput formControlName="gstNo" />
-          </mat-form-field>
+          <div class="grid business-grid">
+            <!-- row 1 -->
+            <mat-form-field appearance="outline" class="full-width">
+              <mat-label>Customer Name</mat-label>
+              <input matInput formControlName="cname" />
+            </mat-form-field>
 
-          <mat-form-field appearance="outline">
-            <mat-label>PAN No</mat-label>
-            <input matInput formControlName="panNo" />
-          </mat-form-field>
-        </div>
-      </section>
+            <!-- row 2 -->
+            <mat-form-field appearance="outline">
+              <mat-label>GST No</mat-label>
+              <input matInput formControlName="gstNo" />
+            </mat-form-field>
 
-      <!-- CONTACT DETAILS -->
-      <section class="details-section">
-        <h2>Contact Details</h2>
+            <mat-form-field appearance="outline">
+              <mat-label>PAN No</mat-label>
+              <input matInput formControlName="panNo" />
+            </mat-form-field>
+          </div>
+        </section>
 
-        <div class="grid">
-          <mat-form-field appearance="outline">
-            <mat-label>Mobile Number</mat-label>
-            <input matInput formControlName="mobileNumber" />
-          </mat-form-field>
+        <!-- CONTACT DETAILS -->
+        <section class="details-section contact">
+          <h2>Contact Details</h2>
 
-          <mat-form-field appearance="outline">
-            <mat-label>Email</mat-label>
-            <input matInput formControlName="email" />
-          </mat-form-field>
-        </div>
-      </section>
+          <div class="contact-grid">
+            <mat-form-field appearance="outline">
+              <mat-label>Mobile Number</mat-label>
+              <input matInput formControlName="mobileNumber" />
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Email</mat-label>
+              <input matInput formControlName="email" />
+            </mat-form-field>
+          </div>
+        </section>
+
+      </div>
 
       <!-- ADDRESS -->
       <section class="details-section">
