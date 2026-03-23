@@ -3,7 +3,16 @@
   align-items: center;
   gap: 6px;
   margin: 20px 0px 20px 0px;
-  
+}
+
+.crumb-link,
+.crumb-active {
+  max-width: 600px;
+  display: inline-block;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  vertical-align: bottom;
 }
 
 .crumb-link {

@@ -5,12 +5,12 @@
     <a *ngIf="item.route && !last"
        [routerLink]="item.route"
        class="crumb-link">
-      {{ item.label }}
+      {{ getTruncatedLabel(item.label) }}
     </a>
 
     <span *ngIf="!item.route || last"
           class="crumb-active">
-      {{ item.label }}
+      {{ getTruncatedLabel(item.label) }}
     </span>
 
     <mat-icon *ngIf="!last" class="divider">arrow_forward_ios</mat-icon>
