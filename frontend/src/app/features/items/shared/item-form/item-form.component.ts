@@ -35,10 +35,10 @@ import { ConfirmDialogComponent } from '../../../../shared/components/confirm-di
 // MODELS
 import {
   ItemGroupResponse,
-  ItemType,
-  Uom,
   ItemDetailResponse
 } from '../../../../core/models/item.models';
+import { ItemType } from '../../../../core/enums/item-type.enum';
+import { Uom } from '../../../../core/enums/uom.enum';
 
 @Component({
   selector: 'app-item-form',
@@ -87,8 +87,8 @@ export class ItemFormComponent implements OnInit {
   private readonly dialog = inject(MatDialog);
 
   // STATIC DATA
-  readonly itemTypes: ItemType[] = ['GOODS', 'SERVICE'];
-  readonly uoms: Uom[] = ['NOS', 'BOX', 'KG', 'LITRE', 'METER', 'PCS'];
+  readonly itemTypes: ItemType[] = Object.values(ItemType);
+  readonly uoms: Uom[] = Object.values(Uom);
   readonly gstRates: number[] = [0, 5, 12, 18, 28];
 
   // FORM
@@ -123,9 +123,9 @@ export class ItemFormComponent implements OnInit {
       Validators.pattern(/^[0-9]+$/)
     ]),
 
-    itemType: this.fb.control<ItemType>('GOODS', Validators.required),
+    itemType: this.fb.control<ItemType>(ItemType.GOODS, Validators.required),
 
-    uom: this.fb.control<Uom>('NOS', Validators.required),
+    uom: this.fb.control<Uom>(Uom.NOS, Validators.required),
 
     isBom: this.fb.control(false),
 
