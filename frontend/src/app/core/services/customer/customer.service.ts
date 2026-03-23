@@ -16,6 +16,9 @@ import {
   CustomerCreateResponse
 } from '../../models/customer.models'
 
+import { InvoiceSummaryResponse } from '../../models/invoice.models';
+import { ReceiptSummaryResponse } from '../../models/receipt.models';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -73,6 +76,32 @@ export class CustomerService {
 
     return this.http.get<AvailabilityResponse>(
       `${this.baseUrl}${API_ENDPOINTS.CUSTOMERS.AVAILABILITY_EMAIL}`,
+      { params }
+    );
+  }
+  // TRANSACTIONS
+  getCustomerInvoices(ccode: string, filter?: string): Observable<InvoiceSummaryResponse[]> {
+
+    let params = new HttpParams();
+    if (filter) {
+      params = params.set('filter', filter);
+    }
+
+    return this.http.get<InvoiceSummaryResponse[]>(
+      `${this.baseUrl}${API_ENDPOINTS.CUSTOMERS.INVOICES(ccode)}`,
+      { params }
+    );
+  }
+
+  getCustomerReceipts(ccode: string, filter?: string): Observable<ReceiptSummaryResponse[]> {
+
+    let params = new HttpParams();
+    if (filter) {
+      params = params.set('filter', filter);
+    }
+
+    return this.http.get<ReceiptSummaryResponse[]>(
+      `${this.baseUrl}${API_ENDPOINTS.CUSTOMERS.RECEIPTS(ccode)}`,
       { params }
     );
   }
