@@ -16,7 +16,7 @@ export class BreadcrumbComponent {
   @Input({ required: true })
   public items: Breadcrumb[] = [];
 
-  private readonly MAX_LENGTH = 15;
+  private readonly MAX_LENGTH = 20;
 
   public getTruncatedLabel(label: string): string {
     return label.length > this.MAX_LENGTH
