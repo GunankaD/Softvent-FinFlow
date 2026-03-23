@@ -78,8 +78,8 @@ export class CustomerDetailsComponent implements OnInit {
 
   readonly invoiceColumns: TableColumn[] = [
   { key: 'invoiceNumber', label: 'Invoice No',   flex: 1.2, minWidth: 140, type: 'text'     },
-  { key: 'totalAmount',   label: 'Total',        flex: 1,   minWidth: 120, type: 'currency' },
-  { key: 'balanceAmount', label: 'Balance',      flex: 1,   minWidth: 120, type: 'currency' },
+  { key: 'totalAmount',   label: 'Total ₹',      flex: 1,   minWidth: 120, type: 'currency' },
+  { key: 'balanceAmount', label: 'Balance ₹',    flex: 1,   minWidth: 120, type: 'currency' },
   { key: 'status',        label: 'Status',       flex: 1,   minWidth: 120, type: 'text'     },
   { key: 'invoiceDate',   label: 'Invoice Date', flex: 1.5, minWidth: 160, type: 'date'     },
   { key: 'dueDate',       label: 'Due Date',     flex: 1.5, minWidth: 160, type: 'date'     },
@@ -89,8 +89,8 @@ export class CustomerDetailsComponent implements OnInit {
 readonly receiptColumns: TableColumn[] = [
   { key: 'receiptNumber',  label: 'Receipt No', flex: 1.2, minWidth: 140, type: 'text'     },
   { key: 'paymentMode',    label: 'Mode',       flex: 1,   minWidth: 120, type: 'text'     },
-  { key: 'totalReceived',  label: 'Total',      flex: 1,   minWidth: 120, type: 'currency' },
-  { key: 'unappliedAmount',label: 'Unapplied',  flex: 1,   minWidth: 120, type: 'currency' },
+  { key: 'totalReceived',  label: 'Total ₹',    flex: 1,   minWidth: 120, type: 'currency' },
+  { key: 'unappliedAmount',label: 'Unapplied ₹',flex: 1,   minWidth: 120, type: 'currency' },
   { key: 'receiptDate',    label: 'Date',       flex: 1.5, minWidth: 160, type: 'date'     },
   { key: 'viewIcon',       label: 'View',       flex: 0.5, minWidth: 70,  type: 'icon'     }
 ];
