@@ -1,3 +1,6 @@
+import { ItemType } from '../enums/item-type.enum'
+import { Uom } from '../enums/uom.enum';
+
 // REQUEST DTOs
 export interface ItemCreateRequest {
   icode: string;
@@ -79,13 +82,3 @@ export interface ItemGroupResponse {
 export interface AvailabilityResponse {
   available: boolean;
 }
-
-// ENUMS (mirror backend exactly)
-export type ItemType = 'GOODS' | 'SERVICE';
-export type Uom =
-  | 'NOS'
-  | 'BOX'
-  | 'KG'
-  | 'LITRE'
-  | 'METER'
-  | 'PCS';
