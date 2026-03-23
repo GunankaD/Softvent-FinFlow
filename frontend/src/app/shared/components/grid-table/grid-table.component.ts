@@ -36,6 +36,10 @@ export class GridTableComponent {
   @Input({ required: true }) data!: any[];
   @Input({ required: true }) loading!: boolean;
 
+  @Input() gridHeight: string = '600px';
+  @Input() paginationPageSize: number = 25;
+  @Input() paginationPageSizeSelector: number[] = [10, 25, 50, 100];
+
   // OUTPUTS
   @Output() refresh = new EventEmitter<void>();
   @Output() view = new EventEmitter<any>();
@@ -80,7 +84,7 @@ export class GridTableComponent {
       },
       // valueGetter: params => "0000", // fits 4 digits atm
       flex: 0.5,
-      minWidth: 60,
+      minWidth: 64,
       sortable: false,
       filter: false,
       cellStyle: { textAlign: 'center'}
@@ -110,7 +114,7 @@ export class GridTableComponent {
             justifyContent: 'center',
             cursor: 'pointer',
             lineHeight: 1
-          },
+          } as CellStyle,
         };
       }
 
@@ -145,6 +149,30 @@ export class GridTableComponent {
           flex: col.flex,
           minWidth: col.minWidth,
           filter: 'agNumberColumnFilter'
+        };
+      }
+
+      if (col.type === 'currency') {
+        return {
+          headerName: col.label,
+          headerTooltip: col.label,
+          field: col.key,
+          flex: col.flex,
+          minWidth: col.minWidth,
+          filter: 'agNumberColumnFilter',
+
+          valueFormatter: params => {
+            if (params.value == null) return '';
+            return params.value.toLocaleString('en-IN', {
+              style: 'currency',
+              currency: 'INR',
+              maximumFractionDigits: 2
+            });
+          },
+
+          cellStyle: {
+            textAlign: 'right'
+          } as CellStyle
         };
       }
 
