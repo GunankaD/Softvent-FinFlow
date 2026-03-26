@@ -1,1 +1,14 @@
-<p>show-invoices works!</p>
+<div class="container">
+  <app-breadcrumb [items]="breadcrumbs()"></app-breadcrumb>
+  <p class="subtitle">View and manage all invoices</p>
+
+  <div>
+    <app-grid-table
+      [columns]="columns"
+      [data]="invoices()"
+      [loading]="loading()"
+      (refresh)="loadInvoices()"
+      (view)="onRowClick($event)">
+    </app-grid-table>
+  </div>
+</div>

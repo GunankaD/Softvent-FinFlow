@@ -24,7 +24,7 @@ export class TransactionsComponent {
   constructor(private readonly router: Router) {}
 
   public onViewInvoices(): void {
-    this.router.navigate(['/transactions/invoices']);
+    this.router.navigate(['/transactions/invoices/show-invoices']);
   }
 
   public onAddInvoice(): void {
