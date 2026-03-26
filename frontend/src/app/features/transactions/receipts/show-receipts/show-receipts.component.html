@@ -1,1 +1,14 @@
-<p>show-receipts works!</p>
+<div class="container">
+  <app-breadcrumb [items]="breadcrumbs()"></app-breadcrumb>
+  <p class="subtitle">View and manage all receipts</p>
+
+  <div>
+    <app-grid-table
+      [columns]="columns"
+      [data]="receipts()"
+      [loading]="loading()"
+      (refresh)="loadReceipts()"
+      (view)="onRowClick($event)">
+    </app-grid-table>
+  </div>
+</div>
