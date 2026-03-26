@@ -1,59 +1,59 @@
 <div class="transactions-container">
   <h1 class="title">Transactions</h1>
 
-  <!-- INVOICES -->
-  <h2 class="section-title">Invoices</h2>
-  <div class="cards-wrapper">
-    <div class="action-card" (click)="onViewInvoices()">
-      <div class="card-icon">
-        <mat-icon fontSet="material-symbols-outlined">receipt_long</mat-icon>
-      </div>
-      <h2>View Invoices</h2>
-      <p>Browse and manage all invoices.</p>
-    </div>
-
-    <div class="action-card" (click)="onAddInvoice()">
-      <div class="card-icon">
-        <mat-icon fontSet="material-symbols-outlined">contract_edit</mat-icon>
-      </div>
-      <h2>Create Invoice</h2>
-      <p>Generate a new invoice for a customer.</p>
-    </div>
-  </div>
-
-  <mat-divider></mat-divider>
-
-  <!-- RECEIPTS -->
-  <h2 class="section-title">Receipts</h2>
-  <div class="cards-wrapper">
-    <div class="action-card" (click)="onViewReceipts()">
-      <div class="card-icon">
-        <mat-icon fontSet="material-symbols-outlined">account_balance_wallet</mat-icon>
-      </div>
-      <h2>View Receipts</h2>
-      <p>Browse all received payments.</p>
-    </div>
-
-    <div class="action-card" (click)="onAddReceipt()">
-      <div class="card-icon">
-        <mat-icon fontSet="material-symbols-outlined">add_card</mat-icon>
-      </div>
-      <h2>Create Receipt</h2>
-      <p>Record a new payment from a customer.</p>
-    </div>
-  </div>
-
-  <mat-divider></mat-divider>
-
   <!-- PAYMENT APPLICATION -->
   <h2 class="section-title">Payment Applications</h2>
-  <div class="cards-wrapper">
-    <div class="action-card single-card" (click)="onApplyPayment()">
+  <div class="cards-row">
+    <div class="action-card half" (click)="onApplyPayment()">
       <div class="card-icon">
         <mat-icon fontSet="material-symbols-outlined">swap_horiz</mat-icon>
       </div>
-      <h2>Apply Payment</h2>
+      <h3>Apply Payment</h3>
       <p>Allocate receipts to invoices.</p>
     </div>
   </div>
+
+  <!-- INVOICES + RECEIPTS HEADINGS ROW -->
+  <div class="section-header-row">
+    <h2>Invoices</h2>
+    <h2 class="receipts-title">Receipts</h2>
+  </div>
+
+  <!-- 4 CARDS IN SAME LINE -->
+  <div class="cards-row">
+    <!-- INVOICES -->
+    <div class="action-card compact" (click)="onViewInvoices()">
+      <div class="card-icon">
+        <mat-icon fontSet="material-symbols-outlined">receipt_long</mat-icon>
+      </div>
+      <h3>View Invoices</h3>
+      <p>Browse and manage all invoices.</p>
+    </div>
+
+    <div class="action-card compact" (click)="onAddInvoice()">
+      <div class="card-icon">
+        <mat-icon fontSet="material-symbols-outlined">contract_edit</mat-icon>
+      </div>
+      <h3>Create Invoice</h3>
+      <p>Generate a new invoice.</p>
+    </div>
+
+    <!-- RECEIPTS -->
+    <div class="action-card compact" (click)="onViewReceipts()">
+      <div class="card-icon">
+        <mat-icon fontSet="material-symbols-outlined">account_balance_wallet</mat-icon>
+      </div>
+      <h3>View Receipts</h3>
+      <p>Browse all received payments.</p>
+    </div>
+
+    <div class="action-card compact" (click)="onAddReceipt()">
+      <div class="card-icon">
+        <mat-icon fontSet="material-symbols-outlined">add_card</mat-icon>
+      </div>
+      <h3>Create Receipt</h3>
+      <p>Record a new payment.</p>
+    </div>
+  </div>
+
 </div>
