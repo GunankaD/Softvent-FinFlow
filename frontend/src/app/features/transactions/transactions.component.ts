@@ -32,7 +32,7 @@ export class TransactionsComponent {
   }
 
   public onViewReceipts(): void {
-    this.router.navigate(['/transactions/receipts']);
+    this.router.navigate(['/transactions/receipts/show-receipts']);
   }
 
   public onAddReceipt(): void {
