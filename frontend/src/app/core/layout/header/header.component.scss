@@ -17,31 +17,27 @@
   align-items: center;
   gap: 12px;
 
-  .logo {
+  .logo-btn {
+    --mdc-text-button-hover-state-layer-color: transparent;
+    --mdc-text-button-focus-state-layer-color: transparent;
+    --mdc-text-button-pressed-state-layer-color: transparent;
+    --mat-text-button-state-layer-color: transparent;
+
     font-size: 18px;
     font-weight: 500;
-    color: var(--text-primary);
+    color: var(--text-primary) !important;
+    border-radius: 6px;
+    padding: 6px 10px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.06);
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+    }
   }
 }
-
 .spacer {
   flex: 1 1 auto;
-}
-
-.right {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-
-  .active {
-    border-bottom: 2px solid currentColor;
-    font-weight: 500;
-  }
-
-  .mat-mdc-button {
-    border-radius: 0 !important;
-    height: 40px;
-  }
 }
 
 .outline-icon {
