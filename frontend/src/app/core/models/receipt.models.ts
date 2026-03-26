@@ -11,3 +11,15 @@ export interface ReceiptSummaryResponse {
 
   receiptDate: string; // ISO date
 }
+
+export interface ReceiptCreateResponse{
+
+}
+
+export interface ReceiptCreateRequest{
+
+}
+
+export interface ReceiptDetailResponse{
+  
+}
