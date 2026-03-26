@@ -14,3 +14,15 @@ export interface InvoiceSummaryResponse {
   invoiceDate: string; // ISO date
   dueDate: string;
 }
+
+export interface InvoiceDetailResponse {
+
+}
+
+export interface InvoiceCreateRequest {
+
+}
+
+export interface InvoiceCreateResponse {
+  
+}
