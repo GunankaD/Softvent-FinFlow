@@ -75,8 +75,8 @@ export class ShowCustomersComponent implements OnInit {
     this.loading.set(true);
 
     this.customerService.getAll().subscribe({
-      next: (data) => {
-        this.customers.set(data);
+      next: (response: CustomerSummaryResponse[]) => {
+        this.customers.set(response);
         this.loading.set(false);
       },
       error: (err) => {

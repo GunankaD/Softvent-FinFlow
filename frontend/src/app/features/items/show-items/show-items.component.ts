@@ -71,8 +71,8 @@ export class ShowItemsComponent implements OnInit {
     this.loading.set(true);
 
     this.itemService.getAll().subscribe({
-      next: (data) => {
-        this.items.set([...data]);
+      next: (response: ItemSummaryResponse[]) => {
+        this.items.set([...response]);
         this.loading.set(false);
       },
       error: (err) => {
