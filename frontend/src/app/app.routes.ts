@@ -97,6 +97,18 @@ export const routes: Routes = [
             .then(m => m.ItemDetailsComponent),
         canActivate: [AuthGuard]
     },
+
+    // TRANSACTIONS ROUTES
+    {
+        path: 'transactions',
+        loadComponent: () =>
+            import('./features/transactions/transactions.component')
+            .then(m => m.TransactionsComponent),
+        canActivate: [AuthGuard]
+    },
+
+
+    // WILDCARD ROUTE TO HOME
     {
         path: '**',
         redirectTo: ''

@@ -1,0 +1,45 @@
+// ANGULAR
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
+
+// MATERIAL UI
+import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
+
+@Component({
+  selector: 'app-transactions',
+  standalone: true,
+  templateUrl: './transactions.component.html',
+  styleUrl: './transactions.component.scss',
+  imports: [
+    CommonModule,
+    MatIconModule,
+    MatDividerModule,
+    RouterModule
+  ]
+})
+export class TransactionsComponent {
+
+  constructor(private readonly router: Router) {}
+
+  public onViewInvoices(): void {
+    this.router.navigate(['/transactions/invoices']);
+  }
+
+  public onAddInvoice(): void {
+    this.router.navigate(['/transactions/invoices/add']);
+  }
+
+  public onViewReceipts(): void {
+    this.router.navigate(['/transactions/receipts']);
+  }
+
+  public onAddReceipt(): void {
+    this.router.navigate(['/transactions/receipts/add']);
+  }
+
+  public onApplyPayment(): void {
+    this.router.navigate(['/transactions/payment-applications']);
+  }
+}
