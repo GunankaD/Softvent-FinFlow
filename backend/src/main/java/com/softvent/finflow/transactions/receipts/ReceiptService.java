@@ -15,7 +15,6 @@ import jakarta.ws.rs.core.Response;
 
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class ReceiptService {
@@ -32,87 +31,7 @@ public class ReceiptService {
                         Response.Status.NOT_FOUND.getStatusCode() // 404
                 ));
 
-
-        // --- 2. Validate Applications (if present) ---
-        Map<String, Invoice> invoiceMap = new HashMap<>();
-        if (request.applications != null && !request.applications.isEmpty()) {
-
-            // --- Duplicate Invoice Check ---
-            Set<String> uniqueInvoices = new HashSet<>();
-            for (ReceiptApplicationRequest app : request.applications) {
-                if (!uniqueInvoices.add(app.invoiceNumber)) {
-                    throw new BusinessException(
-                            "Duplicate invoice in request: " + app.invoiceNumber,
-                            Response.Status.BAD_REQUEST.getStatusCode() // 400
-                    );
-                }
-            }
-
-            // --- Total Applied Check ---
-            BigDecimal totalApplied = request.applications.stream()
-                    .map(app -> app.appliedAmount == null
-                                    ? BigDecimal.ZERO
-                                    : app.appliedAmount
-                    )
-                    .reduce(BigDecimal.ZERO, BigDecimal::add);
-            if (totalApplied.compareTo(request.totalReceived) > 0) {
-                throw new BusinessException(
-                        "Total applied amount across all invoices cannot exceed the receipt total.",
-                        Response.Status.BAD_REQUEST.getStatusCode() // 400
-                );
-            }
-
-            // --- Bulk Fetch to fix N+1 Query Problem ---
-            List<String> invoiceNumbers = request.applications.stream()
-                    .map(app -> app.invoiceNumber)
-                    .toList();
-
-            List<Invoice> fetchedInvoices = Invoice.find(
-                    "SELECT i " +
-                            "FROM Invoice i " +
-                            "JOIN FETCH i.customer " +
-                            "WHERE i.invoiceNumber IN (:invoiceNumbers) " +
-                            "AND i.deletedAt IS NULL",
-                    Parameters.with("invoiceNumbers", invoiceNumbers)
-            ).list();
-
-            invoiceMap = fetchedInvoices.stream()
-                    .collect(Collectors.toMap(inv -> inv.invoiceNumber, inv -> inv));
-
-            // --- Validation Loop (NO DB WRITES) ---
-            for (ReceiptApplicationRequest appReq : request.applications) {
-
-                Invoice invoice = invoiceMap.get(appReq.invoiceNumber);
-
-                if (invoice == null) {
-                    throw new BusinessException(
-                            "Invoice not found: " + appReq.invoiceNumber,
-                            Response.Status.NOT_FOUND.getStatusCode()
-                    );
-                }
-                if (!invoice.customer.cid.equals(customer.cid)) {
-                    throw new BusinessException(
-                            "Invoice " + appReq.invoiceNumber + " does not belong to this customer.",
-                            Response.Status.BAD_REQUEST.getStatusCode()
-                    );
-                }
-                if (invoice.status == InvoiceStatus.VOID) {
-                    throw new BusinessException(
-                            "Cannot apply payment to void invoice: " + appReq.invoiceNumber,
-                            Response.Status.BAD_REQUEST.getStatusCode()
-                    );
-                }
-                if (appReq.appliedAmount.compareTo(invoice.balanceDue) > 0) {
-                    throw new BusinessException(
-                            "Applied amount exceeds invoice balance for: " + appReq.invoiceNumber,
-                            Response.Status.BAD_REQUEST.getStatusCode()
-                    );
-                }
-            }
-        }
-
-
-        // --- 3. Create Receipt ---
+        // --- 2. Create Receipt ---
         Receipt receipt = new Receipt();
         receipt.customer = customer;
         receipt.paymentMode = request.paymentMode;
@@ -123,29 +42,6 @@ public class ReceiptService {
         receipt.receiptNumber = generateReceiptNumber();
 
         receipt.persist();
-
-
-        // --- 4. Apply Payments ---
-        if (request.applications != null && !request.applications.isEmpty()) {
-
-            for (ReceiptApplicationRequest appReq : request.applications) {
-
-                Invoice invoice = invoiceMap.get(appReq.invoiceNumber);
-
-                PaymentApplication payment = new PaymentApplication();
-                payment.invoice = invoice;
-                payment.receipt = receipt;
-                payment.appliedAmount = appReq.appliedAmount;
-
-                payment.persist();
-
-                // Update balances
-                invoice.balanceDue = invoice.balanceDue.subtract(appReq.appliedAmount);
-                receipt.unappliedAmount = receipt.unappliedAmount.subtract(appReq.appliedAmount);
-
-                updateInvoiceStatus(invoice);
-            }
-        }
 
         return new ReceiptCreateResponse(receipt.receiptNumber);
     }

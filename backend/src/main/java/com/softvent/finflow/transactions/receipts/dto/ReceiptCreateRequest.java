@@ -26,6 +26,4 @@ public class ReceiptCreateRequest {
 
     @NotNull(message = "Receipt date is required.")
     public LocalDate receiptDate;
-
-    public List<@Valid ReceiptApplicationRequest> applications;
 }
