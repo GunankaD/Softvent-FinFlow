@@ -18,7 +18,7 @@ import { BreadcrumbComponent } from '../../../../shared/components/breadcrumb/br
 import { ReceiptService } from '../../../../core/services/receipt/receipt.service';
 
 // DTOs
-import { ReceiptSummaryResponse } from '../../../../core/models/receipt.models';
+import { ReceiptSummaryResponse } from '../../../../core/models/transaction.receipt.models';
 import { TableColumn } from '../../../../shared/components/models/table-column.model';
 import { Breadcrumb } from '../../../../shared/components/models/breadcrumb.model';
 

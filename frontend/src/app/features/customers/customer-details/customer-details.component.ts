@@ -22,8 +22,8 @@ import { MatDividerModule } from '@angular/material/divider';
 
 // DTOs
 import { CustomerDetailResponse, CustomerUpdateRequest } from '../../../core/models/customer.models';
-import { InvoiceSummaryResponse } from '../../../core/models/invoice.models';
-import { ReceiptSummaryResponse } from '../../../core/models/receipt.models';
+import { InvoiceSummaryResponse } from '../../../core/models/transaction.invoice.models';
+import { ReceiptSummaryResponse } from '../../../core/models/transaction.receipt.models';
 import { TableColumn } from '../../../shared/components/models/table-column.model'
 import { Breadcrumb } from '../../../shared/components/models/breadcrumb.model';
 

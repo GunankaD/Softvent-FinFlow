@@ -9,7 +9,7 @@ import { API_ENDPOINTS } from '../../constants/api-endpoints';
 // DTOs
 import {
   ItemCreateRequest,
-ItemCreateResponse,
+  ItemCreateResponse,
   ItemUpdateRequest,
   ItemSummaryResponse,
   ItemDetailResponse,

@@ -1,4 +1,4 @@
-import { ReceiptApplicationResponse } from './receipt.models';
+import { ReceiptApplicationResponse } from './transaction.receipt.models';
 
 export interface PaymentApplicationRequest {
   receiptNumber: string;

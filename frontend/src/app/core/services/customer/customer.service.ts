@@ -16,8 +16,8 @@ import {
   CustomerCreateResponse
 } from '../../models/customer.models'
 
-import { InvoiceSummaryResponse } from '../../models/invoice.models';
-import { ReceiptSummaryResponse } from '../../models/receipt.models';
+import { InvoiceSummaryResponse } from '../../models/transaction.invoice.models';
+import { ReceiptSummaryResponse } from '../../models/transaction.receipt.models';
 
 @Injectable({
   providedIn: 'root'

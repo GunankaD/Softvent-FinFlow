@@ -18,7 +18,7 @@ import { BreadcrumbComponent } from '../../../../shared/components/breadcrumb/br
 import { InvoiceService } from '../../../../core/services/invoice/invoice.service';
 
 // DTOs
-import { InvoiceSummaryResponse } from '../../../../core/models/invoice.models';
+import { InvoiceSummaryResponse } from '../../../../core/models/transaction.invoice.models';
 import { TableColumn } from '../../../../shared/components/models/table-column.model';
 import { Breadcrumb } from '../../../../shared/components/models/breadcrumb.model';
 

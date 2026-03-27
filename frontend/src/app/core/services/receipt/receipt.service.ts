@@ -13,7 +13,7 @@ import {
   ReceiptCreateResponse,
   ReceiptSummaryResponse,
   ReceiptDetailResponse
-} from '../../models/receipt.models';
+} from '../../models/transaction.receipt.models';
 
 @Injectable({
   providedIn: 'root'
