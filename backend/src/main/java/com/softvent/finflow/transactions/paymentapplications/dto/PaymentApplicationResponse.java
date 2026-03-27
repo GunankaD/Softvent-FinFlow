@@ -5,17 +5,17 @@ import com.softvent.finflow.transactions.receipts.dto.ReceiptApplicationResponse
 import java.math.BigDecimal;
 import java.util.List;
 
-public class PaymentApplyResponse {
+public class PaymentApplicationResponse {
 
     public String receiptNumber;
     public BigDecimal totalApplied;
     public BigDecimal remainingAmount;
     public List<ReceiptApplicationResponse> applications;
 
-    public PaymentApplyResponse(String receiptNumber,
-                                BigDecimal totalApplied,
-                                BigDecimal remainingAmount,
-                                List<ReceiptApplicationResponse> applications) {
+    public PaymentApplicationResponse(String receiptNumber,
+                                      BigDecimal totalApplied,
+                                      BigDecimal remainingAmount,
+                                      List<ReceiptApplicationResponse> applications) {
 
         this.receiptNumber = receiptNumber;
         this.totalApplied = totalApplied;

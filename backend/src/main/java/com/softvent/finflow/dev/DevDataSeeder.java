@@ -108,11 +108,11 @@ public class DevDataSeeder {
 
     private void applyPayment(String receiptNumber, String invoiceNumber, BigDecimal amount) {
 
-        PaymentApplicationRequest app = new PaymentApplicationRequest();
+        PaymentApplicationItems app = new PaymentApplicationItems();
         app.invoiceNumber = invoiceNumber;
         app.appliedAmount = amount;
 
-        PaymentApplyRequest req = new PaymentApplyRequest();
+        PaymentApplicationRequest req = new PaymentApplicationRequest();
         req.receiptNumber = receiptNumber;
         req.applications = List.of(app);
 

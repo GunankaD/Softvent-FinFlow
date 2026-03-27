@@ -1,7 +1,6 @@
 package com.softvent.finflow.transactions.paymentapplications;
 
-import com.softvent.finflow.transactions.paymentapplications.dto.PaymentApplyRequest;
-import com.softvent.finflow.transactions.paymentapplications.dto.PaymentApplyResponse;
+import com.softvent.finflow.transactions.paymentapplications.dto.*;
 
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.inject.Inject;
@@ -21,9 +20,9 @@ public class PaymentApplicationResource {
     // APPLY PAYMENT
     @POST
     @Path("/apply")
-    public Response apply(PaymentApplyRequest request) {
+    public Response apply(PaymentApplicationRequest request) {
 
-        PaymentApplyResponse response =
+        PaymentApplicationResponse response =
                 paymentApplicationService.applyPayment(request);
 
         return Response

@@ -22,7 +22,7 @@ public class PaymentApplicationService {
 
     // CREATE PAYMENT APPLICATION
     @Transactional
-    public PaymentApplyResponse applyPayment(PaymentApplyRequest request) {
+    public PaymentApplicationResponse applyPayment(PaymentApplicationRequest request) {
 
         // --- 1. Fetch Receipt ---
         Receipt receipt = Receipt.find(
@@ -53,7 +53,7 @@ public class PaymentApplicationService {
         {
             // --- Duplicate Invoice Check ---
             Set<String> uniqueInvoices = new HashSet<>();
-            for (PaymentApplicationRequest app : request.applications) {
+            for (PaymentApplicationItems app : request.applications) {
                 if (!uniqueInvoices.add(app.invoiceNumber)) {
                     throw new BusinessException(
                             "Duplicate invoice in request: " + app.invoiceNumber,
@@ -95,7 +95,7 @@ public class PaymentApplicationService {
                     .collect(Collectors.toMap(inv -> inv.invoiceNumber, inv -> inv));
 
             // --- Validation Loop (NO DB WRITES) ---
-            for (PaymentApplicationRequest appReq : request.applications) {
+            for (PaymentApplicationItems appReq : request.applications) {
 
                 Invoice invoice = invoiceMap.get(appReq.invoiceNumber);
 
@@ -130,7 +130,7 @@ public class PaymentApplicationService {
         List<ReceiptApplicationResponse> responses = new ArrayList<>();
 
         // --- 3. Execution Loop (Apply Payments) ---
-        for (PaymentApplicationRequest appReq : request.applications) {
+        for (PaymentApplicationItems appReq : request.applications) {
 
             Invoice invoice = invoiceMap.get(appReq.invoiceNumber);
 
@@ -159,7 +159,7 @@ public class PaymentApplicationService {
 
 
         // --- 4. Return Application Response ---
-        return new PaymentApplyResponse(
+        return new PaymentApplicationResponse(
                 receipt.receiptNumber,
                 totalApplied,
                 receipt.unappliedAmount,
