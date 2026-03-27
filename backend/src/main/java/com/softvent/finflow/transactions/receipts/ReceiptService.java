@@ -2,8 +2,6 @@ package com.softvent.finflow.transactions.receipts;
 
 import com.softvent.finflow.common.BusinessException;
 import com.softvent.finflow.customers.entity.Customer;
-import com.softvent.finflow.transactions.enums.InvoiceStatus;
-import com.softvent.finflow.transactions.invoices.entity.Invoice;
 import com.softvent.finflow.transactions.paymentapplications.entity.PaymentApplication;
 import com.softvent.finflow.transactions.receipts.dto.*;
 import com.softvent.finflow.transactions.receipts.entity.Receipt;
@@ -13,7 +11,6 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.transaction.Transactional;
 import jakarta.ws.rs.core.Response;
 
-import java.math.BigDecimal;
 import java.util.*;
 
 @ApplicationScoped
@@ -162,16 +159,6 @@ public class ReceiptService {
         }
 
         receipt.deletedAt = java.time.Instant.now();
-    }
-
-    private void updateInvoiceStatus(Invoice invoice) {
-        if (invoice.balanceDue.compareTo(invoice.totalAmount) == 0) {
-            invoice.status = InvoiceStatus.UNPAID;
-        } else if (invoice.balanceDue.compareTo(BigDecimal.ZERO) == 0) {
-            invoice.status = InvoiceStatus.PAID;
-        } else {
-            invoice.status = InvoiceStatus.PARTIAL;
-        }
     }
 
     private String generateReceiptNumber() {
