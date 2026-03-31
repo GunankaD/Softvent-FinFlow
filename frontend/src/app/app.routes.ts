@@ -114,6 +114,13 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
     },
     {
+        path: 'transactions/invoices/add-invoice',
+        loadComponent: () =>
+            import('./features/transactions/invoices/add-invoice/add-invoice.component')
+            .then(m => m.AddInvoiceComponent),
+        canActivate: [AuthGuard]
+    },
+    {
         path: 'transactions/receipts/show-receipts',
         loadComponent: () =>
             import('./features/transactions/receipts/show-receipts/show-receipts.component')

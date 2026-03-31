@@ -28,7 +28,7 @@ export class TransactionsComponent {
   }
 
   public onAddInvoice(): void {
-    this.router.navigate(['/transactions/invoices/add']);
+    this.router.navigate(['/transactions/invoices/add-invoice']);
   }
 
   public onViewReceipts(): void {
@@ -36,7 +36,7 @@ export class TransactionsComponent {
   }
 
   public onAddReceipt(): void {
-    this.router.navigate(['/transactions/receipts/add']);
+    this.router.navigate(['/transactions/receipts/add-invoice']);
   }
 
   public onApplyPayment(): void {
