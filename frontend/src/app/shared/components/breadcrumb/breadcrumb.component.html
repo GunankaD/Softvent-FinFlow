@@ -4,6 +4,7 @@
 
     <a *ngIf="item.route && !last"
        [routerLink]="item.route"
+       [fragment]="item.fragment"
        class="crumb-link">
       {{ item.label }}
     </a>
