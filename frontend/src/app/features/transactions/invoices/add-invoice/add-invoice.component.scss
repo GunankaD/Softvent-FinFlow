@@ -1,0 +1,330 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .subtitle {
+    color: var(--text-secondary);
+    margin-bottom: 30px;
+  }
+}
+
+// =====================
+// FORM LAYOUT
+// =====================
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+.date-group {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.full {
+  width: 100%;
+}
+
+mat-form-field {
+  margin-top: 4px;
+}
+
+// =====================
+// TABLE
+// =====================
+.table-container {
+  margin-bottom: 16px;
+}
+
+// =====================
+// SUMMARY (STEP 3)
+// =====================
+.summary-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.summary-section {
+  border: 1px solid var(--border-color);
+  padding: 16px;
+  border-radius: 8px;
+
+  h3 {
+    margin: 0 0 12px 0;
+    color: var(--text-secondary);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    strong {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+    }
+
+    span {
+      color: var(--text-primary);
+      font-size: 14px;
+    }
+  }
+}
+
+.totals-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.totals-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 380px;
+  align-self: flex-end;
+  width: 100%;
+}
+
+.totals-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: var(--text-secondary);
+
+  &.discount span:last-child {
+    color: #e57373;
+  }
+
+  &.grand-total {
+    color: var(--text-primary);
+    font-size: 16px;
+    font-weight: 600;
+  }
+}
+
+.totals-divider {
+  height: 1px;
+  background-color: var(--border-color);
+  margin: 4px 0;
+}
+
+.total {
+  margin-top: 12px;
+  font-size: 16px;
+}
+
+// =====================
+// STEP ACTION BARS
+// =====================
+.step-action-bar {
+  display: flex;
+  width: 100%;
+  margin-top: 16px;
+}
+
+.step-action-bar--step-1 {
+  justify-content: flex-end;
+}
+
+.step-action-bar--step-2 {
+  justify-content: space-between;
+  align-items: center;
+
+  .right-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+}
+
+.step-action-bar--step-3 {
+  margin-top: 32px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+// =====================
+// PREVIOUS BUTTON
+// =====================
+.go-back-btn {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+}
+
+.go-back-btn:disabled {
+  opacity: 0.5 !important;
+}
+
+// =====================
+// NEXT BUTTON
+// =====================
+.next-btn {
+  background-color: var(--button-blue) !important;
+  color: var(--text-primary) !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.next-btn-wrapper.invalid .next-btn {
+  background-color: var(--button-dark-blue) !important;
+  color: var(--text-disabled) !important;
+  opacity: 0.8;
+}
+
+.next-btn-wrapper.invalid .next-btn mat-icon {
+  color: var(--text-disabled) !important;
+}
+
+// =====================
+// CREATE BUTTON
+// =====================
+.create-btn {
+  min-width: 180px;
+  background-color: var(--button-green) !important;
+  color: var(--text-primary) !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.create-btn-wrapper.invalid .create-btn {
+  background-color: var(--button-dark-green) !important;
+  color: var(--text-disabled) !important;
+  opacity: 0.8;
+}
+
+.create-btn-wrapper.loading .create-btn {
+  background-color: var(--button-green) !important;
+  color: var(--text-primary) !important;
+  opacity: 1;
+  cursor: default;
+}
+
+.create-btn-wrapper.invalid .create-btn mat-icon {
+  color: var(--text-disabled) !important;
+}
+
+
+// =====================
+// CLEAR BUTTON
+// =====================
+.clear-items-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 8px;
+}
+
+.clear-btn {
+  border: 2px solid red !important;
+  color: red !important;
+}
+
+.clear-btn:disabled {
+  border-color: var(--text-disabled) !important;
+  color: var(--text-disabled) !important;
+  opacity: 0.5;
+}
+
+// =====================
+// SHARED WRAPPER STATES
+// =====================
+.create-btn-wrapper.invalid,
+.create-btn-wrapper.loading,
+.next-btn-wrapper.invalid {
+  cursor: not-allowed;
+}
+
+.next-btn-wrapper.invalid:hover,
+.create-btn-wrapper.invalid:hover,
+.create-btn-wrapper.loading:hover {
+  opacity: 0.9;
+}
+
+// =====================
+// MATERIAL STEPPER OVERRIDES
+// (vertical stepper for this page)
+// =====================
+.mat-stepper-vertical {
+  background-color: var(--bg-primary) !important;
+}
+
+::ng-deep .mat-vertical-content-container {
+  margin-left: 36px !important;
+}
+
+::ng-deep .mat-vertical-stepper-content {
+  padding: 0 24px 0px 24px !important;
+}
+::ng-deep .mat-vertical-content {
+  padding: 0 24px 0px 24px !important;
+}
+
+// Step icons
+::ng-deep .mat-step-header .mat-step-icon {
+  background-color: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
+}
+
+::ng-deep .mat-step-header .mat-step-icon-selected {
+  background-color: var(--button-blue) !important;
+  color: var(--text-primary) !important;
+}
+
+::ng-deep .mat-step-header .mat-step-icon-state-done,
+::ng-deep .mat-step-header .mat-step-icon-state-edit {
+  background-color: var(--button-green) !important;
+  color: var(--text-primary) !important;
+}
+
+// Step labels
+::ng-deep .mat-step-header .mat-step-label {
+  color: var(--text-secondary) !important;
+}
+
+::ng-deep .mat-step-header .mat-step-label-active {
+  color: var(--text-primary) !important;
+}
+
+::ng-deep .mat-step-header .mat-step-label-selected {
+  color: var(--text-primary) !important;
+}
+
+// Remove focus highlight on step headers
+::ng-deep .mat-step-header.cdk-program-focused,
+::ng-deep .mat-step-header.cdk-keyboard-focused {
+  background: transparent !important;
+}
+
+// Connector line color
+::ng-deep .mat-stepper-vertical-line::before {
+  border-left-color: var(--border-color) !important;
+}
+
+.outline-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 300,
+    'GRAD' 0,
+    'opsz' 24;
+}

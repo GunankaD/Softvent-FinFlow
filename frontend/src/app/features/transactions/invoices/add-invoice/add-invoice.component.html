@@ -1,1 +1,283 @@
-<p>add-invoice works!</p>
+<div class="container">
+
+  <app-breadcrumb [items]="breadcrumbs()"></app-breadcrumb>
+  <p class="subtitle">Create a new invoice</p>
+
+  <mat-vertical-stepper linear>
+
+    <!-- ================= STEP 1 ================= -->
+    <mat-step [stepControl]="invoiceGroup" [editable]="!isSubmitting()">
+      <form [formGroup]="invoiceGroup">
+
+        <ng-template matStepLabel>Invoice Details</ng-template>
+
+        <div class="form-grid">
+
+          <!-- CUSTOMER INPUT -->
+          <mat-form-field appearance="outline">
+            <mat-label>Customer</mat-label>
+            <input
+              matInput
+              [formControl]="customerSearch"
+              [matAutocomplete]="customerAuto"
+            />
+            <mat-autocomplete #customerAuto="matAutocomplete"
+              (optionSelected)="onCustomerSelected($event.option.value)">
+              <mat-option *ngFor="let customer of filteredCustomers" [value]="customer">
+                {{ customer.ccode }} | {{ customer.cname }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+
+          <!-- DATES INPUT -->
+          <div class="date-group">
+
+            <mat-form-field appearance="outline">
+              <mat-label>Invoice Date</mat-label>
+              <input matInput [matDatepicker]="invoicePicker" formControlName="invoiceDate">
+              <mat-datepicker-toggle matIconSuffix [for]="invoicePicker"></mat-datepicker-toggle>
+              <mat-datepicker #invoicePicker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Due Date</mat-label>
+              <input matInput [matDatepicker]="duePicker" formControlName="dueDate">
+              <mat-datepicker-toggle matIconSuffix [for]="duePicker"></mat-datepicker-toggle>
+              <mat-datepicker #duePicker></mat-datepicker>
+            </mat-form-field>
+
+          </div>
+
+        </div>
+
+        <div class="step-action-bar step-action-bar--step-1">
+          <div class="next-btn-wrapper" [class.invalid]="invoiceGroup.invalid">
+            <button
+              mat-raised-button
+              matStepperNext
+              type="button"
+              class="full next-btn"
+              [disabled]="invoiceGroup.invalid"
+            >
+              Next
+              <mat-icon fontSet="material-symbols-outlined" class="outline-icon" iconPositionEnd>
+                arrow_circle_right
+              </mat-icon>
+            </button>
+          </div>
+        </div>
+
+      </form>
+    </mat-step>
+
+    <!-- ================= STEP 2 ================= -->
+    <mat-step [editable]="!isSubmitting()">
+
+      <ng-template matStepLabel>Items</ng-template>
+
+      <!-- Search -->
+      <mat-form-field appearance="outline" class="full">
+        <mat-label>Search Item</mat-label>
+
+        <input
+          matInput
+          [formControl]="itemSearch"
+          [matAutocomplete]="itemAuto"
+        />
+
+        <mat-autocomplete
+          #itemAuto="matAutocomplete"
+          (optionSelected)="addItem($event.option.value)"
+        >
+
+          <mat-option
+            *ngFor="let item of filteredItems"
+            [value]="item"
+          >
+            {{ item.icode }} - {{ item.name }}
+          </mat-option>
+
+        </mat-autocomplete>
+      </mat-form-field>
+
+      <!-- Table -->
+      <div class="table-container">
+
+        <app-grid-table
+          [columns]="itemColumns"
+          [data]="itemsWithTotals"
+          [loading]="false"
+          [gridHeight]="getGridHeight(itemsArray.length)"
+          [pagination]="false"
+          [enableFilter]="false"
+          [showRefresh]="false"
+          (inputValueChange)="onItemChange($event)"
+          (delete)="onItemDelete($event)">
+        </app-grid-table>
+
+      </div>
+
+      <!-- Actions -->
+      <div class="step-action-bar step-action-bar--step-2">
+
+        <!-- LEFT -->
+        <button mat-button matStepperPrevious class="go-back-btn" type="button">
+          <mat-icon fontSet="material-symbols-outlined" class="outline-icon">
+            arrow_circle_left
+          </mat-icon>
+          Previous
+        </button>
+
+        <!-- RIGHT -->
+        <div class="right-actions">
+
+          <!-- CLEAR ALL ITEMS -->
+          <button
+            mat-stroked-button
+            class="clear-btn"
+            (click)="onClearItems()"
+            type="button"
+          >
+            <mat-icon fontSet="material-symbols-outlined" class="outline-icon">
+              ink_eraser
+            </mat-icon>
+            Clear All
+          </button>
+
+          <!-- NEXT -->
+          <div class="next-btn-wrapper" [class.invalid]="itemsControls.length === 0">
+            <button
+              mat-raised-button
+              matStepperNext
+              type="button"
+              class="next-btn"
+              [disabled]="itemsControls.length === 0"
+            >
+              Next
+              <mat-icon fontSet="material-symbols-outlined" iconPositionEnd class="outline-icon">
+                arrow_circle_right
+              </mat-icon>
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+    </mat-step>
+
+    <!-- ================= STEP 3 ================= -->
+    <mat-step [editable]="!isSubmitting()">
+
+      <ng-template matStepLabel>Review</ng-template>
+
+      <!-- Summary -->
+      <div class="summary-container">
+
+         <!-- Invoice Details -->
+        <div class="summary-section">
+          <h3>Invoice Details</h3>
+          <div class="summary-grid">
+            <div><strong>Customer Code</strong><span>{{ selectedCustomer?.ccode }}</span></div>
+            <div><strong>Customer Name</strong><span>{{ selectedCustomer?.cname }}</span></div>
+            <div><strong>Invoice Date</strong><span>{{ invoiceGroup.value.invoiceDate | date:'dd MMM yyyy' }}</span></div>
+            <div><strong>Due Date</strong><span>{{ invoiceGroup.value.dueDate | date:'dd MMM yyyy' }}</span></div>
+          </div>
+        </div>
+
+        <!-- Items Table -->
+        <div class="summary-section">
+          <h3>Items</h3>
+          <app-grid-table
+            [columns]="reviewColumns"
+            [data]="reviewItems"
+            [loading]="false"
+            [gridHeight]="getGridHeight(itemsArray.length)"
+            [pagination]="false"
+            [enableFilter]="false"
+            [showRefresh]="false">
+          </app-grid-table>
+        </div>
+
+        <!-- Totals Breakdown -->
+        <div class="summary-section totals-section">
+          <h3>Amount Summary</h3>
+          <div class="totals-grid">
+
+            <div class="totals-row">
+              <span>Subtotal</span>
+              <span>{{ getSubtotal() | currency:'INR':'symbol':'1.2-2':'en-IN' }}</span>
+            </div>
+
+            <div class="totals-row discount">
+              <span>Total Discount</span>
+              <span>− {{ getTotalDiscount() | currency:'INR':'symbol':'1.2-2':'en-IN' }}</span>
+            </div>
+
+            <div class="totals-row">
+              <span>Taxable Amount</span>
+              <span>{{ getTaxableAmount() | currency:'INR':'symbol':'1.2-2':'en-IN' }}</span>
+            </div>
+
+            <div class="totals-row">
+              <span>GST</span>
+              <span>{{ getTotalTax() | currency:'INR':'symbol':'1.2-2':'en-IN' }}</span>
+            </div>
+
+            <div class="totals-divider"></div>
+
+            <div class="totals-row grand-total">
+              <span>Grand Total</span>
+              <span>{{ getTotal() | currency:'INR':'symbol':'1.2-2':'en-IN' }}</span>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- Actions -->
+      <div class="step-action-bar step-action-bar--step-3">
+
+        <button
+          mat-button
+          matStepperPrevious
+          class="go-back-btn"
+          [disabled]="isSubmitting()"
+        >
+          <mat-icon fontSet="material-symbols-outlined" class="outline-icon">
+            arrow_circle_left
+          </mat-icon>
+          Previous
+        </button>
+
+        <div class="create-btn-wrapper" [class.loading]="isSubmitting()">
+          <button
+            mat-raised-button
+            class="create-btn"
+            (click)="onCreateClick()"
+            [disabled]="isSubmitting()"
+          >
+
+            <mat-progress-spinner
+              *ngIf="isSubmitting()"
+              mode="indeterminate"
+              diameter="20"
+              strokeWidth="2"
+            ></mat-progress-spinner>
+
+            <mat-icon fontSet="material-symbols-outlined" class="outline-icon" *ngIf="!isSubmitting()">
+              add_circle
+            </mat-icon>
+
+            <span *ngIf="!isSubmitting()">Create Invoice</span>
+
+          </button>
+        </div>
+
+      </div>
+
+    </mat-step>
+
+  </mat-vertical-stepper>
+
+</div>
