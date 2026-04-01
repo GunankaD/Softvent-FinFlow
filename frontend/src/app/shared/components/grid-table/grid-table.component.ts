@@ -37,12 +37,17 @@ export class GridTableComponent {
   @Input({ required: true }) loading!: boolean;
 
   @Input() gridHeight: string = '600px';
+  @Input() showRefresh: boolean = true;
   @Input() paginationPageSize: number = 25;
+  @Input() pagination: boolean = true;
   @Input() paginationPageSizeSelector: number[] = [10, 25, 50, 100];
+  @Input() enableFilter: boolean = true;
 
   // OUTPUTS
   @Output() refresh = new EventEmitter<void>();
   @Output() view = new EventEmitter<any>();
+  @Output() delete = new EventEmitter<any>();
+  @Output() inputValueChange = new EventEmitter<any>();
 
   // GRID STATE
   private gridApi!: GridApi;
@@ -53,8 +58,8 @@ export class GridTableComponent {
   defaultColDef: ColDef = {
     sortable: true,
     resizable: true,
-    filter: true,
-    floatingFilter: true,
+    filter: this.enableFilter,
+    floatingFilter: this.enableFilter,
     suppressHeaderFilterButton: true,
     suppressHeaderMenuButton: true,
   };
@@ -63,6 +68,13 @@ export class GridTableComponent {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['data']) this.rowData = this.data ?? [];
     if (changes['columns']) this.buildColumnDefs();
+    if (changes['enableFilter']) {
+      this.defaultColDef = {
+        ...this.defaultColDef,
+        filter: this.enableFilter,
+        floatingFilter: this.enableFilter
+      };
+    }
   }
 
   onGridReady(event: GridReadyEvent): void {
@@ -92,8 +104,8 @@ export class GridTableComponent {
 
     const dynamicColumns: ColDef[] = this.columns.map(col => {
 
-      // ICON COLUMNS
-      if (col.type === 'icon') {
+      // VIEW ICON COLUMNS
+      if (col.type === 'viewIcon') {
         return {
           headerName: col.label,
           headerTooltip: col.label,
@@ -104,7 +116,7 @@ export class GridTableComponent {
           sortable: false,
           filter: false,
           cellRenderer: () => `
-            <div class="eye-cell">
+            <div class="icon-cell">
               <span class="material-icons">visibility</span>
             </div>
           `,
@@ -115,6 +127,32 @@ export class GridTableComponent {
             cursor: 'pointer',
             lineHeight: 1
           } as CellStyle,
+        };
+      }
+
+      // DELETE ICON COLUMNS
+      if (col.type === 'deleteIcon') {
+        return {
+          headerName: col.label,
+          headerTooltip: col.label,
+          field: col.key,
+          width: 80,
+          minWidth: col.minWidth,
+          flex: col.flex,
+          sortable: false,
+          filter: false,
+          cellRenderer: () => `
+            <div class="icon-cell">
+              <span class="material-icons" style="color: red; cursor: pointer;">delete</span>
+            </div>
+          `,
+          cellStyle: {
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            lineHeight: 1
+          } as CellStyle
         };
       }
 
@@ -152,6 +190,7 @@ export class GridTableComponent {
         };
       }
 
+      // CURRENCY COLUMNS
       if (col.type === 'currency') {
         return {
           headerName: col.label,
@@ -194,6 +233,28 @@ export class GridTableComponent {
         };
       }
 
+      // INPUT COLUMNS
+      if (col.type === 'input') {
+        return {
+          headerName: col.label,
+          field: col.key,
+          flex: col.flex,
+          minWidth: col.minWidth,
+          editable: true,
+          filter: false,
+          cellEditor: 'agTextCellEditor',
+
+          valueParser: params => {
+            const val = parseFloat(params.newValue);
+            return isNaN(val) ? 0 : val;
+          },
+
+          cellStyle: {
+            textAlign: 'right'
+          } as CellStyle
+        };
+      }
+
       // TEXT COLUMNS (DEFAULT)
       return {
         headerName: col.label,
@@ -216,6 +277,13 @@ export class GridTableComponent {
     if (event.colDef.field === 'viewIcon') {
       this.view.emit(event.data);
     }
+    if (event.colDef.field === 'deleteIcon') {
+      this.delete.emit(event.data);
+    }
+  }
+
+  onCellValueChanged(params: any): void {
+    this.inputValueChange.emit({ ...params.data });
   }
 
   onRefresh(): void {

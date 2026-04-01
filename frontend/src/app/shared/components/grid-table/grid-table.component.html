@@ -1,7 +1,7 @@
 <div class="table-container">
 
   <!-- 1. TABLE ACTION ROW BEGINS -->
-  <div class="table-actions">
+  <div class="table-actions" *ngIf="showRefresh">
     <button
       mat-icon-button
       type="button"
@@ -25,7 +25,7 @@
         [columnDefs]="columnDefs"
         [defaultColDef]="defaultColDef"
         
-        [pagination]="true"
+        [pagination]="pagination"
         [paginationPageSize]="paginationPageSize"
         [paginationPageSizeSelector]="paginationPageSizeSelector"
 
