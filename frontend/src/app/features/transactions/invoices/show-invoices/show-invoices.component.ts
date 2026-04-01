@@ -59,7 +59,7 @@ export class ShowInvoicesComponent implements OnInit {
     { key: 'status',        label: 'Status',         flex: 0.7, minWidth: 90,  type: 'text' },
     { key: 'invoiceDate',   label: 'Invoice Date',   flex: 1.2, minWidth: 130, type: 'date' },
     { key: 'dueDate',       label: 'Due Date',       flex: 1.2, minWidth: 130, type: 'date' },
-    { key: 'viewIcon',      label: 'View',           flex: 0.5, minWidth: 70,  type: 'icon' }
+    { key: 'viewIcon',      label: 'View',           flex: 0.5, minWidth: 70,  type: 'viewIcon' }
   ];
 
   ngOnInit(): void {

@@ -83,7 +83,7 @@ export class CustomerDetailsComponent implements OnInit {
   { key: 'status',        label: 'Status',       flex: 1,   minWidth: 120, type: 'text'     },
   { key: 'invoiceDate',   label: 'Invoice Date', flex: 1.5, minWidth: 160, type: 'date'     },
   { key: 'dueDate',       label: 'Due Date',     flex: 1.5, minWidth: 160, type: 'date'     },
-  { key: 'viewIcon',      label: 'View',         flex: 0.5, minWidth: 70,  type: 'icon'     }
+  { key: 'viewIcon',      label: 'View',         flex: 0.5, minWidth: 70,  type: 'viewIcon'     }
 ];
 
 readonly receiptColumns: TableColumn[] = [
@@ -92,7 +92,7 @@ readonly receiptColumns: TableColumn[] = [
   { key: 'totalReceived',  label: 'Total ₹',    flex: 1,   minWidth: 120, type: 'currency' },
   { key: 'unappliedAmount',label: 'Unapplied ₹',flex: 1,   minWidth: 120, type: 'currency' },
   { key: 'receiptDate',    label: 'Date',       flex: 1.5, minWidth: 160, type: 'date'     },
-  { key: 'viewIcon',       label: 'View',       flex: 0.5, minWidth: 70,  type: 'icon'     }
+  { key: 'viewIcon',       label: 'View',       flex: 0.5, minWidth: 70,  type: 'viewIcon'     }
 ];
 
   private ccode!: string;

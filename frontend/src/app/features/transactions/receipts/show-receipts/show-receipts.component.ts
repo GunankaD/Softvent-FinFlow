@@ -58,7 +58,7 @@ export class ShowReceiptsComponent implements OnInit {
     { key: 'totalReceived',   label: 'Total ₹',         flex: 1,   minWidth: 140, type: 'currency' },
     { key: 'unappliedAmount', label: 'Unapplied ₹',     flex: 1,   minWidth: 140, type: 'currency' },
     { key: 'receiptDate',     label: 'Receipt Date',    flex: 1.2, minWidth: 180, type: 'date' },
-    { key: 'viewIcon',        label: 'View',            flex: 0.5, minWidth: 70,  type: 'icon' }
+    { key: 'viewIcon',        label: 'View',            flex: 0.5, minWidth: 70,  type: 'viewIcon' }
   ];
 
   ngOnInit(): void {

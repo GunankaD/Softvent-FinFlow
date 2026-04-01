@@ -60,7 +60,7 @@ export class ShowItemsComponent implements OnInit {
     { key: 'gstRate',      label: 'GST%',             flex: 0.5,  minWidth: 70 ,   type: 'number' },
     { key: 'createdAt',    label: 'Created On',       flex: 2,    minWidth: 170,   type: 'date' },
     { key: 'isActive',     label: 'Active',           flex: 0.25, minWidth: 72 ,   type: 'boolean' },
-    { key: 'viewIcon',     label: 'View',             flex: 0.5,  minWidth: 70 ,   type: 'icon' }
+    { key: 'viewIcon',     label: 'View',             flex: 0.5,  minWidth: 70 ,   type: 'viewIcon' }
   ];
 
   ngOnInit(): void {
