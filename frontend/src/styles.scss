@@ -152,6 +152,41 @@ body .mat-mdc-option.mdc-list-item--selected:hover {
   color: var(--text-primary) !important;
 }
 
+/* ============================= */
+/* AUTOCOMPLETE PANEL THEME      */
+/* ============================= */
+
+/* Panel background */
+body .mat-mdc-autocomplete-panel {
+  background-color: var(--bg-tertiary) !important;
+}
+
+/* All options default text */
+body .mat-mdc-autocomplete-panel .mat-mdc-option {
+  color: var(--text-primary) !important;
+}
+
+/* Hover state */
+body .mat-mdc-autocomplete-panel .mat-mdc-option:hover {
+  background-color: var(--bg-primary) !important;
+}
+
+/* Active (keyboard navigation) */
+body .mat-mdc-autocomplete-panel .mat-mdc-option.mat-mdc-option-active {
+  background-color: var(--bg-primary) !important;
+}
+
+/* Selected option */
+body .mat-mdc-autocomplete-panel .mat-mdc-option.mdc-list-item--selected {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+}
+
+/* Selected + hover */
+body .mat-mdc-autocomplete-panel .mat-mdc-option.mdc-list-item--selected:hover {
+  background-color: var(--bg-primary) !important;
+}
+
 // INPUTS
 :root {
   .compact {

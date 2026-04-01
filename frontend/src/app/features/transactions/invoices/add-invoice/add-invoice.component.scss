@@ -317,6 +317,14 @@ mat-form-field {
   border-left-color: var(--border-color) !important;
 }
 
+
+// =====================
+// MATERIAL AUTOCOMPLETE
+// =====================
+::ng-deep .mat-mdc-autocomplete-panel {
+  max-height: 155px !important;
+}
+
 .outline-icon {
   font-size: 24px;
   width: 24px;
