@@ -166,12 +166,12 @@ export class AddInvoiceComponent {
     }
 
     const group = this.fb.nonNullable.group({
-      icode: item.icode,
-      name: item.name,
+      icode: [item.icode],
+      name: [item.name],
       quantity: [1, [Validators.required, Validators.min(1)]],
-      rate: item.salesRate,
+      rate: [item.salesRate],
       discountPercent: [0],
-      gstRate: item.gstRate,
+      gstRate: [item.gstRate],
     });
 
     this.itemsArray.push(group);
