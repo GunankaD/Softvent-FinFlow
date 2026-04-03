@@ -32,6 +32,7 @@
           <!-- DATES INPUT -->
           <div class="date-group">
 
+            <!-- INVOICE DATE -->
             <mat-form-field appearance="outline">
               <mat-label>Invoice Date</mat-label>
               <input matInput [matDatepicker]="invoicePicker" formControlName="invoiceDate">
@@ -39,11 +40,16 @@
               <mat-datepicker #invoicePicker></mat-datepicker>
             </mat-form-field>
 
+            <!-- DUE DATE -->
             <mat-form-field appearance="outline">
               <mat-label>Due Date</mat-label>
               <input matInput [matDatepicker]="duePicker" formControlName="dueDate">
               <mat-datepicker-toggle matIconSuffix [for]="duePicker"></mat-datepicker-toggle>
               <mat-datepicker #duePicker></mat-datepicker>
+
+              <mat-error *ngIf="invoiceGroup.get('dueDate')?.hasError('invalidDueDate')">
+                Due date cannot be earlier than invoice date
+              </mat-error>
             </mat-form-field>
 
           </div>
@@ -75,7 +81,7 @@
 
       <ng-template matStepLabel>Items</ng-template>
 
-      <!-- Search -->
+      <!-- ITEM SEARCH -->
       <mat-form-field appearance="outline" class="full">
         <mat-label>Search Item</mat-label>
 
@@ -100,27 +106,30 @@
         </mat-autocomplete>
       </mat-form-field>
 
-      <!-- Table -->
+      <!-- ITEMS GRID -->
       <div class="table-container">
 
         <app-grid-table
           [columns]="itemColumns"
           [data]="itemsWithTotals"
-          [loading]="false"
           [gridHeight]="getGridHeight(itemsArray.length)"
+
+          [loading]="false"
+
           [pagination]="false"
           [enableFilter]="false"
           [showRefresh]="false"
-          (inputValueChange)="onItemChange($event)"
+
+          (inputValueChange)="onItemUpdate($event)"
           (delete)="onItemDelete($event)">
         </app-grid-table>
 
       </div>
 
-      <!-- Actions -->
+      <!-- ACTION BAR -->
       <div class="step-action-bar step-action-bar--step-2">
 
-        <!-- LEFT -->
+        <!-- GO BACK BUTTON -->
         <button mat-button matStepperPrevious class="go-back-btn" type="button">
           <mat-icon fontSet="material-symbols-outlined" class="outline-icon">
             arrow_circle_left
@@ -171,10 +180,10 @@
 
       <ng-template matStepLabel>Review</ng-template>
 
-      <!-- Summary -->
+      <!-- SUMMARY -->
       <div class="summary-container">
 
-         <!-- Invoice Details -->
+         <!-- STEP 1 DETAILS -->
         <div class="summary-section">
           <h3>Invoice Details</h3>
           <div class="summary-grid">
@@ -185,21 +194,23 @@
           </div>
         </div>
 
-        <!-- Items Table -->
+        <!-- STEP 2 ITEMS DETAILS -->
         <div class="summary-section">
           <h3>Items</h3>
           <app-grid-table
             [columns]="reviewColumns"
             [data]="reviewItems"
-            [loading]="false"
             [gridHeight]="getGridHeight(itemsArray.length)"
+
+            [loading]="false"
+
             [pagination]="false"
             [enableFilter]="false"
             [showRefresh]="false">
           </app-grid-table>
         </div>
 
-        <!-- Totals Breakdown -->
+        <!-- AMOUNT TOTAL BREAKDOWN -->
         <div class="summary-section totals-section">
           <h3>Amount Summary</h3>
           <div class="totals-grid">
@@ -235,9 +246,10 @@
         </div>
       </div>
 
-      <!-- Actions -->
+      <!-- ACTION BAR -->
       <div class="step-action-bar step-action-bar--step-3">
 
+        <!-- GO BACK PREVIOUS BUTTON -->
         <button
           mat-button
           matStepperPrevious
@@ -254,7 +266,7 @@
           <button
             mat-raised-button
             class="create-btn"
-            (click)="onCreateClick()"
+            (click)="onSubmit()"
             [disabled]="isSubmitting()"
           >
 
@@ -263,6 +275,7 @@
               mode="indeterminate"
               diameter="20"
               strokeWidth="2"
+              style="--mdc-circular-progress-active-indicator-color: white"
             ></mat-progress-spinner>
 
             <mat-icon fontSet="material-symbols-outlined" class="outline-icon" *ngIf="!isSubmitting()">

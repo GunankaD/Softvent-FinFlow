@@ -1,7 +1,7 @@
 // ANGULAR
 import { Component, inject, signal, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormArray, ReactiveFormsModule, Validators, AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';
 import { Router } from '@angular/router';
 
 // MATERIAL
@@ -57,8 +57,18 @@ import { CustomerSummaryResponse } from '../../../../core/models/customer.models
 })
 export class AddInvoiceComponent {
 
+  // BREAD CRUMB
+  public breadcrumbs(): Breadcrumb[] {
+    return [
+      { label: 'Transactions', route: '/transactions' },
+      { label: 'Invoices', route: '/transactions', fragment:"invoice-section"},
+      { label: 'Create Invoice' }
+    ];
+  }
+
   @ViewChild(MatStepper) stepper!: MatStepper;
 
+  // DEPENDENCIES INJECTION
   private readonly fb = inject(FormBuilder);
   private readonly router = inject(Router);
   private readonly invoiceService = inject(InvoiceService);
@@ -69,19 +79,52 @@ export class AddInvoiceComponent {
 
   protected isSubmitting = signal(false);
 
-  public breadcrumbs(): Breadcrumb[] {
-    return [
-      { label: 'Transactions', route: '/transactions' },
-      { label: 'Invoices', route: '/transactions', fragment:"invoice-section"},
-      { label: 'Create Invoice' }
-    ];
-  }
-
   // DATA
   protected customers: CustomerSummaryResponse[] = [];
   protected itemsMaster: ItemSummaryResponse[] = [];
   private activeIcodes = new Set<string>();
   protected selectedCustomer: CustomerSummaryResponse | null = null;
+  protected itemsArray: FormArray = this.fb.array([]);
+
+  // GRID DATA
+  protected get itemsWithTotals(): any[] {
+    return this.itemsArray.value.map((item: any) => ({
+      ...item,
+      lineTotal: this.getLineTotal(item)
+    }));
+  }
+  protected get reviewItems(): any[] {
+    return this.itemsArray.value.map((item: any) => ({
+      ...item,
+      lineTotal: this.getLineTotal(item)
+    }));
+  }
+
+  // VALIDATORS
+  private readonly dateValidator: ValidatorFn = (
+    control: AbstractControl
+  ): ValidationErrors | null => {
+
+    const group = control as FormGroup;
+
+    const invoiceDate = group.get('invoiceDate');
+    const dueDate = group.get('dueDate');
+
+    if (!invoiceDate?.value || !dueDate?.value) return null;
+
+    if (dueDate.value < invoiceDate.value) {
+      dueDate.setErrors({ ...(dueDate.errors || {}), invalidDueDate: true });
+    } else {
+      if (dueDate.errors) {
+        delete dueDate.errors['invalidDueDate'];
+        if (!Object.keys(dueDate.errors).length) {
+          dueDate.setErrors(null);
+        }
+      }
+    }
+
+    return null; // IMPORTANT
+  };
 
   // FORM
   protected readonly invoiceGroup: FormGroup = this.fb.nonNullable.group({
@@ -89,20 +132,34 @@ export class AddInvoiceComponent {
     cname: [''],
     invoiceDate: [null as Date | null, Validators.required],
     dueDate: [null as Date | null, Validators.required]
-  });
-  
-  protected itemsArray: FormArray = this.fb.array([]);
-
-  protected get itemsControls() {
-    return this.itemsArray.controls as FormGroup[];
-  }
+  },
+  { validators: this.dateValidator });
 
   // FILTERING
   protected customerSearch = this.fb.control('');
   protected filteredCustomers: CustomerSummaryResponse[] = [];
   protected itemSearch = this.fb.control('');
   protected filteredItems: ItemSummaryResponse[] = [];
+  protected get itemsControls() {
+    return this.itemsArray.controls as FormGroup[];
+  }
 
+  // DYNAMIC GRID HEIGHT CALCULATION
+  protected getGridHeight(rowCount: number): string {
+    const header = 50;
+    const rowHeight = 42.2;
+
+    const minRows = 4;
+    const maxRows = 10;
+
+    const height = rowCount === 0 ? 
+      header + rowHeight 
+      : rowCount <= maxRows ?
+        header + rowCount * rowHeight
+        : header + maxRows * rowHeight
+
+    return `${height}px`;
+  }
 
   // INIT
   constructor() {
@@ -145,18 +202,38 @@ export class AddInvoiceComponent {
         .slice(0, 10);
     });
   }
-
   private loadInitialData(): void {
     this.customerService.getAll().subscribe(res => this.customers = res);
     this.itemService.getAll().subscribe(res => this.itemsMaster = res);
   }
 
+  // ========================
+  // STEP 1 
+  // ========================
   protected onCustomerSelected(customer: CustomerSummaryResponse): void {
     this.selectedCustomer = customer;
     this.invoiceGroup.patchValue({ ccode: customer.ccode });
     this.customerSearch.setValue(`${customer.ccode} | ${customer.cname}`);
   }
-  // ITEM HANDLING
+  private formatDate(date: Date | null): string {
+    if (!date) return '';
+    return date.toISOString().split('T')[0];
+  }
+
+  // ======================== 
+  // STEP 2 
+  // ========================
+  readonly itemColumns: TableColumn[] = [
+    { key: 'icode',           label: 'Item Code',   flex: 1,   minWidth: 120, type: 'text' },
+    { key: 'name',            label: 'Item Name',   flex: 1.5, minWidth: 160, type: 'text' },
+    { key: 'quantity',        label: 'Qty',         flex: 0.8, minWidth: 100, type: 'input' },
+    { key: 'rate',            label: 'Rate',        flex: 1,   minWidth: 120, type: 'currency' },
+    { key: 'discountPercent', label: 'Discount %',  flex: 1,   minWidth: 120, type: 'input' },
+    { key: 'gstRate',         label: 'GST %',       flex: 1,   minWidth: 120, type: 'number' },
+    { key: 'lineTotal',       label: 'Total',       flex: 1.2, minWidth: 140, type: 'currency' },
+    { key: 'deleteIcon',      label: 'Delete',      flex: 0.7, minWidth: 80,  type: 'deleteIcon' }
+  ];
+
   protected addItem(item: ItemSummaryResponse): void {
 
     const exists = this.itemsArray.value.find((i: any) => i.icode === item.icode);
@@ -178,12 +255,6 @@ export class AddInvoiceComponent {
     this.activeIcodes.add(item.icode);
     this.itemSearch.setValue('');
   }
-
-  protected removeItem(index: number, icode: string): void {
-    this.itemsArray.removeAt(index);
-    this.activeIcodes.delete(icode);
-  }
-
   protected onItemDelete(row: any): void {
     const index = this.itemsArray.value.findIndex(
       (item: any) => item.icode === row.icode
@@ -192,8 +263,31 @@ export class AddInvoiceComponent {
       this.removeItem(index, row.icode);
     }
   }
+  protected removeItem(index: number, icode: string): void {
+    this.itemsArray.removeAt(index);
+    this.activeIcodes.delete(icode);
+  }
+  protected onClearItems(): void {
+    if (this.isSubmitting()) return;
 
-  // CALCULATIONS
+    if (this.itemsArray.length === 0) return;
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Clear Items',
+        message: 'Are you sure you want to remove all added items?',
+        confirmColor: 'red',
+        confirmButtonText: 'Clear'
+      },
+      panelClass: 'custom-dialog-panel'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) return;
+      this.itemsArray.clear();
+      this.activeIcodes.clear();
+    });
+  }
   protected getLineTotal(item: any): number {
     const qty = Number(item.quantity) || 0;
     const rate = Number(item.rate) || 0;
@@ -208,47 +302,28 @@ export class AddInvoiceComponent {
     return afterDiscount + gst;
   }
 
-  protected getTotal(): number {
-    return this.itemsArray.value
-      .reduce((sum: number, item: any) => sum + this.getLineTotal(item), 0);
+  // FROM CHILD LISTENER
+  protected onItemUpdate(updatedRow: any): void {
+
+    const index = this.itemsArray.value.findIndex(
+      (item: any) => item.icode === updatedRow.icode
+    );
+
+    if (index === -1) return;
+
+    const formGroup = this.itemsArray.at(index) as FormGroup;
+
+    formGroup.patchValue({
+      quantity: updatedRow.quantity,
+      discountPercent: updatedRow.discountPercent
+    });
+
+    this.itemsArray.updateValueAndValidity({ emitEvent: true });
   }
 
-  // GRIDS
-  protected getGridHeight(rowCount: number): string {
-    const header = 50;
-    const rowHeight = 42.2;
-
-    const minRows = 4;
-    const maxRows = 10;
-
-    const height = rowCount === 0 ? 
-      header + rowHeight 
-      : rowCount <= maxRows ?
-        header + rowCount * rowHeight
-        : header + maxRows * rowHeight
-
-    return `${height}px`;
-  }
-
-  readonly itemColumns: TableColumn[] = [
-    { key: 'icode',           label: 'Item Code',   flex: 1,   minWidth: 120, type: 'text' },
-    { key: 'name',            label: 'Item Name',   flex: 1.5, minWidth: 160, type: 'text' },
-    { key: 'quantity',        label: 'Qty',         flex: 0.8, minWidth: 100, type: 'input' },
-    { key: 'rate',            label: 'Rate',        flex: 1,   minWidth: 120, type: 'currency' },
-    { key: 'discountPercent', label: 'Discount %',  flex: 1,   minWidth: 120, type: 'input' },
-    { key: 'gstRate',         label: 'GST %',       flex: 1,   minWidth: 120, type: 'number' },
-    { key: 'lineTotal',       label: 'Total',       flex: 1.2, minWidth: 140, type: 'currency' },
-    { key: 'deleteIcon',      label: 'Delete',      flex: 0.7, minWidth: 80,  type: 'deleteIcon' }
-  ];
-
-  protected get itemsWithTotals(): any[] {
-    return this.itemsArray.value.map((item: any) => ({
-      ...item,
-      lineTotal: this.getLineTotal(item)
-    }));
-  }
-
-  // SUMMARY STEP
+  //========================
+  // STEP 3
+  // ========================
   readonly reviewColumns: TableColumn[] = [
     { key: 'icode',           label: 'Item Code',   flex: 1,   minWidth: 120, type: 'text' },
     { key: 'name',            label: 'Item Name',   flex: 1.5, minWidth: 160, type: 'text' },
@@ -259,29 +334,24 @@ export class AddInvoiceComponent {
     { key: 'lineTotal',       label: 'Total',       flex: 1.2, minWidth: 140, type: 'currency' }
   ];
 
-  protected get reviewItems(): any[] {
-    return this.itemsArray.value.map((item: any) => ({
-      ...item,
-      lineTotal: this.getLineTotal(item)
-    }));
+  // CALCULATION FUNCTIONS
+  protected getTotal(): number {
+    return this.itemsArray.value
+      .reduce((sum: number, item: any) => sum + this.getLineTotal(item), 0);
   }
-
   protected getSubtotal(): number {
     return this.itemsArray.value
       .reduce((sum: number, item: any) => sum + (item.quantity * item.rate), 0);
   }
-
   protected getTotalDiscount(): number {
     return this.itemsArray.value.reduce((sum: number, item: any) => {
       const base = item.quantity * item.rate;
       return sum + (base * (item.discountPercent || 0) / 100);
     }, 0);
   }
-
   protected getTaxableAmount(): number {
     return this.getSubtotal() - this.getTotalDiscount();
   }
-
   protected getTotalTax(): number {
     return this.itemsArray.value.reduce((sum: number, item: any) => {
       const base = item.quantity * item.rate;
@@ -291,7 +361,8 @@ export class AddInvoiceComponent {
   }
 
   // SUBMIT
-  private onSubmit(): void {
+  protected onSubmit(): void {
+    if (this.isSubmitting()) return;
 
     if (this.invoiceGroup.invalid || this.itemsArray.length === 0) return;
 
@@ -319,55 +390,5 @@ export class AddInvoiceComponent {
         this.snackbar.error('Failed to create invoice', 4000);
       }
     });
-  }
-
-  protected onCreateClick(): void {
-    if (this.isSubmitting()) return;
-    this.onSubmit();
-  }
-
-  protected onClearItems(): void {
-    if (this.isSubmitting()) return;
-
-    if (this.itemsArray.length === 0) return;
-
-    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      data: {
-        title: 'Clear Items',
-        message: 'Are you sure you want to remove all added items?',
-        confirmColor: 'red',
-        confirmButtonText: 'Clear'
-      },
-      panelClass: 'custom-dialog-panel'
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (!result) return;
-      this.itemsArray.clear();
-      this.activeIcodes.clear();
-    });
-  }
-
-  private formatDate(date: Date | null): string {
-    if (!date) return '';
-    return date.toISOString().split('T')[0];
-  }
-
-  protected onItemChange(updatedRow: any): void {
-
-    const index = this.itemsArray.value.findIndex(
-      (item: any) => item.icode === updatedRow.icode
-    );
-
-    if (index === -1) return;
-
-    const formGroup = this.itemsArray.at(index) as FormGroup;
-
-    formGroup.patchValue({
-      quantity: updatedRow.quantity,
-      discountPercent: updatedRow.discountPercent
-    });
-
-    this.itemsArray.updateValueAndValidity({ emitEvent: true });
   }
 }
