@@ -111,7 +111,7 @@
     </div>
   </div>
 
-  @if(customer()){
+  @if(customer() && receipts() && invoices()){
     <!-- FORM -->
     <form [formGroup]="form" class="details-form">
       <!-- BUSINESS + CONTACT ROW -->
@@ -228,8 +228,8 @@
         [columns]="invoiceColumns"
         [data]="invoices()"
         [loading]="loadingInvoices()"
-        [gridHeight]="'400px'"
-        [paginationPageSize]="10"
+        [gridHeight]="getGridHeight(invoices().length)"
+        [pagination]=false
         (refresh)="loadInvoices()"
         (view)="onInvoiceClick($event)">
       </app-grid-table>
@@ -242,8 +242,8 @@
         [columns]="receiptColumns"
         [data]="receipts()"
         [loading]="loadingReceipts()"
-        [gridHeight]="'400px'"
-        [paginationPageSize]="10"
+        [gridHeight]="getGridHeight(receipts().length)"
+        [pagination]=false
         (refresh)="loadReceipts()"
         (view)="onReceiptClick($event)">
       </app-grid-table>
