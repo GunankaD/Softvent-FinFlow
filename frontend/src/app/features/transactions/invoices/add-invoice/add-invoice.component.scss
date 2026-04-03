@@ -263,10 +263,7 @@ mat-form-field {
 // =====================
 .mat-stepper-vertical {
   background-color: var(--bg-primary) !important;
-}
-
-::ng-deep .mat-vertical-content-container {
-  margin-left: 36px !important;
+  margin-bottom: 30px !important;
 }
 
 ::ng-deep .mat-vertical-stepper-content {
