@@ -20,8 +20,10 @@
   <div class="grid-wrapper ag-theme-quartz-dark" [style.height]="gridHeight">
     <ag-grid-angular
         class="ag-grid"
+        [context]="this"
 
         [rowData]="rowData"
+        [getRowId]="getRowId"
         [columnDefs]="columnDefs"
         [defaultColDef]="defaultColDef"
         
@@ -31,9 +33,11 @@
 
         [alwaysShowVerticalScroll]="true"
         [enableCellTextSelection]="true"
+        [stopEditingWhenCellsLoseFocus]="true"
 
         (gridReady)="onGridReady($event)"
-        (cellClicked)="onCellClicked($event)">
+        (cellClicked)="onCellClicked($event)"
+        (cellValueChanged)="onCellValueChanged($event)">
     </ag-grid-angular>
   </div>
 </div>

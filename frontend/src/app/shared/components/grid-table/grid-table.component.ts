@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 
 // AG GRID
 import { AgGridAngular } from 'ag-grid-angular';
-import { ColDef, GridApi, GridReadyEvent, CellStyle } from 'ag-grid-community';
+import { ColDef, GridApi, GridReadyEvent, CellStyle, GetRowIdFunc, GetRowIdParams } from 'ag-grid-community';
 
 // MATERIAL UI
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -26,7 +26,7 @@ import { TableColumn } from '../models/table-column.model';
     MatProgressBarModule,
     MatIconModule,
     MatButtonModule,
-    MatTooltipModule
+    MatTooltipModule,
   ]
 })
 export class GridTableComponent {
@@ -35,13 +35,15 @@ export class GridTableComponent {
   @Input({ required: true }) columns!: TableColumn[];
   @Input({ required: true }) data!: any[];
   @Input({ required: true }) loading!: boolean;
-
+  
   @Input() gridHeight: string = '600px';
+
   @Input() showRefresh: boolean = true;
-  @Input() paginationPageSize: number = 25;
-  @Input() pagination: boolean = true;
-  @Input() paginationPageSizeSelector: number[] = [10, 25, 50, 100];
   @Input() enableFilter: boolean = true;
+  @Input() pagination: boolean = true;
+
+  @Input() paginationPageSize: number = 25;
+  @Input() paginationPageSizeSelector: number[] = [10, 25, 50, 100];
 
   // OUTPUTS
   @Output() refresh = new EventEmitter<void>();
@@ -89,10 +91,15 @@ export class GridTableComponent {
       headerName: 'No.',
       headerTooltip: 'Index',
       valueGetter: params => {
-        if (!this.gridApi || !params.node) return '';
-        const pageSize = this.gridApi.paginationGetPageSize();
-        const currentPage = this.gridApi.paginationGetCurrentPage();
-        return currentPage * pageSize + params.node.rowIndex! + 1;
+        if (params.node?.rowIndex === undefined || params.node?.rowIndex === null) {
+          return '';
+        }
+
+        const api = params.api;
+        const pageSize = api.paginationGetPageSize();
+        const currentPage = api.paginationGetCurrentPage();
+        
+        return (currentPage * pageSize) + params.node.rowIndex + 1;
       },
       // valueGetter: params => "0000", // fits 4 digits atm
       flex: 0.5,
@@ -103,18 +110,22 @@ export class GridTableComponent {
     };
 
     const dynamicColumns: ColDef[] = this.columns.map(col => {
+      const baseCol: ColDef = {
+        headerName: col.label,
+        headerTooltip: col.label,
+        field: col.key,
+        flex: col.flex,
+        minWidth: col.minWidth,
+      };
 
       // VIEW ICON COLUMNS
       if (col.type === 'viewIcon') {
         return {
-          headerName: col.label,
-          headerTooltip: col.label,
-          field: col.key,
+          ...baseCol,
           width: 90,
-          minWidth: col.minWidth,
-          flex: col.flex,
           sortable: false,
           filter: false,
+          editable: false,
           cellRenderer: () => `
             <div class="icon-cell">
               <span class="material-icons">visibility</span>
@@ -133,14 +144,11 @@ export class GridTableComponent {
       // DELETE ICON COLUMNS
       if (col.type === 'deleteIcon') {
         return {
-          headerName: col.label,
-          headerTooltip: col.label,
-          field: col.key,
+          ...baseCol,
           width: 80,
-          minWidth: col.minWidth,
-          flex: col.flex,
           sortable: false,
           filter: false,
+          editable: false,
           cellRenderer: () => `
             <div class="icon-cell">
               <span class="material-icons" style="color: red; cursor: pointer;">delete</span>
@@ -159,12 +167,9 @@ export class GridTableComponent {
       // DATE COLUMNS
       if (col.type === 'date') {
         return {
-          headerName: col.label,
-          headerTooltip: col.label,
-          field: col.key,
-          flex: col.flex,
-          minWidth: col.minWidth,
+          ...baseCol,
           filter: 'agDateColumnFilter',
+          editable: false,
           valueFormatter: params => {
             if (!params.value) return '';
             return new Date(params.value).toLocaleString('en-IN', {
@@ -181,11 +186,8 @@ export class GridTableComponent {
       // NUMBER COLUMNS
       if (col.type === 'number') {
         return {
-          headerName: col.label,
-          headerTooltip: col.label,
-          field: col.key,
-          flex: col.flex,
-          minWidth: col.minWidth,
+          ...baseCol,
+          editable: false,
           filter: 'agNumberColumnFilter'
         };
       }
@@ -193,12 +195,9 @@ export class GridTableComponent {
       // CURRENCY COLUMNS
       if (col.type === 'currency') {
         return {
-          headerName: col.label,
-          headerTooltip: col.label,
-          field: col.key,
-          flex: col.flex,
-          minWidth: col.minWidth,
+          ...baseCol,
           filter: 'agNumberColumnFilter',
+          editable: false,
 
           valueFormatter: params => {
             if (params.value == null) return '';
@@ -218,11 +217,7 @@ export class GridTableComponent {
       // CHECKBOX COLUMNS
       if (col.type === 'boolean') {
         return {
-          headerName: col.label,
-          headerTooltip: col.label,
-          field: col.key,
-          flex: col.flex,
-          minWidth: col.minWidth,
+          ...baseCol,
           filter: 'agTextColumnFilter',
           // editable: true,
           cellStyle: {
@@ -235,34 +230,36 @@ export class GridTableComponent {
 
       // INPUT COLUMNS
       if (col.type === 'input') {
+        const isQuantity = col.key === 'quantity';
         return {
-          headerName: col.label,
-          field: col.key,
-          flex: col.flex,
-          minWidth: col.minWidth,
+          ...baseCol,
           editable: true,
-          filter: false,
-          cellEditor: 'agTextCellEditor',
-
-          valueParser: params => {
-            const val = parseFloat(params.newValue);
-            return isNaN(val) ? 0 : val;
+          singleClickEdit: true,
+          cellEditor: 'agNumberCellEditor',
+          cellEditorParams: {
+            precision: isQuantity ? 0 : 2,
+            step: isQuantity ? 1 : 0.01,
+            showStepperButtons: true,
+            min: isQuantity ? 1 : 0
           },
-
+          valueParser: (params: any) => {
+            const newValue = parseFloat(params.newValue);
+            if (isNaN(newValue) || newValue < (isQuantity ? 1 : 0)) {
+              return (isQuantity ? 1 : 0);
+            }
+            return newValue;
+          },
           cellStyle: {
-            textAlign: 'right'
+            overflow: 'visible'
           } as CellStyle
         };
       }
 
       // TEXT COLUMNS (DEFAULT)
       return {
-        headerName: col.label,
-        headerTooltip: col.label,
-        field: col.key,
-        flex: col.flex,
-        minWidth: col.minWidth, 
-        filter: 'agTextColumnFilter'
+        ...baseCol, 
+        filter: 'agTextColumnFilter',
+        editable: false,
       };
     });
 
@@ -287,11 +284,32 @@ export class GridTableComponent {
   }
 
   onRefresh(): void {
-    if (this.gridApi) {
+    if (this.gridApi && this.enableFilter) {
       this.gridApi.setFilterModel(null);
+    }
+
+    if (this.gridApi && this.pagination) {
       this.gridApi.paginationGoToFirstPage();
     }
 
     this.refresh.emit();
   }
+
+  public getRowId: GetRowIdFunc = (params: GetRowIdParams) => {
+    const d = params.data;
+
+    // 1. Just check the 3 most common ID names you use. 
+    // This is WAY faster than JSON.stringify and much more stable.
+    const stableId = d.invid || d.invoiceNumber || 
+    d.rid || d.receiptNumber || 
+    d.icode || 
+    d.id || 
+    d.ccode;
+
+    if (stableId) return stableId.toString();
+
+    // 2. If it's a new row with no ID, use a unique object property
+    // This avoids the "re-draw everything" lag.
+    return d.name ? `row-${d.name}` : `temp-${Math.random()}`;
+  };
 }
