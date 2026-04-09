@@ -1,1 +1,195 @@
-<p>add-receipt works!</p>
+<div class="container">
+
+  <app-breadcrumb [items]="breadcrumbs()"></app-breadcrumb>
+  <p class="subtitle">Create a new receipt</p>
+
+  <mat-vertical-stepper linear>
+
+    <!-- ================= STEP 1 ================= -->
+    <mat-step [stepControl]="receiptGroup" [editable]="!isSubmitting()">
+      <form [formGroup]="receiptGroup">
+
+        <ng-template matStepLabel>Receipt Details</ng-template>
+
+        <div class="form-grid">
+
+          <!-- CUSTOMER INPUT -->
+          <mat-form-field appearance="outline">
+            <mat-label>Customer Code or Name</mat-label>
+            <input
+              matInput
+              [formControl]="customerSearch"
+              [matAutocomplete]="customerAuto"
+            />
+            <mat-autocomplete #customerAuto="matAutocomplete"
+              (optionSelected)="onCustomerSelected($event.option.value)">
+              <mat-option *ngFor="let customer of filteredCustomers" [value]="customer">
+                {{ customer.ccode }} | {{ customer.cname }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+
+          <!-- PAYMENT MODE -->
+          <mat-form-field appearance="outline">
+            <mat-label>Payment Mode</mat-label>
+            <mat-select formControlName="paymentMode">
+              <mat-option *ngFor="let mode of paymentModes" [value]="mode">
+                {{ mode }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- REFERENCE NUMBER -->
+          <mat-form-field appearance="outline">
+            <mat-label>Reference Number</mat-label>
+            <input matInput formControlName="referenceNumber" />
+          </mat-form-field>
+
+          <!-- TOTAL RECEIVED -->
+          <mat-form-field appearance="outline">
+            <mat-label>Total Received ₹</mat-label>
+
+            <input
+                matInput
+                type="text"
+                min="0"
+                step="0.01"
+                inputmode="decimal"
+                [maxDecimals]="2"
+                formControlName="totalReceived"
+            />
+
+            <mat-error *ngIf="receiptGroup.get('totalReceived')?.hasError('min')">
+                Amount must be greater than 0
+            </mat-error>
+
+            <mat-error *ngIf="receiptGroup.get('totalReceived')?.hasError('required')">
+                Amount is required
+            </mat-error>
+          </mat-form-field>
+
+          <!-- RECEIPT DATE -->
+          <mat-form-field appearance="outline">
+            <mat-label>Receipt Date</mat-label>
+            <input matInput [matDatepicker]="receiptPicker" formControlName="receiptDate">
+            <mat-datepicker-toggle matIconSuffix [for]="receiptPicker"></mat-datepicker-toggle>
+            <mat-datepicker #receiptPicker></mat-datepicker>
+          </mat-form-field>
+
+        </div>
+
+        <!-- ACTION BAR -->
+        <div class="step-action-bar step-action-bar--step-1">
+          <div class="next-btn-wrapper" [class.invalid]="receiptGroup.invalid">
+            <button
+              mat-raised-button
+              matStepperNext
+              type="button"
+              class="full next-btn"
+              [disabled]="receiptGroup.invalid"
+            >
+              Next
+              <mat-icon fontSet="material-symbols-outlined" class="outline-icon" iconPositionEnd>
+                arrow_circle_right
+              </mat-icon>
+            </button>
+          </div>
+        </div>
+
+      </form>
+    </mat-step>
+
+    <!-- ================= STEP 2 ================= -->
+    <mat-step [editable]="!isSubmitting()">
+
+      <ng-template matStepLabel>Review</ng-template>
+
+      <!-- SUMMARY -->
+      <div class="summary-container">
+
+        <div class="summary-section">
+          <h3>Receipt Details</h3>
+          <div class="summary-grid">
+            <div><strong>Customer Code</strong><span>{{ selectedCustomer?.ccode }}</span></div>
+            <div><strong>Customer Name</strong><span>{{ selectedCustomer?.cname }}</span></div>
+            <div><strong>Payment Mode</strong><span>{{ receiptGroup.value.paymentMode }}</span></div>
+            <div><strong>Reference</strong><span>{{ receiptGroup.value.referenceNumber || '-' }}</span></div>
+            <div><strong>Receipt Date</strong><span>{{ receiptGroup.value.receiptDate | date:'dd MMM yyyy' }}</span></div>
+            <div><strong>Total Received</strong><span>{{ receiptGroup.value.totalReceived | currency:'INR':'symbol':'1.2-2':'en-IN' }}</span></div>
+          </div>
+        </div>
+
+        <!-- UNAPPLIED DISPLAY -->
+        <div class="summary-section totals-section">
+          <h3>Amount Summary</h3>
+          <div class="totals-grid">
+
+            <!-- TOTAL -->
+            <div class="totals-row  total-received">
+                <span>Total Received</span>
+                <span>+ {{ receiptGroup.value.totalReceived | currency:'INR':'symbol':'1.2-2':'en-IN' }}</span>
+            </div>
+
+            <!-- DIVIDER -->
+            <div class="totals-divider"></div>
+
+            <!-- UNAPPLIED -->
+            <div class="totals-row grand-total">
+                <span>Unapplied Amount</span>
+                <span>{{ receiptGroup.value.totalReceived | currency:'INR':'symbol':'1.2-2':'en-IN' }}</span>
+            </div>
+
+            </div>
+        </div>
+
+      </div>
+
+      <!-- ACTION BAR -->
+      <div class="step-action-bar step-action-bar--step-2">
+
+        <!-- BACK -->
+        <button
+          mat-button
+          matStepperPrevious
+          class="go-back-btn"
+          [disabled]="isSubmitting()"
+        >
+          <mat-icon fontSet="material-symbols-outlined" class="outline-icon">
+            arrow_circle_left
+          </mat-icon>
+          Previous
+        </button>
+
+        <!-- CREATE -->
+        <div class="create-btn-wrapper" [class.loading]="isSubmitting()">
+          <button
+            mat-raised-button
+            class="create-btn"
+            (click)="onSubmit()"
+            [disabled]="isSubmitting()"
+          >
+
+            <mat-progress-spinner
+              *ngIf="isSubmitting()"
+              mode="indeterminate"
+              diameter="20"
+              strokeWidth="2"
+              style="--mdc-circular-progress-active-indicator-color: white"
+            ></mat-progress-spinner>
+
+            <mat-icon fontSet="material-symbols-outlined" class="outline-icon" *ngIf="!isSubmitting()">
+              add_circle
+            </mat-icon>
+
+            <span *ngIf="!isSubmitting()">Create Receipt</span>
+
+          </button>
+        </div>
+
+      </div>
+
+    </mat-step>
+
+  </mat-vertical-stepper>
+
+</div>

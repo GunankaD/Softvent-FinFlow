@@ -15,7 +15,7 @@
 
           <!-- CUSTOMER INPUT -->
           <mat-form-field appearance="outline">
-            <mat-label>Customer</mat-label>
+            <mat-label>Customer Code or Name</mat-label>
             <input
               matInput
               [formControl]="customerSearch"
@@ -222,7 +222,7 @@
 
             <div class="totals-row discount">
               <span>Total Discount</span>
-              <span>− {{ getTotalDiscount() | currency:'INR':'symbol':'1.2-2':'en-IN' }}</span>
+              <span>- {{ getTotalDiscount() | currency:'INR':'symbol':'1.2-2':'en-IN' }}</span>
             </div>
 
             <div class="totals-row">
