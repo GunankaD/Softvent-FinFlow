@@ -127,6 +127,13 @@ export const routes: Routes = [
             .then(m => m.ShowReceiptsComponent),
         canActivate: [AuthGuard]
     },
+    {
+        path: 'transactions/receipts/add-receipt',
+        loadComponent: () =>
+            import('./features/transactions/receipts/add-receipt/add-receipt.component')
+            .then(m => m.AddReceiptComponent),
+        canActivate: [AuthGuard]
+    },
 
 
     // WILDCARD ROUTE TO HOME
