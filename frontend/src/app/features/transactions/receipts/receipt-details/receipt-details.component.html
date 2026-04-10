@@ -1,1 +1,111 @@
-<p>receipt-details works!</p>
+<div class="container">
+
+  <!-- HEADER -->
+  <div class="header-row">
+    <app-breadcrumb [items]="breadcrumbs()"></app-breadcrumb>
+  </div>
+
+  @if (receipt()) {
+
+    <!-- TOP SUMMARY -->
+    <div class="summary-container">
+
+      <!-- RECEIPT SUMMARY -->
+      <div class="summary-section receipt">
+        <h3>Receipt Summary</h3>
+
+        <div class="summary-grid">
+          <div>
+            <strong>Customer</strong>
+            <span>{{ receipt()?.cname }}</span>
+          </div>
+
+          <div>
+            <strong>Customer Code</strong>
+            <span>{{ receipt()?.ccode }}</span>
+          </div>
+
+          <div>
+            <strong>Payment Mode</strong>
+            <span>{{ receipt()?.paymentMode }}</span>
+          </div>
+
+          @if (receipt()?.referenceNumber) {
+            <div>
+              <strong>Reference No</strong>
+              <span>{{ receipt()?.referenceNumber }}</span>
+            </div>
+          }
+
+          <div>
+            <strong>Receipt Date</strong>
+            <span>{{ receipt()?.receiptDate | date:'dd MMM yyyy' }}</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- APPLICATIONS + TOTALS -->
+    <div class="payments-totals-container">
+
+      <!-- APPLIED INVOICES -->
+      <section class="table payments">
+        <div class="table-header">
+          <h2>Applied Invoices</h2>
+        </div>
+
+        <app-grid-table
+          [columns]="applicationColumns"
+          [data]="applications()"
+          [loading]="isLoadingReceipt()"
+          [gridHeight]="getGridHeight(applications().length, 3, 3)"
+          [pagination]="false"
+          [enableFilter]="false"
+          [showRefresh]="false"
+          (view)="onInvoiceClick($event)">
+        </app-grid-table>
+      </section>
+
+      <!-- BALANCE SUMMARY -->
+      <div class="summary-section totals-section">
+        <h3>Summary</h3>
+
+        <div class="totals-grid">
+
+          <div class="totals-row">
+            <span>Total Received</span>
+            <span>{{ receipt()?.totalReceived | currency:'INR' }}</span>
+          </div>
+
+          <div class="totals-row paid">
+            <span>Applied</span>
+            <span>{{ appliedAmount() | currency:'INR' }}</span>
+          </div>
+
+          <div class="totals-divider"></div>
+
+          <div class="totals-row balance">
+            <span>Remaining</span>
+            <span>{{ receipt()?.unappliedAmount | currency:'INR' }}</span>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+
+  } @else {
+
+    <!-- LOADING -->
+    <div class="page-loading-container">
+      <mat-spinner
+        diameter="100"
+        strokeWidth="3"
+        style="--mdc-circular-progress-active-indicator-color: white;">
+      </mat-spinner>
+    </div>
+
+  }
+
+</div>
