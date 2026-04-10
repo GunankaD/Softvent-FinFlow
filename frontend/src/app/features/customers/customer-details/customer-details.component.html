@@ -222,7 +222,44 @@
     </div>
 
     <section class="table">
-      <h2>Invoices</h2>
+      <div class="table-header">
+        <h2>Invoices</h2>
+
+        <div class="filter-group">
+          <button
+            mat-raised-button
+            type="button"
+            class="filter-btn"
+            [class.active]="invoiceFilter === 'pending'"
+            [disabled]="loadingInvoices()"
+            (click)="onInvoiceFilterChange('pending')"
+          >
+            Pending
+          </button>
+
+          <button
+            mat-raised-button
+            type="button"
+            class="filter-btn"
+            [class.active]="invoiceFilter === 'paid'"
+            [disabled]="loadingInvoices()"
+            (click)="onInvoiceFilterChange('paid')"
+          >
+            Paid
+          </button>
+
+          <button
+            mat-raised-button
+            type="button"
+            class="filter-btn"
+            [class.active]="invoiceFilter === 'all'"
+            [disabled]="loadingInvoices()"
+            (click)="onInvoiceFilterChange('all')"
+          >
+            All
+          </button>
+        </div>
+      </div>
 
       <app-grid-table
         [columns]="invoiceColumns"
@@ -236,7 +273,33 @@
     </section>
 
     <section class="table">
-      <h2>Receipts</h2>
+      <div class="table-header">
+        <h2>Receipts</h2>
+
+        <div class="filter-group">
+          <button
+            mat-raised-button
+            type="button"
+            class="filter-btn"
+            [class.active]="receiptFilter === 'available'"
+            [disabled]="loadingReceipts()"
+            (click)="onReceiptFilterChange('available')"
+          >
+            Available
+          </button>
+
+          <button
+            mat-raised-button
+            type="button"
+            class="filter-btn"
+            [class.active]="receiptFilter === 'all'"
+            [disabled]="loadingReceipts()"
+            (click)="onReceiptFilterChange('all')"
+          >
+            All
+          </button>
+        </div>
+      </div>
 
       <app-grid-table
         [columns]="receiptColumns"

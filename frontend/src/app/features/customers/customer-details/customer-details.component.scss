@@ -209,8 +209,47 @@ button:disabled {
   margin-bottom: 18px;
 }
 
-.table h2 {
-  margin: 0 0 20px 0;
-  font-size: 22px;
-  font-weight: 400;
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+  margin-right: 48px;
+
+  h2 {
+    margin: 0 0 20px 0;
+    font-size: 22px;
+    font-weight: 400;
+  }
+}
+
+
+.filter-group {
+  display: flex;
+  gap: 10px;
+}
+
+.filter-btn {
+  border-radius: 999px !important; // pill
+  padding: 6px 16px !important;
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-secondary) !important;
+  box-shadow: none !important;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: var(--bg-tertiary) !important;
+  }
+
+  &.active {
+    background-color: var(--button-blue) !important;
+    color: var(--text-primary) !important;
+  }
+
+  &:disabled {
+    background-color: var(--bg-secondary) !important;
+    color: var(--text-disabled) !important;
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
 }

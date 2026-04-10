@@ -76,6 +76,9 @@ export class CustomerDetailsComponent implements OnInit {
   readonly loadingInvoices = signal(false);
   readonly loadingReceipts = signal(false);
 
+  invoiceFilter: 'pending' | 'paid' | 'all' = 'pending';
+  receiptFilter: 'available' | 'all' = 'available';
+
   readonly invoiceColumns: TableColumn[] = [
     { key: 'invoiceNumber', label: 'Invoice No',   flex: 1.2, minWidth: 140, type: 'text'     },
     { key: 'totalAmount',   label: 'Total ₹',      flex: 1,   minWidth: 120, type: 'currency' },
@@ -162,7 +165,7 @@ export class CustomerDetailsComponent implements OnInit {
   loadInvoices(): void {
     this.loadingInvoices.set(true);
 
-    this.customerService.getCustomerInvoices(this.ccode).subscribe({
+    this.customerService.getCustomerInvoices(this.ccode, this.invoiceFilter).subscribe({
       next: (response: InvoiceSummaryResponse[]) => {
         this.invoices.set(response);
         this.loadingInvoices.set(false);
@@ -177,7 +180,7 @@ export class CustomerDetailsComponent implements OnInit {
   loadReceipts(): void {
     this.loadingReceipts.set(true);
 
-    this.customerService.getCustomerReceipts(this.ccode).subscribe({
+    this.customerService.getCustomerReceipts(this.ccode, this.receiptFilter).subscribe({
       next: (response: ReceiptSummaryResponse[]) => {
         this.receipts.set(response);
         this.loadingReceipts.set(false);
@@ -322,5 +325,19 @@ export class CustomerDetailsComponent implements OnInit {
         }
       });
     });
+  }
+
+  onInvoiceFilterChange(filter: 'pending' | 'paid' | 'all'): void {
+    if (this.invoiceFilter === filter) return;
+
+    this.invoiceFilter = filter;
+    this.loadInvoices();
+  }
+
+  onReceiptFilterChange(filter: 'available' | 'all'): void {
+    if (this.receiptFilter === filter) return;
+
+    this.receiptFilter = filter;
+    this.loadReceipts();
   }
 }
