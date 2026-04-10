@@ -301,7 +301,7 @@ export class GridTableComponent {
     // 1. Just check the 3 most common ID names you use. 
     // This is WAY faster than JSON.stringify and much more stable.
     const stableId = d.invid || d.invoiceNumber || 
-    d.rid || d.receiptNumber || 
+    
     d.icode || 
     d.id || 
     d.ccode;
