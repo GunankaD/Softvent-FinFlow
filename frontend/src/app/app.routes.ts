@@ -106,6 +106,8 @@ export const routes: Routes = [
             .then(m => m.TransactionsComponent),
         canActivate: [AuthGuard]
     },
+
+    // INVOICE ROUTES
     {
         path: 'transactions/invoices/show-invoices',
         loadComponent: () =>
@@ -121,6 +123,15 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
     },
     {
+        path: 'transactions/invoices/:invoiceNumber',
+        loadComponent: () =>
+            import('./features/transactions/invoices/invoice-details/invoice-details.component')
+            .then(m => m.InvoiceDetailsComponent),
+        canActivate: [AuthGuard]
+    },
+
+    // RECEIPT ROUTES
+    {
         path: 'transactions/receipts/show-receipts',
         loadComponent: () =>
             import('./features/transactions/receipts/show-receipts/show-receipts.component')
@@ -135,10 +146,10 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
     },
     {
-        path: 'transactions/invoices/:invoiceNumber',
+        path: 'transactions/receipts/:receiptNumber',
         loadComponent: () =>
-            import('./features/transactions/invoices/invoice-details/invoice-details.component')
-            .then(m => m.InvoiceDetailsComponent),
+            import('./features/transactions/receipts/receipt-details/receipt-details.component')
+            .then(m => m.ReceiptDetailsComponent),
         canActivate: [AuthGuard]
     },
 
