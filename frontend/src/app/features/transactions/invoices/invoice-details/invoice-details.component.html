@@ -2,9 +2,13 @@
 
   <!-- HEADER -->
   <div class="header-row">
-    <div>
-      <app-breadcrumb [items]="breadcrumbs()"></app-breadcrumb>
-    </div>
+        <app-breadcrumb [items]="breadcrumbs()"></app-breadcrumb>
+
+        @if (invoice()?.status) {
+            <span class="invoice-status-chip" [attr.data-status]="invoice()!.status">
+            {{ invoice()!.status }}
+            </span>
+        }
   </div>
 
   @if(invoice()){
@@ -98,7 +102,7 @@
             [columns]="paymentColumns"
             [data]="payments()"
             [loading]="isLoadingInvoice()"
-            [gridHeight]="getGridHeight(payments().length, 5)"
+            [gridHeight]="getGridHeight(payments().length, 4, 4)"
             [pagination]="false"
             [enableFilter]="false"
             [showRefresh]="false"

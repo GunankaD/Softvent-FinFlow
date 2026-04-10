@@ -18,6 +18,46 @@
   margin-bottom: 20px;
 }
 
+.invoice-status-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 16px;
+  border-radius: 999px;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border: 2px solid;
+  background: transparent;
+  white-space: nowrap;
+
+  &[data-status='DRAFT'] {
+    color: #868e96;
+    border-color: #ced4da;
+  }
+
+  &[data-status='PAID'] {
+    color:#22c55e;
+    border-color: #51cf66;
+  }
+
+  &[data-status='PARTIAL'] {
+    color: #c07700;
+    border-color: #fcc419;
+  }
+
+  &[data-status='UNPAID'] {
+    color: #ef4444;
+    border-color: #ff6b6b;
+  }
+
+  &[data-status='VOID'] {
+    color: #adb5bd;
+    border-color: #dee2e6;
+    text-decoration: line-through;
+  }
+}
+
 // =====================
 // SUMMARY (REUSED STYLE)
 // =====================
@@ -191,17 +231,17 @@
   }
 
   &.total span:last-child {
-    font-weight: 600;
+    font-weight: 500;
   }
 
   &.paid span:last-child {
     color: #22c55e;
-    font-weight: 600;
+    font-weight: 500;
   }
 
   &.balance span:last-child {
     color: #ef4444;
-    font-weight: 600;
+    font-weight: 500;
   }
 }
 

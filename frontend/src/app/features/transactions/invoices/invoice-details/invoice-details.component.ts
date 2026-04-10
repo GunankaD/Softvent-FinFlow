@@ -151,13 +151,13 @@ export class InvoiceDetailsComponent implements OnInit {
   // =====================
   // GRID HEIGHT
   // =====================
-  protected getGridHeight(rowCount: number, maxRows: number): string {
+  protected getGridHeight(rowCount: number, maxRows: number, minRows: number = 1): string {
     const header = 50;
     const rowHeight = 42.2;
 
     const height =
-      rowCount === 0
-        ? header + rowHeight
+      rowCount <= minRows
+        ? header + minRows * rowHeight
         : rowCount <= maxRows
           ? header + rowCount * rowHeight
           : header + maxRows * rowHeight;
