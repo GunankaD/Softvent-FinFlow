@@ -203,8 +203,23 @@ export class AddInvoiceComponent {
     });
   }
   private loadInitialData(): void {
-    this.customerService.getAll().subscribe(res => this.customers = res);
-    this.itemService.getAll().subscribe(res => this.itemsMaster = res);
+    this.customerService.getAll().subscribe({
+      next: (response: CustomerSummaryResponse[]) => {
+        this.customers = response;
+      },
+      error: () => {
+        this.snackbar.error('Failed to fetch customers. Try again later.', 6000);
+      }
+    });
+
+    this.itemService.getAll().subscribe({
+      next: (response: ItemSummaryResponse[]) => {
+        this.itemsMaster = response;
+      },
+      error: () => {
+        this.snackbar.error('Failed to fetch items. Try again later.', 6000);
+      }
+    });
   }
 
   // ========================
@@ -224,13 +239,14 @@ export class AddInvoiceComponent {
   // STEP 2 
   // ========================
   readonly itemColumns: TableColumn[] = [
-    { key: 'icode',           label: 'Item Code',   flex: 1,   minWidth: 120, type: 'text' },
-    { key: 'name',            label: 'Item Name',   flex: 1.5, minWidth: 160, type: 'text' },
-    { key: 'quantity',        label: 'Qty',         flex: 0.8, minWidth: 100, type: 'input' },
+    { key: 'icode',           label: 'Item Code',   flex: 1,   minWidth: 100, type: 'text' },
+    { key: 'name',            label: 'Item Name',   flex: 1.5, minWidth: 180, type: 'text' },
+    { key: 'quantity',        label: 'Qty',         flex: 0.8, minWidth: 80,  type: 'input' },
     { key: 'rate',            label: 'Rate',        flex: 1,   minWidth: 120, type: 'currency' },
-    { key: 'discountPercent', label: 'Discount %',  flex: 1,   minWidth: 120, type: 'input' },
-    { key: 'gstRate',         label: 'GST %',       flex: 1,   minWidth: 120, type: 'number' },
+    { key: 'discountPercent', label: 'Discount %',  flex: 1,   minWidth: 110, type: 'input' },
+    { key: 'gstRate',         label: 'GST %',       flex: 1,   minWidth: 60,  type: 'number' },
     { key: 'lineTotal',       label: 'Total',       flex: 1.2, minWidth: 140, type: 'currency' },
+    { key: 'viewIcon',        label: 'View',        flex: 0.7, minWidth: 70,  type: 'viewIcon'},
     { key: 'deleteIcon',      label: 'Delete',      flex: 0.7, minWidth: 80,  type: 'deleteIcon' }
   ];
 
@@ -300,6 +316,9 @@ export class AddInvoiceComponent {
     const gst = afterDiscount * gstRate / 100;
 
     return afterDiscount + gst;
+  }
+  protected onItemView(row: any): void {
+    window.open(`/items/${row.icode}`, '_blank');
   }
 
   // FROM CHILD LISTENER
