@@ -166,9 +166,9 @@ export class InvoiceDetailsComponent implements OnInit {
   }
 
   onItemClick(row: InvoiceItemResponse): void {
-    this.router.navigate(['/items', row.itemCode]);
+    window.open(`/items/${row.itemCode}`, '_blank');
   }
   onReceiptClick(row: InvoicePaymentResponse): void {
-    this.router.navigate(['/transactions/receipts', row.receiptNumber]);
+    window.open(`/transactions/receipts/${row.receiptNumber}`, '_blank');
   }
 }

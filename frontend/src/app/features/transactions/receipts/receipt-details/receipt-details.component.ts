@@ -134,6 +134,6 @@ export class ReceiptDetailsComponent implements OnInit {
   // NAVIGATION
   // =====================
   protected onInvoiceClick(row: ReceiptApplicationResponse): void {
-    this.router.navigate(['/transactions/invoices', row.invoiceNumber]);
+    window.open(`/transactions/invoices/${row.invoiceNumber}`, '_blank');
   }
 }
