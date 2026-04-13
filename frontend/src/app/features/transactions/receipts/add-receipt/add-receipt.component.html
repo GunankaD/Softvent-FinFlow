@@ -3,7 +3,7 @@
   <app-breadcrumb [items]="breadcrumbs()"></app-breadcrumb>
   <p class="subtitle">Create a new receipt</p>
 
-  <mat-vertical-stepper linear>
+  <mat-vertical-stepper>
 
     <!-- ================= STEP 1 ================= -->
     <mat-step [stepControl]="receiptGroup" [editable]="!isSubmitting()">
@@ -115,7 +115,6 @@
             <div><strong>Payment Mode</strong><span>{{ receiptGroup.value.paymentMode }}</span></div>
             <div><strong>Reference</strong><span>{{ receiptGroup.value.referenceNumber || '-' }}</span></div>
             <div><strong>Receipt Date</strong><span>{{ receiptGroup.value.receiptDate | date:'dd MMM yyyy' }}</span></div>
-            <div><strong>Total Received</strong><span>{{ receiptGroup.value.totalReceived | currency:'INR':'symbol':'1.2-2':'en-IN' }}</span></div>
           </div>
         </div>
 
