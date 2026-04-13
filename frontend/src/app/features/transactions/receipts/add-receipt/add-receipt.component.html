@@ -3,7 +3,7 @@
   <app-breadcrumb [items]="breadcrumbs()"></app-breadcrumb>
   <p class="subtitle">Create a new receipt</p>
 
-  <mat-vertical-stepper>
+  <mat-vertical-stepper linear>
 
     <!-- ================= STEP 1 ================= -->
     <mat-step [stepControl]="receiptGroup" [editable]="!isSubmitting()">
