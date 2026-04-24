@@ -126,16 +126,64 @@ export class PaymentApplicationStore {
   public addReceiptToInvoice(
     receipt: ReceiptSummaryResponse,
     amount?: number
-  ): void {}
+  ): void {
+
+    if (this.mode() !== 'INVOICE' || !this.selectedInvoice()) return;
+
+    const invoice = this.selectedInvoice()!;
+    const map = new Map(this.applicationsMap());
+
+    // Prevent duplicate receipt
+    if (map.has(receipt.receiptNumber)) return;
+
+    const appliedAmount =
+      amount ??
+      Math.min(invoice.balanceAmount, receipt.unappliedAmount);
+
+    map.set(receipt.receiptNumber, [
+      {
+        invoiceNumber: invoice.invoiceNumber,
+        appliedAmount
+      }
+    ]);
+
+    this.applicationsMap.set(map);
+  }
+
 
   public updateReceiptAmount(
     receiptNumber: string,
     amount: number
-  ): void {}
+  ): void {
+
+    if (this.mode() !== 'INVOICE') return;
+
+    const map = new Map(this.applicationsMap());
+    const applications = map.get(receiptNumber);
+
+    if (!applications || applications.length === 0) return;
+
+    applications[0].appliedAmount = amount;
+
+    map.set(receiptNumber, [...applications]);
+    this.applicationsMap.set(map);
+  }
+
 
   public removeReceipt(
     receiptNumber: string
-  ): void {}
+  ): void {
+
+    if (this.mode() !== 'INVOICE') return;
+
+    const map = new Map(this.applicationsMap());
+
+    if (!map.has(receiptNumber)) return;
+
+    map.delete(receiptNumber);
+
+    this.applicationsMap.set(map);
+  }
 
 
   // =========================
@@ -145,16 +193,92 @@ export class PaymentApplicationStore {
   public addInvoiceToReceipt(
     invoice: InvoiceSummaryResponse,
     amount?: number
-  ): void {}
+  ): void {
+
+    if (this.mode() !== 'RECEIPT' || !this.selectedReceipt()) return;
+
+    const receipt = this.selectedReceipt()!;
+    const map = new Map(this.applicationsMap());
+
+    const existing = map.get(receipt.receiptNumber) ?? [];
+
+    // Prevent duplicate invoice
+    if (existing.some(app => app.invoiceNumber === invoice.invoiceNumber)) return;
+
+    const currentTotal = existing.reduce(
+      (sum, app) => sum + app.appliedAmount,
+      0
+    );
+
+    const remainingReceiptBalance =
+      receipt.unappliedAmount - currentTotal;
+
+    const appliedAmount =
+      amount ??
+      Math.min(remainingReceiptBalance, invoice.balanceAmount);
+
+    const updated = [
+      ...existing,
+      {
+        invoiceNumber: invoice.invoiceNumber,
+        appliedAmount
+      }
+    ];
+
+    map.set(receipt.receiptNumber, updated);
+
+    this.applicationsMap.set(map);
+  }
+
 
   public updateInvoiceAmount(
     invoiceNumber: string,
     amount: number
-  ): void {}
+  ): void {
+
+    if (this.mode() !== 'RECEIPT' || !this.selectedReceipt()) return;
+
+    const receiptNumber = this.selectedReceipt()!.receiptNumber;
+    const map = new Map(this.applicationsMap());
+
+    const applications = map.get(receiptNumber);
+    if (!applications) return;
+
+    const updated = applications.map(app =>
+      app.invoiceNumber === invoiceNumber
+        ? { ...app, appliedAmount: amount }
+        : app
+    );
+
+    map.set(receiptNumber, updated);
+    this.applicationsMap.set(map);
+  }
+
 
   public removeInvoice(
     invoiceNumber: string
-  ): void {}
+  ): void {
+
+    if (this.mode() !== 'RECEIPT' || !this.selectedReceipt()) return;
+
+    const receiptNumber = this.selectedReceipt()!.receiptNumber;
+    const map = new Map(this.applicationsMap());
+
+    const applications = map.get(receiptNumber);
+    if (!applications) return;
+
+    const updated = applications.filter(
+      app => app.invoiceNumber !== invoiceNumber
+    );
+
+    if (updated.length === 0) {
+      map.delete(receiptNumber);
+    } else {
+      map.set(receiptNumber, updated);
+    }
+
+    this.applicationsMap.set(map);
+  }
 
 
   // =========================
