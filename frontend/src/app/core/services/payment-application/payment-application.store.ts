@@ -61,19 +61,74 @@ export class PaymentApplicationStore {
   // =========================
 
   public readonly totalApplied = computed<number>(() => {
-    return 0;
+    const map = this.applicationsMap();
+
+    let total = 0;
+
+    for (const applications of map.values()) {
+      for (const app of applications) {
+        total += app.appliedAmount;
+      }
+    }
+
+    return total;
   });
+
 
   public readonly remainingBalance = computed<number>(() => {
+
+    if (this.mode() === 'INVOICE') {
+      const invoice = this.selectedInvoice();
+      if (!invoice) return 0;
+
+      return Math.max(
+        invoice.balanceAmount - this.totalApplied(),
+        0
+      );
+    }
+
+    if (this.mode() === 'RECEIPT') {
+      const receipt = this.selectedReceipt();
+      if (!receipt) return 0;
+
+      return Math.max(
+        receipt.unappliedAmount - this.totalApplied(),
+        0
+      );
+    }
+
     return 0;
   });
 
+
   public readonly selectedReceipts = computed<SelectedReceipt[]>(() => {
-    return [];
+
+    if (this.mode() !== 'INVOICE') return [];
+
+    const map = this.applicationsMap();
+
+    return Array.from(map.entries()).map(([receiptNumber, apps]) => {
+      return {
+        receiptNumber,
+        appliedAmount: apps[0]?.appliedAmount ?? 0
+      } as SelectedReceipt;
+    });
   });
 
+
   public readonly selectedInvoices = computed<SelectedInvoice[]>(() => {
-    return [];
+
+    if (this.mode() !== 'RECEIPT') return [];
+
+    const receipt = this.selectedReceipt();
+    if (!receipt) return [];
+
+    const apps = this.applicationsMap().get(receipt.receiptNumber) ?? [];
+
+    return apps.map(app => ({
+      invoiceNumber: app.invoiceNumber,
+      appliedAmount: app.appliedAmount
+    } as SelectedInvoice));
   });
 
 
@@ -156,14 +211,23 @@ export class PaymentApplicationStore {
     amount: number
   ): void {
 
-    if (this.mode() !== 'INVOICE') return;
+    if (this.mode() !== 'INVOICE' || !this.selectedInvoice()) return;
 
+    const invoice = this.selectedInvoice()!;
     const map = new Map(this.applicationsMap());
-    const applications = map.get(receiptNumber);
 
+    const applications = map.get(receiptNumber);
     if (!applications || applications.length === 0) return;
 
-    applications[0].appliedAmount = amount;
+    const currentTotalExcludingThis =
+      this.totalApplied() - applications[0].appliedAmount;
+
+    const maxAllowed =
+      invoice.balanceAmount - currentTotalExcludingThis;
+
+    const safeAmount = Math.max(0, Math.min(amount, maxAllowed));
+
+    applications[0].appliedAmount = safeAmount;
 
     map.set(receiptNumber, [...applications]);
     this.applicationsMap.set(map);
@@ -238,19 +302,32 @@ export class PaymentApplicationStore {
 
     if (this.mode() !== 'RECEIPT' || !this.selectedReceipt()) return;
 
-    const receiptNumber = this.selectedReceipt()!.receiptNumber;
+    const receipt = this.selectedReceipt()!;
     const map = new Map(this.applicationsMap());
 
-    const applications = map.get(receiptNumber);
+    const applications = map.get(receipt.receiptNumber);
     if (!applications) return;
+
+    const currentTotalExcludingThis = applications.reduce(
+      (sum, app) =>
+        app.invoiceNumber === invoiceNumber
+          ? sum
+          : sum + app.appliedAmount,
+      0
+    );
+
+    const maxAllowed =
+      receipt.unappliedAmount - currentTotalExcludingThis;
+
+    const safeAmount = Math.max(0, Math.min(amount, maxAllowed));
 
     const updated = applications.map(app =>
       app.invoiceNumber === invoiceNumber
-        ? { ...app, appliedAmount: amount }
+        ? { ...app, appliedAmount: safeAmount }
         : app
     );
 
-    map.set(receiptNumber, updated);
+    map.set(receipt.receiptNumber, updated);
     this.applicationsMap.set(map);
   }
 
