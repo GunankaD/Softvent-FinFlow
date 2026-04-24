@@ -81,13 +81,42 @@ export class PaymentApplicationStore {
   // CORE SETTERS (Step 1 & 2)
   // =========================
 
-  public setMode(mode: Mode): void {}
+  public setMode(mode: Mode): void {
+    if (this.mode() === mode) return;
 
-  public setCustomer(customer: CustomerSummaryResponse): void {}
+    this.mode.set(mode);
 
-  public selectInvoice(invoice: InvoiceSummaryResponse): void {}
+    // HARD RESET (mode switch = fresh flow)
+    this.selectedInvoice.set(null);
+    this.selectedReceipt.set(null);
+    this.applicationsMap.set(new Map());
+  }
 
-  public selectReceipt(receipt: ReceiptSummaryResponse): void {}
+  public setCustomer(customer: CustomerSummaryResponse): void {
+    this.customer.set(customer);
+
+    // Reset everything downstream
+    this.resetStep2();
+    this.resetStep3();
+  }
+
+  public selectInvoice(invoice: InvoiceSummaryResponse): void {
+    if (this.mode() !== 'INVOICE') return;
+
+    this.selectedInvoice.set(invoice);
+
+    // Clear previous allocations
+    this.resetStep3();
+  }
+
+  public selectReceipt(receipt: ReceiptSummaryResponse): void {
+    if (this.mode() !== 'RECEIPT') return;
+
+    this.selectedReceipt.set(receipt);
+
+    // Clear previous allocations
+    this.resetStep3();
+  }
 
 
   // =========================
@@ -141,10 +170,23 @@ export class PaymentApplicationStore {
   // RESET HANDLERS
   // =========================
 
-  public resetAll(): void {}
+  public resetAll(): void {
+    this.mode.set(null);
+    this.customer.set(null);
 
-  public resetStep2(): void {}
+    this.selectedInvoice.set(null);
+    this.selectedReceipt.set(null);
 
-  public resetStep3(): void {}
+    this.applicationsMap.set(new Map());
+  }
+
+  public resetStep2(): void {
+    this.selectedInvoice.set(null);
+    this.selectedReceipt.set(null);
+  }
+
+  public resetStep3(): void {
+    this.applicationsMap.set(new Map());
+  }
 
 }
