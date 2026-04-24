@@ -152,6 +152,13 @@ export const routes: Routes = [
             .then(m => m.ReceiptDetailsComponent),
         canActivate: [AuthGuard]
     },
+    {
+        path: 'transactions/payment-applications',
+        loadComponent: () =>
+            import('./features/transactions/payment-application/payment-application.component')
+            .then(m => m.PaymentApplicationComponent),
+        canActivate: [AuthGuard]
+    },
 
 
     // WILDCARD ROUTE TO HOME
