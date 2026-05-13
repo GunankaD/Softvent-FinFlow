@@ -280,10 +280,10 @@ export class PaymentApplicationComponent {
     this.store.selectReceipt(row);
   }
 
-  protected getGridHeight(rowCount: number): string {
+  protected getGridHeight(rowCount: number, filter = true): string {
     const header = 50;
     const rowHeight = 42.2;
-    const filterHeight = 49;
+    const filterHeight = filter ? 49 : 0;
 
     const minRows = 4;
     const maxRows = 10;

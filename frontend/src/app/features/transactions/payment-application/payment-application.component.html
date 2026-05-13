@@ -237,31 +237,31 @@
         </div>
 
 
-    <!-- ================= ACTION BAR ================= -->
-    <div class="step-action-bar step-action-bar--step-3">
+        <!-- ================= ACTION BAR ================= -->
+        <div class="step-action-bar step-action-bar--step-3">
 
-        <button mat-button matStepperPrevious class="go-back-btn" type="button">
-        <mat-icon fontSet="material-symbols-outlined" class="outline-icon">
-            arrow_circle_left
-        </mat-icon>
-        Previous
-        </button>
-
-        <div class="next-btn-wrapper">
-        <button
-            mat-raised-button
-            matStepperNext
-            type="button"
-            class="next-btn"
-        >
-            Next
-            <mat-icon fontSet="material-symbols-outlined" iconPositionEnd class="outline-icon">
-            arrow_circle_right
+            <button mat-button matStepperPrevious class="go-back-btn" type="button">
+            <mat-icon fontSet="material-symbols-outlined" class="outline-icon">
+                arrow_circle_left
             </mat-icon>
-        </button>
-        </div>
+            Previous
+            </button>
 
-    </div>
+            <div class="next-btn-wrapper">
+            <button
+                mat-raised-button
+                matStepperNext
+                type="button"
+                class="next-btn"
+            >
+                Next
+                <mat-icon fontSet="material-symbols-outlined" iconPositionEnd class="outline-icon">
+                arrow_circle_right
+                </mat-icon>
+            </button>
+            </div>
+
+        </div>
 
     </mat-step>
 
@@ -308,7 +308,7 @@
                 ? reviewReceiptColumns
                 : reviewInvoiceColumns"
             [data]="allocationRows"
-            [gridHeight]="getGridHeight(allocationRows.length)"
+            [gridHeight]="getGridHeight(allocationRows.length, false)"
 
             [loading]="false"
 
