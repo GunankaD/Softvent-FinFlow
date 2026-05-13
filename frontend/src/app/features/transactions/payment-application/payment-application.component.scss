@@ -9,21 +9,10 @@
 }
 
 // =====================
-// FORM LAYOUT
+// SHARED
 // =====================
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  margin-bottom: 8px;
-}
-
 .full {
   width: 100%;
-}
-
-mat-form-field {
-  margin-top: 4px;
 }
 
 // =====================
@@ -33,9 +22,36 @@ mat-form-field {
   margin-bottom: 16px;
 }
 
+.table.payments {
+  flex: 5;
+  display: flex;
+  flex-direction: column;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+
+  h2 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+}
+
 // =====================
 // SUMMARY
 // =====================
+.payments-totals-container {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
 .summary-container {
   display: flex;
   flex-direction: column;
@@ -81,36 +97,9 @@ mat-form-field {
   }
 }
 
-.payments-totals-container {
-  display: flex;
-  gap: 24px;
-  align-items: flex-start;
-  margin-bottom: 16px;
-}
-
-.table.payments {
-  flex: 5;
-  display: flex;
-  flex-direction: column;
-}
-
 .summary-section.totals-section {
   flex: 1;
   min-width: 250px;
-}
-
-.table-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-
-  h2 {
-    margin: 0;
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text-primary);
-  }
 }
 
 .totals-section {
@@ -150,6 +139,24 @@ mat-form-field {
   margin: 4px 0;
 }
 
+// =====================
+// STEP 1
+// =====================
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+mat-form-field {
+  margin-top: 4px;
+}
+
+
+// =====================
+// ACTION BAR STYLES
+// =====================
 .step-action-bar {
   display: flex;
   width: 100%;
@@ -171,12 +178,21 @@ mat-form-field {
   align-items: center;
 }
 
+
+// =====================
+// GO BACK BUTTON
+// =====================
 .go-back-btn {
   background-color: var(--bg-secondary) !important;
   color: var(--text-primary) !important;
 }
+.go-back-btn:disabled {
+  opacity: 0.5 !important;
+}
 
+// =====================
 // NEXT BUTTON
+// =====================
 .next-btn {
   background-color: var(--button-blue) !important;
   color: var(--text-primary) !important;
@@ -195,13 +211,53 @@ mat-form-field {
   color: var(--text-disabled) !important;
 }
 
-
+// =====================
+// CREATE BUTTON
+// =====================
 .create-btn {
   min-width: 180px;
   background-color: var(--button-green) !important;
   color: var(--text-primary) !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 }
 
+.create-btn-wrapper.invalid .create-btn {
+  background-color: var(--button-dark-green) !important;
+  color: var(--text-disabled) !important;
+  opacity: 0.8;
+}
+
+.create-btn-wrapper.loading .create-btn {
+  background-color: var(--button-green) !important;
+  color: var(--text-primary) !important;
+  opacity: 1;
+  cursor: default;
+}
+
+.create-btn-wrapper.invalid .create-btn mat-icon {
+  color: var(--text-disabled) !important;
+}
+
+// =====================
+// SHARED WRAPPER STATES
+// =====================
+.create-btn-wrapper.invalid,
+.create-btn-wrapper.loading,
+.next-btn-wrapper.invalid {
+  cursor: not-allowed;
+}
+
+.next-btn-wrapper.invalid:hover,
+.create-btn-wrapper.invalid:hover,
+.create-btn-wrapper.loading:hover {
+  opacity: 0.9;
+}
+
+// =====================
+// MATERIAL STEPPER
+// =====================
 .mat-stepper-vertical {
   background-color: var(--bg-primary) !important;
   margin-bottom: 30px !important;
@@ -225,8 +281,58 @@ mat-form-field {
   background-color: var(--button-green) !important;
 }
 
+// Step icons
+::ng-deep .mat-step-header .mat-step-icon {
+  background-color: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
+}
+
+::ng-deep .mat-step-header .mat-step-icon-selected {
+  background-color: var(--button-blue) !important;
+  color: var(--text-primary) !important;
+}
+
+::ng-deep .mat-step-header .mat-step-icon-state-done,
+::ng-deep .mat-step-header .mat-step-icon-state-edit {
+  background-color: var(--button-green) !important;
+  color: var(--text-primary) !important;
+}
+
+// Step labels
+::ng-deep .mat-step-header .mat-step-label {
+  color: var(--text-secondary) !important;
+}
+
+::ng-deep .mat-step-header .mat-step-label-active {
+  color: var(--text-primary) !important;
+}
+
+::ng-deep .mat-step-header .mat-step-label-selected {
+  color: var(--text-primary) !important;
+}
+
+// Remove focus highlight on step headers
+::ng-deep .mat-step-header.cdk-program-focused,
+::ng-deep .mat-step-header.cdk-keyboard-focused {
+  background: transparent !important;
+}
+
+// Connector line color
+::ng-deep .mat-stepper-vertical-line::before {
+  border-left-color: var(--border-color) !important;
+}
+
+// =====================
+// ICON
+// =====================
 .outline-icon {
   font-size: 24px;
   width: 24px;
   height: 24px;
+  line-height: 24px;
+  font-variation-settings:
+    'FILL' 0,
+    'wght' 300,
+    'GRAD' 0,
+    'opsz' 24;
 }
