@@ -32,28 +32,28 @@
   white-space: nowrap;
 
   &[data-status='DRAFT'] {
-    color: #868e96;
-    border-color: #ced4da;
+    color: var(--amount-draft);
+    border-color: var(--amount-draft-border);
   }
 
   &[data-status='PAID'] {
-    color:#22c55e;
-    border-color: #51cf66;
+    color: var(--amount-green);
+    border-color: var(--amount-green-border);
   }
 
   &[data-status='PARTIAL'] {
-    color: #c07700;
-    border-color: #fcc419;
+    color: var(--amount-orange);
+    border-color: var(--amount-orange-border);
   }
 
   &[data-status='UNPAID'] {
-    color: #ef4444;
-    border-color: #ff6b6b;
+    color: var(--amount-red);
+    border-color: var(--amount-red-border);
   }
 
   &[data-status='VOID'] {
-    color: #adb5bd;
-    border-color: #dee2e6;
+    color: var(--amount-void);
+    border-color: var(--amount-void-border);
     text-decoration: line-through;
   }
 }
@@ -156,11 +156,11 @@
   }
 
   .paid {
-    color: #22c55e;
+    color: var(--amount-green);
   }
 
   .balance {
-    color: #ef4444;
+    color: var(--amount-red);
   }
 }
 
@@ -227,7 +227,7 @@
   }
 
   &.discount span:last-child {
-    color: #f59e0b;
+    color: var(--amount-orange);
   }
 
   &.total span:last-child {
@@ -235,12 +235,12 @@
   }
 
   &.paid span:last-child {
-    color: #22c55e;
+    color: var(--amount-green);
     font-weight: 500;
   }
 
   &.balance span:last-child {
-    color: #ef4444;
+    color: var(--amount-red);
     font-weight: 500;
   }
 }

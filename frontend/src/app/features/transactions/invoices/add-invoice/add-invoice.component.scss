@@ -108,13 +108,16 @@ mat-form-field {
   color: var(--text-secondary);
 
   &.discount span:last-child {
-    color: #ef4444;;
+    color: var(--amount-orange);;
   }
 
   &.grand-total {
     color: var(--text-primary);
     font-size: 16px;
     font-weight: 600;
+  }
+  &.grand-total span:last-child{
+    color: var(--amount-red);
   }
 }
 

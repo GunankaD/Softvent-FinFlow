@@ -48,6 +48,23 @@ $theme: mat.define-theme((
   --button-dark-green: #164b1f;
   --button-red: #880808;
 
+  /* AMOUNT */
+  --amount-green: #22c55e;
+  --amount-green-border:#51cf66;
+
+  --amount-red: #ef4444;
+  --amount-red-border: #ff6b6b;
+
+  --amount-orange: #f59e0b;
+  --amount-orange-border: #fcc419;
+
+  --amount-void: #adb5bd;
+  --amount-void-border: #dee2e6;
+
+  --amount-draft: #868e96;
+  --amount-draft-border: #ced4da;
+
+
   /* GLOBAL MDC OVERRIDES */
   --mdc-theme-primary: var(--accent-color);
 

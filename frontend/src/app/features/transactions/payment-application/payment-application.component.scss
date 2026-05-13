@@ -99,7 +99,7 @@
 
 .summary-section.totals-section {
   flex: 1;
-  min-width: 250px;
+  min-width: 270px;
 }
 
 .totals-section {
@@ -132,6 +132,14 @@
     font-size: 16px;
     font-weight: 600;
   }
+}
+
+.totals-row.amount-green span:last-child {
+  color: var(--amount-green);
+}
+
+.totals-row.amount-red span:last-child {
+  color: var(--amount-red);
 }
 
 .totals-divider {

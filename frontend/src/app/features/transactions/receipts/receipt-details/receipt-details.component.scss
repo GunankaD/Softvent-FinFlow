@@ -130,12 +130,12 @@
   }
 
   &.paid span:last-child {
-    color: #ef4444;
+    color: var(--amount-red);
     font-weight: 500;
   }
 
   &.balance span:last-child {
-    color: #22c55e;
+    color: var(--amount-green);
     font-weight: 500;
   }
 }
