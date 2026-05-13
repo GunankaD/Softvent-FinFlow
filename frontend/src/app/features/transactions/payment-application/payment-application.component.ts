@@ -318,7 +318,22 @@ export class PaymentApplicationComponent {
   }
 
   public onUpdateReceiptAmount(receiptNumber: string, amount: number): void {
-    this.store.updateReceiptAmount(receiptNumber, amount);
+    const receipt = this.selectedReceipts()
+      .find(r => r.receiptNumber === receiptNumber);
+
+    if (!receipt) return;
+
+    const safeAmount = Math.min(
+      amount,
+      receipt.unappliedAmount
+    );
+
+    receipt.appliedAmount = safeAmount;
+
+    this.store.updateReceiptAmount(
+      receiptNumber,
+      safeAmount
+    );
   }
 
   public onRemoveReceipt(receiptNumber: string): void {
@@ -350,7 +365,22 @@ export class PaymentApplicationComponent {
   }
 
   public onUpdateInvoiceAmount(invoiceNumber: string, amount: number): void {
-    this.store.updateInvoiceAmount(invoiceNumber, amount);
+    const invoice = this.selectedInvoices()
+      .find(i => i.invoiceNumber === invoiceNumber);
+
+    if (!invoice) return;
+
+    const safeAmount = Math.min(
+      amount,
+      invoice.balanceAmount
+    );
+
+    invoice.appliedAmount = safeAmount;
+
+    this.store.updateInvoiceAmount(
+      invoiceNumber,
+      safeAmount
+    );
   }
 
   public onRemoveInvoice(invoiceNumber: string): void {
@@ -407,16 +437,16 @@ export class PaymentApplicationComponent {
   protected isSubmitting = signal(false);
 
   readonly reviewReceiptColumns: TableColumn[] = [
-    { key: 'receiptNumber',   label: 'Receipt No',  flex: 1,   minWidth: 130, type: 'text'     },
-    { key: 'receiptDate',     label: 'Date',        flex: 1,   minWidth: 170, type: 'date'     },
+    { key: 'receiptNumber',   label: 'Receipt No',  flex: 1,   minWidth: 140, type: 'text'     },
+    { key: 'receiptDate',     label: 'Date',        flex: 1,   minWidth: 160, type: 'date'     },
     { key: 'unappliedAmount', label: 'Balance ₹',   flex: 1.5, minWidth: 150, type: 'currency' },
     { key: 'appliedAmount',   label: 'Applied ₹',   flex: 1.5, minWidth: 150, type: 'currency' },
     { key: 'viewIcon',        label: 'View',        flex: 0.5, minWidth: 70,  type: 'viewIcon' }
   ];
 
   readonly reviewInvoiceColumns: TableColumn[] = [
-    { key: 'invoiceNumber', label: 'Invoice No', flex: 1,   minWidth: 130, type: 'text'     },
-    { key: 'invoiceDate',   label: 'Date',       flex: 1,   minWidth: 170, type: 'date'     },
+    { key: 'invoiceNumber', label: 'Invoice No', flex: 1,   minWidth: 140, type: 'text'     },
+    { key: 'invoiceDate',   label: 'Date',       flex: 1,   minWidth: 160, type: 'date'     },
     { key: 'balanceAmount', label: 'Balance ₹',  flex: 1.5, minWidth: 150, type: 'currency' },
     { key: 'appliedAmount', label: 'Applied ₹',  flex: 1.5, minWidth: 150, type: 'currency' },
     { key: 'viewIcon',      label: 'View',       flex: 0.5, minWidth: 70,  type: 'viewIcon' }
