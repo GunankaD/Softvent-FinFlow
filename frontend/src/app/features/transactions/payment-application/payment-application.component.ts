@@ -407,16 +407,16 @@ export class PaymentApplicationComponent {
   protected isSubmitting = signal(false);
 
   readonly reviewReceiptColumns: TableColumn[] = [
-    { key: 'receiptNumber',   label: 'Receipt No',  flex: 1,   minWidth: 140, type: 'text'     },
-    { key: 'receiptDate',     label: 'Date',        flex: 1,   minWidth: 180, type: 'date'     },
+    { key: 'receiptNumber',   label: 'Receipt No',  flex: 1,   minWidth: 130, type: 'text'     },
+    { key: 'receiptDate',     label: 'Date',        flex: 1,   minWidth: 170, type: 'date'     },
     { key: 'unappliedAmount', label: 'Balance ₹',   flex: 1.5, minWidth: 150, type: 'currency' },
     { key: 'appliedAmount',   label: 'Applied ₹',   flex: 1.5, minWidth: 150, type: 'currency' },
     { key: 'viewIcon',        label: 'View',        flex: 0.5, minWidth: 70,  type: 'viewIcon' }
   ];
 
   readonly reviewInvoiceColumns: TableColumn[] = [
-    { key: 'invoiceNumber', label: 'Invoice No', flex: 1,   minWidth: 140, type: 'text'     },
-    { key: 'invoiceDate',   label: 'Date',       flex: 1,   minWidth: 180, type: 'date'     },
+    { key: 'invoiceNumber', label: 'Invoice No', flex: 1,   minWidth: 130, type: 'text'     },
+    { key: 'invoiceDate',   label: 'Date',       flex: 1,   minWidth: 170, type: 'date'     },
     { key: 'balanceAmount', label: 'Balance ₹',  flex: 1.5, minWidth: 150, type: 'currency' },
     { key: 'appliedAmount', label: 'Applied ₹',  flex: 1.5, minWidth: 150, type: 'currency' },
     { key: 'viewIcon',      label: 'View',       flex: 0.5, minWidth: 70,  type: 'viewIcon' }
