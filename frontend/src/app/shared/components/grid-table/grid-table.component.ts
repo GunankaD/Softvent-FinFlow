@@ -41,6 +41,7 @@ export class GridTableComponent {
   @Input() showRefresh: boolean = true;
   @Input() enableFilter: boolean = true;
   @Input() pagination: boolean = true;
+  @Input() enableRowSelection: boolean = false;
 
   @Input() paginationPageSize: number = 25;
   @Input() paginationPageSizeSelector: number[] = [10, 25, 50, 100];
@@ -50,6 +51,7 @@ export class GridTableComponent {
   @Output() view = new EventEmitter<any>();
   @Output() delete = new EventEmitter<any>();
   @Output() inputValueChange = new EventEmitter<any>();
+  @Output() select = new EventEmitter<any>();
 
   // GRID STATE
   private gridApi!: GridApi;
@@ -243,10 +245,28 @@ export class GridTableComponent {
             min: isQuantity ? 1 : 0
           },
           valueParser: (params: any) => {
-            const newValue = parseFloat(params.newValue);
-            if (isNaN(newValue) || newValue < (isQuantity ? 1 : 0)) {
-              return (isQuantity ? 1 : 0);
+            // 1. Get the raw input
+            const input = params.newValue;
+
+            // 2. If it's empty or null, default to min
+            if (input === null || input === undefined || input === '') {
+              return isQuantity ? 1 : 0;
             }
+
+            const newValue = parseFloat(input);
+            const min = isQuantity ? 1 : 0;
+            const max = isQuantity ? Infinity : 100;
+
+            // 3. If input is not a number, return the min (or params.oldValue)
+            if (isNaN(newValue)) {
+              return min; 
+            }
+
+            // 4. Force clamping
+            // This ensures that if they type 500 in a % cell, it returns 100
+            if (newValue < min) return min;
+            if (newValue > max) return max;
+
             return newValue;
           },
           cellStyle: {
@@ -273,9 +293,34 @@ export class GridTableComponent {
   onCellClicked(event: any): void {
     if (event.colDef.field === 'viewIcon') {
       this.view.emit(event.data);
+      return
     }
     if (event.colDef.field === 'deleteIcon') {
       this.delete.emit(event.data);
+      return
+    }
+  }
+
+  get rowSelectionConfig(): any {
+    if (!this.enableRowSelection) return undefined;
+    
+    return { 
+      mode: 'singleRow', 
+      enableClickSelection: false 
+    };
+  }
+
+  // Listen to native AG Grid selection changes
+  onSelectionChanged(event: any): void {
+    if (!this.enableRowSelection) return;
+
+    const selectedRows = event.api.getSelectedRows();
+    
+    // Emit the selected row data, or null if they deselected it
+    if (selectedRows.length > 0) {
+      this.select.emit(selectedRows[0]);
+    } else {
+      this.select.emit(null); 
     }
   }
 
@@ -303,8 +348,9 @@ export class GridTableComponent {
     const stableId = // d.invid || d.invoiceNumber || 
     // d.rid || d.receiptNumber || 
     d.icode || 
-    d.id || 
-    d.ccode;
+    d.id 
+    // d.ccode
+    ;
 
     if (stableId) return stableId.toString();
 

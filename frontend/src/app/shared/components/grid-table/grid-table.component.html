@@ -33,7 +33,9 @@
 
         [enableCellTextSelection]="true"
         [stopEditingWhenCellsLoseFocus]="true"
+        [rowSelection]="rowSelectionConfig"
 
+        (selectionChanged)="onSelectionChanged($event)"
         (gridReady)="onGridReady($event)"
         (cellClicked)="onCellClicked($event)"
         (cellValueChanged)="onCellValueChanged($event)">
