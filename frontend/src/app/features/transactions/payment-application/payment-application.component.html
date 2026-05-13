@@ -199,6 +199,7 @@
                     [pagination]="false"
                     [enableFilter]="true"
                     [showRefresh]="false"
+                    
                     (inputValueChange)="mode() === 'INVOICE' ? onUpdateReceiptAmount($event.receiptNumber, $event.appliedAmount) : onUpdateInvoiceAmount($event.invoiceNumber, $event.appliedAmount)"
                     (delete)="mode() === 'INVOICE' ? onRemoveReceipt($event.receiptNumber) : onRemoveInvoice($event.invoiceNumber)">
                 </app-grid-table>
