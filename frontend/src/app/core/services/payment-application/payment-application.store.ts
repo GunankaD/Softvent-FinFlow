@@ -235,7 +235,7 @@ export class PaymentApplicationStore {
 
     const appliedAmount =
       amount ??
-      Math.min(remainingBalance, receipt.unappliedAmount);
+      Number(Math.min(remainingBalance, receipt.unappliedAmount).toFixed(2));
 
     map.set(receipt.receiptNumber, [
       {
@@ -267,7 +267,7 @@ export class PaymentApplicationStore {
     const maxAllowed =
       invoice.balanceAmount - currentTotalExcludingThis;
 
-    const safeAmount = Math.max(0, Math.min(amount, maxAllowed));
+    const safeAmount = Number(Math.max(0, Math.min(amount, maxAllowed)).toFixed(2));
 
     applications[0].appliedAmount = safeAmount;
 
@@ -328,7 +328,7 @@ export class PaymentApplicationStore {
 
     const appliedAmount =
       amount ??
-      Math.min(remainingBalance, invoice.balanceAmount);
+      Number(Math.min(remainingBalance, invoice.balanceAmount).toFixed(2));
 
     const updated = [
       ...existing,
@@ -368,7 +368,7 @@ export class PaymentApplicationStore {
     const maxAllowed =
       receipt.unappliedAmount - currentTotalExcludingThis;
 
-    const safeAmount = Math.max(0, Math.min(amount, maxAllowed));
+    const safeAmount = Number(Math.max(0, Math.min(amount, maxAllowed)).toFixed(2));
 
     const updated = applications.map(app =>
       app.invoiceNumber === invoiceNumber
@@ -412,7 +412,7 @@ export class PaymentApplicationStore {
   // =========================
 
   public getApplicationsMap(): Map<string, PaymentApplicationItems[]> {
-    return new Map();
+    return this.applicationsMap();
   }
 
 
