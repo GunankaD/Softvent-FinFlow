@@ -230,48 +230,88 @@ export class GridTableComponent {
         };
       }
 
-      // INPUT COLUMNS
-      if (col.type === 'input') {
-        const isQuantity = col.key === 'quantity';
+      // 1. AMOUNT (For Currency, Balances, Totals)
+      if (col.type === 'inputAmount') {
         return {
           ...baseCol,
           editable: true,
           singleClickEdit: true,
           cellEditor: 'agNumberCellEditor',
           cellEditorParams: {
-            precision: isQuantity ? 0 : 2,
-            step: isQuantity ? 1 : 0.01,
+            precision: 2,
+            step: 0.01,
             showStepperButtons: true,
-            min: isQuantity ? 1 : 0
+            min: 0,
+            max: Infinity
           },
           valueParser: (params: any) => {
-            // 1. Get the raw input
             const input = params.newValue;
-
-            // 2. If it's empty or null, default to min
-            if (input === null || input === undefined || input === '') {
-              return isQuantity ? 1 : 0;
-            }
+            if (input === null || input === undefined || input === '') return 0;
 
             const newValue = parseFloat(input);
-            const min = isQuantity ? 1 : 0;
-            const max = isQuantity ? Infinity : 100;
+            if (isNaN(newValue)) return 0;
 
-            // 3. If input is not a number, return the min (or params.oldValue)
-            if (isNaN(newValue)) {
-              return min; 
-            }
+            return newValue < 0 ? 0 : newValue;
+          },
+          cellStyle: { overflow: 'visible' } as CellStyle
+        };
+      }
 
-            // 4. Force clamping
-            // This ensures that if they type 500 in a % cell, it returns 100
-            if (newValue < min) return min;
-            if (newValue > max) return max;
+      // 2. QUANTITY (For Whole Items)
+      if (col.type === 'inputQuantity') {
+        return {
+          ...baseCol,
+          editable: true,
+          singleClickEdit: true,
+          cellEditor: 'agNumberCellEditor',
+          cellEditorParams: {
+            precision: 0, // No decimals
+            step: 1,      // Increments by 1
+            showStepperButtons: true,
+            min: 1,       // Usually start at 1 for orders
+            max: Infinity
+          },
+          valueParser: (params: any) => {
+            const input = params.newValue;
+            if (input === null || input === undefined || input === '') return 1;
+
+            const newValue = parseInt(input, 10);
+            if (isNaN(newValue)) return 1;
+
+            return newValue < 1 ? 1 : newValue;
+          },
+          cellStyle: { overflow: 'visible' } as CellStyle
+        };
+      }
+
+      // 3. PERCENT (For Discounts, Tax, Rates)
+      if (col.type === 'inputPercent') {
+        return {
+          ...baseCol,
+          editable: true,
+          singleClickEdit: true,
+          cellEditor: 'agNumberCellEditor',
+          cellEditorParams: {
+            precision: 2,
+            step: 0.01,
+            showStepperButtons: true,
+            min: 0,
+            max: 100
+          },
+          valueParser: (params: any) => {
+            const input = params.newValue;
+            if (input === null || input === undefined || input === '') return 0;
+
+            const newValue = parseFloat(input);
+            if (isNaN(newValue)) return 0;
+
+            // Force clamp between 0 and 100
+            if (newValue < 0) return 0;
+            if (newValue > 100) return 100;
 
             return newValue;
           },
-          cellStyle: {
-            overflow: 'visible'
-          } as CellStyle
+          cellStyle: { overflow: 'visible' } as CellStyle
         };
       }
 
