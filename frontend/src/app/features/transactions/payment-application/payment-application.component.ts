@@ -456,6 +456,10 @@ export class PaymentApplicationComponent {
 
     const map = this.store.getApplicationsMap();
 
+    const mode = this.mode();
+    const invoiceNumber = this.selectedInvoice()?.invoiceNumber;
+    const receiptNumber = this.selectedReceipt()?.receiptNumber;
+
     if (map.size === 0) {
       this.snackbar.error('No applications to submit');
       return;
@@ -471,8 +475,28 @@ export class PaymentApplicationComponent {
       }
 
       this.snackbar.success('Payment applied successfully');
-
       this.store.resetAll();
+      
+      if (mode === 'INVOICE') {
+
+        if (invoiceNumber) {
+          await this.router.navigate([
+            '/transactions/invoices',
+            invoiceNumber
+          ]);
+        }
+
+      } else if (mode === 'RECEIPT') {
+
+        if (receiptNumber) {
+          await this.router.navigate([
+            '/transactions/receipts',
+            receiptNumber
+          ]);
+        }
+      }
+
+      
 
     } catch (error) {
       this.snackbar.error('Failed to apply payment');
