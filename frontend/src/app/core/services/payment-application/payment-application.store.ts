@@ -1,11 +1,13 @@
 // ANGULAR
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
 
 // DTOs
 import { CustomerSummaryResponse } from '../../models/customer.models';
 import { InvoiceSummaryResponse } from '../../models/transaction.invoice.models';
 import { ReceiptSummaryResponse } from '../../models/transaction.receipt.models';
 import { PaymentApplicationItems } from '../../models/transaction.payment-application.model';
+
+import { SnackbarService } from '../snackbar/snackbar.service';
 
 type Mode = 'INVOICE' | 'RECEIPT';
 
@@ -27,12 +29,17 @@ export class PaymentApplicationStore {
   // STATE (Signals)
   // =========================
 
+  private readonly snackbar = inject(SnackbarService);
+
   private readonly mode = signal<Mode | null>(null);
 
   private readonly customer = signal<CustomerSummaryResponse | null>(null);
 
   private readonly selectedInvoice = signal<InvoiceSummaryResponse | null>(null);
   private readonly selectedReceipt = signal<ReceiptSummaryResponse | null>(null);
+
+  private readonly allReceipts = signal<ReceiptSummaryResponse[]>([]);
+  private readonly allInvoices = signal<InvoiceSummaryResponse[]>([]);
 
   /**
    * Core structure:
@@ -108,11 +115,16 @@ export class PaymentApplicationStore {
     const map = this.applicationsMap();
 
     return Array.from(map.entries()).map(([receiptNumber, apps]) => {
+
+      const receipt = this.allReceipts().find(r => r.receiptNumber === receiptNumber);
+      if (!receipt) return null;
+
       return {
-        receiptNumber,
+        ...receipt,
         appliedAmount: apps[0]?.appliedAmount ?? 0
-      } as SelectedReceipt;
-    });
+      };
+
+    }).filter(Boolean) as SelectedReceipt[];
   });
 
 
@@ -125,10 +137,17 @@ export class PaymentApplicationStore {
 
     const apps = this.applicationsMap().get(receipt.receiptNumber) ?? [];
 
-    return apps.map(app => ({
-      invoiceNumber: app.invoiceNumber,
-      appliedAmount: app.appliedAmount
-    } as SelectedInvoice));
+    return apps.map(app => {
+
+      const invoice = this.allInvoices().find(i => i.invoiceNumber === app.invoiceNumber);
+      if (!invoice) return null;
+
+      return {
+        ...invoice,
+        appliedAmount: app.appliedAmount
+      };
+
+    }).filter(Boolean) as SelectedInvoice[];
   });
 
 
@@ -173,6 +192,14 @@ export class PaymentApplicationStore {
     this.resetStep3();
   }
 
+  public setReceipts(receipts: ReceiptSummaryResponse[]): void {
+    this.allReceipts.set(receipts);
+  }
+
+  public setInvoices(invoices: InvoiceSummaryResponse[]): void {
+    this.allInvoices.set(invoices);
+  }
+
 
   // =========================
   // STEP 3 ACTIONS (Invoice Mode)
@@ -188,12 +215,27 @@ export class PaymentApplicationStore {
     const invoice = this.selectedInvoice()!;
     const map = new Map(this.applicationsMap());
 
-    // Prevent duplicate receipt
-    if (map.has(receipt.receiptNumber)) return;
+    // Prevent duplicate
+    if (map.has(receipt.receiptNumber)) {
+      this.snackbar.error('Receipt already added');
+      return;
+    }
+
+    const currentTotal = Array.from(map.values()).reduce(
+      (sum, apps) => sum + (apps[0]?.appliedAmount ?? 0),
+      0
+    );
+
+    const remainingBalance = invoice.balanceAmount - currentTotal;
+
+    if (remainingBalance <= 0) {
+      this.snackbar.error('Invoice fully allocated');
+      return;
+    }
 
     const appliedAmount =
       amount ??
-      Math.min(invoice.balanceAmount, receipt.unappliedAmount);
+      Math.min(remainingBalance, receipt.unappliedAmount);
 
     map.set(receipt.receiptNumber, [
       {
@@ -266,20 +308,27 @@ export class PaymentApplicationStore {
 
     const existing = map.get(receipt.receiptNumber) ?? [];
 
-    // Prevent duplicate invoice
-    if (existing.some(app => app.invoiceNumber === invoice.invoiceNumber)) return;
+    // Prevent duplicate
+    if (existing.some(app => app.invoiceNumber === invoice.invoiceNumber)) {
+      this.snackbar.error('Invoice already added');
+      return;
+    }
 
     const currentTotal = existing.reduce(
       (sum, app) => sum + app.appliedAmount,
       0
     );
 
-    const remainingReceiptBalance =
-      receipt.unappliedAmount - currentTotal;
+    const remainingBalance = receipt.unappliedAmount - currentTotal;
+
+    if (remainingBalance <= 0) {
+      this.snackbar.error('Receipt fully allocated');
+      return;
+    }
 
     const appliedAmount =
       amount ??
-      Math.min(remainingReceiptBalance, invoice.balanceAmount);
+      Math.min(remainingBalance, invoice.balanceAmount);
 
     const updated = [
       ...existing,
