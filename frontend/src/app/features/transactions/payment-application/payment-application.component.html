@@ -1,1 +1,415 @@
-<p>payment-application works!</p>
+<div class="container">
+
+  <app-breadcrumb [items]="breadcrumbs()"></app-breadcrumb>
+  <p class="subtitle">Apply payments to invoices</p>
+
+  <mat-vertical-stepper linear>
+
+    <!-- ================= STEP 1 ================= -->
+    <mat-step [stepControl]="customerGroup" [editable]="true">
+        <form [formGroup]="customerGroup">
+
+            <ng-template matStepLabel>Customer</ng-template>
+
+            <div class="form-grid">
+
+            <!-- CUSTOMER INPUT -->
+            <mat-form-field appearance="outline">
+                <mat-label>Customer Code or Name</mat-label>
+                <input
+                matInput
+                [formControl]="customerSearch"
+                [matAutocomplete]="customerAuto"
+                />
+                <mat-autocomplete
+                #customerAuto="matAutocomplete"
+                (optionSelected)="onCustomerSelected($event.option.value)"
+                >
+                <mat-option
+                    *ngFor="let customer of filteredCustomers"
+                    [value]="customer"
+                >
+                    {{ customer.ccode }} | {{ customer.cname }}
+                </mat-option>
+                </mat-autocomplete>
+            </mat-form-field>
+
+            </div>
+
+            <div class="step-action-bar step-action-bar--step-1">
+                <div class="next-btn-wrapper" [class.invalid]="customerGroup.invalid">
+                    <button
+                    mat-raised-button
+                    matStepperNext
+                    type="button"
+                    class="full next-btn"
+                    [disabled]="customerGroup.invalid"
+                    >
+                    Next
+                    <mat-icon
+                        fontSet="material-symbols-outlined"
+                        class="outline-icon"
+                        iconPositionEnd
+                    >
+                        arrow_circle_right
+                    </mat-icon>
+                    </button>
+                </div>
+            </div>
+
+        </form>
+    </mat-step>
+
+    <!-- ================= STEP 2 ================= -->
+    <mat-step [editable]="true">
+
+        <ng-template matStepLabel>Select an Invoice or a Receipt to apply payments on</ng-template>
+
+        <!-- TABS -->
+        <mat-tab-group>
+
+            <!-- ================= INVOICES TAB ================= -->
+            <mat-tab label="Invoices">
+
+            <div class="table-container">
+
+                <app-grid-table
+                [columns]="invoiceColumns"
+                [data]="invoices()"
+                [loading]="loadingInvoices()"
+                [gridHeight]="getGridHeight(invoices().length)"
+                [pagination]="false"
+                [enableRowSelection]="true"
+
+                (refresh)="loadInvoices()"
+                (view)="onInvoiceView($event)"
+                (select)="onInvoiceSelect($event)">
+                </app-grid-table>
+
+            </div>
+
+            </mat-tab>
+
+            <!-- ================= RECEIPTS TAB ================= -->
+            <mat-tab label="Receipts">
+
+            <div class="table-container">
+
+                <app-grid-table
+                [columns]="receiptColumns"
+                [data]="receipts()"
+                [loading]="loadingReceipts()"
+                [gridHeight]="getGridHeight(receipts().length)"
+                [pagination]="false"
+                [enableRowSelection]="true"
+
+                (refresh)="loadReceipts()"
+                (view)="onReceiptView($event)"
+                (select)="onReceiptSelect($event)">
+                </app-grid-table>
+
+            </div>
+
+            </mat-tab>
+
+        </mat-tab-group>
+
+
+        <!-- ACTION BAR -->
+        <div class="step-action-bar step-action-bar--step-2">
+
+            <!-- GO BACK -->
+            <button mat-button matStepperPrevious class="go-back-btn" type="button">
+            <mat-icon fontSet="material-symbols-outlined" class="outline-icon">
+                arrow_circle_left
+            </mat-icon>
+            Previous
+            </button>
+
+            <!-- NEXT -->
+            <div class="next-btn-wrapper" [class.invalid]="!hasSelection()">
+            <button
+                mat-raised-button
+                matStepperNext
+                type="button"
+                class="next-btn"
+                [disabled]="!hasSelection()"
+            >
+                Next
+                <mat-icon
+                fontSet="material-symbols-outlined"
+                iconPositionEnd
+                class="outline-icon"
+                >
+                arrow_circle_right
+                </mat-icon>
+            </button>
+            </div>
+
+        </div>
+
+    </mat-step>
+
+    <!-- ================= STEP 3 ================= -->
+    <mat-step [editable]="true">
+
+        <ng-template matStepLabel>Allocation</ng-template>
+
+        <!-- ================= TOP: AVAILABLE ================= -->
+        <div class="table-container">
+
+            <div class="table-header">
+                <h2>
+                    {{ mode() === 'INVOICE' ? 'Available Receipts' : 'Available Invoices' }}
+                </h2>
+            </div>
+
+            <app-grid-table
+                [columns]="mode() === 'INVOICE' ? receiptColumns : invoiceColumns"
+                [data]="mode() === 'INVOICE' ? availableReceipts() : availableInvoices()"
+                [loading]="mode() === 'INVOICE' ? loadingReceipts() : loadingInvoices()"
+                [gridHeight]="getGridHeight((mode() === 'INVOICE' ? availableReceipts() : availableInvoices()).length)"
+                [pagination]="false"
+                [enableFilter]="true"
+                [showRefresh]="false"
+                [enableRowSelection]="true"
+                (select)="mode() === 'INVOICE' ? onAddReceipt($event) : onAddInvoice($event)"
+                (view)="mode() === 'INVOICE' ? onReceiptView($event) : onInvoiceView($event)">
+            </app-grid-table>
+
+        </div>
+
+
+        <!-- ================= BOTTOM: SELECTED + SUMMARY ================= -->
+        <div class="payments-totals-container">
+
+            <!-- SELECTED TABLE -->
+            <section class="table payments">
+                <div class="table-header">
+                    <h2>
+                        {{ mode() === 'INVOICE' ? 'Selected Receipts' : 'Selected Invoices' }}
+                    </h2>
+                </div>
+
+                <app-grid-table
+                    [columns]="mode() === 'INVOICE' ? allocationReceiptColumns : allocationInvoiceColumns"
+                    [data]="allocationRows"
+                    [gridHeight]="getGridHeight((mode() === 'INVOICE' ? selectedReceipts() : selectedInvoices()).length)"
+                    [loading]="false"
+                    [pagination]="false"
+                    [enableFilter]="true"
+                    [showRefresh]="false"
+                    (inputValueChange)="mode() === 'INVOICE' ? onUpdateReceiptAmount($event.receiptNumber, $event.appliedAmount) : onUpdateInvoiceAmount($event.invoiceNumber, $event.appliedAmount)"
+                    (delete)="mode() === 'INVOICE' ? onRemoveReceipt($event.receiptNumber) : onRemoveInvoice($event.invoiceNumber)">
+                </app-grid-table>
+            </section>
+
+            <!-- SUMMARY -->
+            <div class="summary-section totals-section">
+                <h3>Balance Summary</h3>
+
+                <div class="totals-grid">
+                    <div class="totals-row">
+                        <span>Original Balance</span>
+                        <span>
+                            {{
+                            mode() === 'INVOICE'
+                                ? (selectedInvoice()?.balanceAmount | currency:'INR')
+                                : (selectedReceipt()?.unappliedAmount | currency:'INR')
+                            }}
+                        </span>
+                    </div>
+
+                    <div class="totals-row">
+                        <span>Total Applied</span>
+                        <span>{{ totalApplied() | currency:'INR' }}</span>
+                    </div>
+
+                    <div class="totals-divider"></div>
+
+                    <div class="totals-row balance">
+                        <span>Remaining Balance</span>
+                        <span>{{ remainingBalance() | currency:'INR' }}</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+    <!-- ================= ACTION BAR ================= -->
+    <div class="step-action-bar step-action-bar--step-3">
+
+        <button mat-button matStepperPrevious class="go-back-btn" type="button">
+        <mat-icon fontSet="material-symbols-outlined" class="outline-icon">
+            arrow_circle_left
+        </mat-icon>
+        Previous
+        </button>
+
+        <div class="next-btn-wrapper">
+        <button
+            mat-raised-button
+            matStepperNext
+            type="button"
+            class="next-btn"
+        >
+            Next
+            <mat-icon fontSet="material-symbols-outlined" iconPositionEnd class="outline-icon">
+            arrow_circle_right
+            </mat-icon>
+        </button>
+        </div>
+
+    </div>
+
+    </mat-step>
+
+    <!-- ================= STEP 4 ================= -->
+    <mat-step [editable]="!isSubmitting()">
+
+    <ng-template matStepLabel>Review</ng-template>
+
+    <!-- SUMMARY -->
+    <div class="summary-container">
+
+        <!-- STEP 1 DETAILS -->
+        <div class="summary-section">
+        <h3>Payment Details</h3>
+
+        <div class="summary-grid">
+            <div><strong>Customer Code</strong><span>{{ selectedCustomer?.ccode }}</span></div>
+            <div><strong>Customer Name</strong><span>{{ selectedCustomer?.cname }}</span></div>
+
+            <div *ngIf="mode() === 'INVOICE'">
+            <strong>Invoice</strong>
+            <span>{{ selectedInvoice()?.invoiceNumber }}</span>
+            </div>
+
+            <div *ngIf="mode() === 'RECEIPT'">
+            <strong>Receipt</strong>
+            <span>{{ selectedReceipt()?.receiptNumber }}</span>
+            </div>
+        </div>
+        </div>
+
+
+        <!-- TABLE + TOTALS WRAPPER -->
+        <div class="payments-totals-container">
+
+        <!-- ALLOCATION TABLE -->
+        <section class="table payments">
+            <div class="table-header">
+            <h2>Allocations</h2>
+            </div>
+
+            <app-grid-table
+            [columns]="mode() === 'INVOICE'
+                ? reviewReceiptColumns
+                : reviewInvoiceColumns"
+            [data]="allocationRows"
+            [gridHeight]="getGridHeight(allocationRows.length)"
+
+            [loading]="false"
+
+            [pagination]="false"
+            [enableFilter]="false"
+            [showRefresh]="false"
+
+            (view)="mode() === 'INVOICE'
+                ? onReceiptView($event)
+                : onInvoiceView($event)">
+            </app-grid-table>
+        </section>
+
+
+        <!-- BALANCE SUMMARY -->
+        <div class="summary-section totals-section">
+            <h3>Balance Summary</h3>
+
+            <div class="totals-grid">
+
+            <div class="totals-row">
+                <span>Original Balance</span>
+                <span>
+                {{
+                    mode() === 'INVOICE'
+                    ? (selectedInvoice()?.balanceAmount | currency:'INR':'symbol':'1.2-2':'en-IN')
+                    : (selectedReceipt()?.unappliedAmount | currency:'INR':'symbol':'1.2-2':'en-IN')
+                }}
+                </span>
+            </div>
+
+            <div class="totals-row">
+                <span>Total Applied</span>
+                <span>{{ totalApplied() | currency:'INR':'symbol':'1.2-2':'en-IN' }}</span>
+            </div>
+
+            <div class="totals-divider"></div>
+
+            <div class="totals-row grand-total">
+                <span>Remaining Balance</span>
+                <span>{{ remainingBalance() | currency:'INR':'symbol':'1.2-2':'en-IN' }}</span>
+            </div>
+
+            </div>
+        </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ACTION BAR -->
+    <div class="step-action-bar step-action-bar--step-3">
+
+        <!-- BACK -->
+        <button
+        mat-button
+        matStepperPrevious
+        class="go-back-btn"
+        [disabled]="isSubmitting()"
+        >
+        <mat-icon fontSet="material-symbols-outlined" class="outline-icon">
+            arrow_circle_left
+        </mat-icon>
+        Previous
+        </button>
+
+        <!-- SUBMIT -->
+        <div class="create-btn-wrapper" [class.loading]="isSubmitting()">
+        <button
+            mat-raised-button
+            class="create-btn"
+            (click)="onSubmit()"
+            [disabled]="isSubmitting()"
+        >
+
+            <mat-progress-spinner
+            *ngIf="isSubmitting()"
+            mode="indeterminate"
+            diameter="20"
+            strokeWidth="2"
+            style="--mdc-circular-progress-active-indicator-color: white"
+            ></mat-progress-spinner>
+
+            <mat-icon
+            fontSet="material-symbols-outlined"
+            class="outline-icon"
+            *ngIf="!isSubmitting()"
+            >
+            done
+            </mat-icon>
+
+            <span *ngIf="!isSubmitting()">Apply Payment</span>
+
+        </button>
+        </div>
+
+    </div>
+
+    </mat-step>
+
+  </mat-vertical-stepper>
+
+</div>

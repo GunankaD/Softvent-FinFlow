@@ -1,0 +1,232 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+
+  .subtitle {
+    color: var(--text-secondary);
+    margin-bottom: 30px;
+  }
+}
+
+// =====================
+// FORM LAYOUT
+// =====================
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.full {
+  width: 100%;
+}
+
+mat-form-field {
+  margin-top: 4px;
+}
+
+// =====================
+// TABLE
+// =====================
+.table-container {
+  margin-bottom: 16px;
+}
+
+// =====================
+// SUMMARY
+// =====================
+.summary-container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-bottom: 24px;
+}
+
+.summary-section {
+  border: 1px solid var(--border-color);
+  padding: 16px;
+  border-radius: 8px;
+
+  h3 {
+    margin: 0 0 12px 0;
+    color: var(--text-secondary);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+}
+
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+
+  div {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    strong {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-secondary);
+    }
+
+    span {
+      color: var(--text-primary);
+      font-size: 14px;
+    }
+  }
+}
+
+.payments-totals-container {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+  margin-bottom: 16px;
+}
+
+.table.payments {
+  flex: 5;
+  display: flex;
+  flex-direction: column;
+}
+
+.summary-section.totals-section {
+  flex: 1;
+  min-width: 250px;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+
+  h2 {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+}
+
+.totals-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.totals-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+
+.totals-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  color: var(--text-secondary);
+
+  &.balance span:last-child {
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+
+  &.grand-total {
+    color: var(--text-primary);
+    font-size: 16px;
+    font-weight: 600;
+  }
+}
+
+.totals-divider {
+  height: 1px;
+  background-color: var(--border-color);
+  margin: 4px 0;
+}
+
+.step-action-bar {
+  display: flex;
+  width: 100%;
+  margin-top: 16px;
+}
+
+.step-action-bar--step-1 {
+  justify-content: flex-end;
+}
+
+.step-action-bar--step-2 {
+  justify-content: space-between;
+  align-items: center;
+}
+
+.step-action-bar--step-3 {
+  margin-top: 32px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.go-back-btn {
+  background-color: var(--bg-secondary) !important;
+  color: var(--text-primary) !important;
+}
+
+// NEXT BUTTON
+.next-btn {
+  background-color: var(--button-blue) !important;
+  color: var(--text-primary) !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.next-btn-wrapper.invalid .next-btn {
+  background-color: var(--button-dark-blue) !important;
+  color: var(--text-disabled) !important;
+  opacity: 0.8;
+}
+
+.next-btn-wrapper.invalid .next-btn mat-icon {
+  color: var(--text-disabled) !important;
+}
+
+
+.create-btn {
+  min-width: 180px;
+  background-color: var(--button-green) !important;
+  color: var(--text-primary) !important;
+}
+
+.mat-stepper-vertical {
+  background-color: var(--bg-primary) !important;
+  margin-bottom: 30px !important;
+}
+
+::ng-deep .mat-vertical-stepper-content,
+::ng-deep .mat-vertical-content {
+  padding: 0 24px 0px 24px !important;
+}
+
+::ng-deep .mat-step-header .mat-step-icon {
+  background-color: var(--bg-tertiary) !important;
+  color: var(--text-primary) !important;
+}
+
+::ng-deep .mat-step-header .mat-step-icon-selected {
+  background-color: var(--button-blue) !important;
+}
+
+::ng-deep .mat-step-header .mat-step-icon-state-done {
+  background-color: var(--button-green) !important;
+}
+
+.outline-icon {
+  font-size: 24px;
+  width: 24px;
+  height: 24px;
+}
