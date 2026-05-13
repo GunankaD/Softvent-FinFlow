@@ -241,9 +241,9 @@ export class AddInvoiceComponent {
   readonly itemColumns: TableColumn[] = [
     { key: 'icode',           label: 'Item Code',   flex: 1,   minWidth: 100, type: 'text' },
     { key: 'name',            label: 'Item Name',   flex: 1.5, minWidth: 180, type: 'text' },
-    { key: 'quantity',        label: 'Qty',         flex: 0.8, minWidth: 80,  type: 'input' },
+    { key: 'quantity',        label: 'Qty',         flex: 0.8, minWidth: 80,  type: 'inputQuantity' },
     { key: 'rate',            label: 'Rate',        flex: 1,   minWidth: 120, type: 'currency' },
-    { key: 'discountPercent', label: 'Discount %',  flex: 1,   minWidth: 110, type: 'input' },
+    { key: 'discountPercent', label: 'Discount %',  flex: 1,   minWidth: 110, type: 'inputPercent' },
     { key: 'gstRate',         label: 'GST %',       flex: 1,   minWidth: 60,  type: 'number' },
     { key: 'lineTotal',       label: 'Total',       flex: 1.2, minWidth: 140, type: 'currency' },
     { key: 'viewIcon',        label: 'View',        flex: 0.7, minWidth: 70,  type: 'viewIcon'},

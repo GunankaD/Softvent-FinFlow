@@ -372,7 +372,7 @@ export class PaymentApplicationComponent {
     { key: 'receiptNumber',  label: 'Receipt No',  flex: 1.5, minWidth: 110, type: 'text'     },
     { key: 'receiptDate',    label: 'Date',        flex: 1.5, minWidth: 120, type: 'date'     },
     { key: 'unappliedAmount',label: 'Balance ₹',   flex: 1,   minWidth: 140, type: 'currency' },
-    { key: 'appliedAmount',  label: 'Applied ₹',   flex: 1,   minWidth: 120, type: 'input'    },
+    { key: 'appliedAmount',  label: 'Applied ₹',   flex: 1,   minWidth: 120, type: 'inputAmount'    },
     { key: 'viewIcon',       label: 'View',        flex: 0.5, minWidth: 70,  type: 'viewIcon' },
     { key: 'deleteIcon',     label: 'Remove',      flex: 0.5, minWidth: 70,  type: 'deleteIcon' }
   ];
@@ -381,7 +381,7 @@ export class PaymentApplicationComponent {
     { key: 'invoiceNumber', label: 'Invoice No', flex: 1.5, minWidth: 110, type: 'text'     },
     { key: 'invoiceDate',   label: 'Date',       flex: 1.5, minWidth: 120, type: 'date'     },
     { key: 'balanceAmount', label: 'Balance ₹',  flex: 1,   minWidth: 140, type: 'currency' },
-    { key: 'appliedAmount', label: 'Applied ₹',  flex: 1,   minWidth: 120, type: 'input'    },
+    { key: 'appliedAmount', label: 'Applied ₹',  flex: 1,   minWidth: 120, type: 'inputAmount'    },
     { key: 'viewIcon',      label: 'View',       flex: 0.5, minWidth: 70,  type: 'viewIcon' },
     { key: 'deleteIcon',    label: 'Remove',     flex: 0.5, minWidth: 70,  type: 'deleteIcon' }
   ];
