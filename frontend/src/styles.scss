@@ -293,6 +293,29 @@ textarea,
   border-right: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+// =====================
+// AG GRID SELECTION OVERRIDES
+// =====================
+
+/* Target both odd and even rows when they are selected to beat the !important specificity above */
+.ag-theme-quartz-dark .ag-row-odd.ag-row-selected,
+.ag-theme-quartz-dark .ag-row-even.ag-row-selected {
+  background-color: rgba(76, 175, 80, 0.14) !important;
+}
+
+/* Make sure the individual cells don't have a background that hides the green row background */
+.ag-theme-quartz-dark .ag-row.ag-row-selected .ag-cell {
+  background-color: transparent !important;
+}
+
+/* Apply the green left border to the first cell */
+.ag-theme-quartz-dark .ag-row.ag-row-selected .ag-cell:first-child {
+  border-left: 3px solid #4caf50 !important;
+}
+
+.mat-mdc-tab-group .mdc-tab-indicator--active .mdc-tab-indicator__content--underline {
+  border-color: var(--text-primary) !important;
+}
 
 mat-checkbox {
   --mdc-checkbox-selected-icon-color: var(--accent-color);
