@@ -359,8 +359,6 @@ export class GridTableComponent {
     // Emit the selected row data, or null if they deselected it
     if (selectedRows.length > 0) {
       this.select.emit(selectedRows[0]);
-    } else {
-      this.select.emit(null); 
     }
   }
 
