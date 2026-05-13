@@ -220,14 +220,21 @@
                         </span>
                     </div>
 
-                    <div class="totals-row">
+                    <div 
+                        class="totals-row"
+                        [class.amount-green]="mode() === 'INVOICE'"
+                        [class.amount-red]="mode() === 'RECEIPT'"
+                        >
                         <span>Total Applied</span>
                         <span>{{ totalApplied() | currency:'INR' }}</span>
                     </div>
 
                     <div class="totals-divider"></div>
 
-                    <div class="totals-row balance">
+                    <div class="totals-row balance"
+                        [class.amount-red]="mode() === 'INVOICE'"
+                        [class.amount-green]="mode() === 'RECEIPT'"
+                        >
                         <span>Remaining Balance</span>
                         <span>{{ remainingBalance() | currency:'INR' }}</span>
                     </div>
@@ -340,14 +347,18 @@
                 </span>
             </div>
 
-            <div class="totals-row">
+            <div class="totals-row"
+                    [class.amount-green]="mode() === 'INVOICE'"
+                    [class.amount-red]="mode() === 'RECEIPT'">
                 <span>Total Applied</span>
                 <span>{{ totalApplied() | currency:'INR':'symbol':'1.2-2':'en-IN' }}</span>
             </div>
 
             <div class="totals-divider"></div>
 
-            <div class="totals-row grand-total">
+            <div class="totals-row grand-total"
+                [class.amount-red]="mode() === 'INVOICE'"
+                [class.amount-green]="mode() === 'RECEIPT'">
                 <span>Remaining Balance</span>
                 <span>{{ remainingBalance() | currency:'INR':'symbol':'1.2-2':'en-IN' }}</span>
             </div>
