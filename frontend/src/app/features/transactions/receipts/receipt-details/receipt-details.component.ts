@@ -119,13 +119,14 @@ export class ReceiptDetailsComponent implements OnInit {
   protected getGridHeight(rowCount: number, maxRows: number, minRows: number = 1): string {
     const header = 50;
     const rowHeight = 42.2;
+    const filter = 49;
 
     const height =
       rowCount <= minRows
-        ? header + minRows * rowHeight
+        ? header + minRows * rowHeight + filter
         : rowCount <= maxRows
-          ? header + rowCount * rowHeight
-          : header + maxRows * rowHeight;
+          ? header + rowCount * rowHeight + filter
+          : header + maxRows * rowHeight + filter;
 
     return `${height}px`;
   }

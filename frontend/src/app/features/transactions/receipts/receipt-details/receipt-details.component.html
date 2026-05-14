@@ -59,9 +59,9 @@
           [columns]="applicationColumns"
           [data]="applications()"
           [loading]="isLoadingReceipt()"
-          [gridHeight]="getGridHeight(applications().length, 3, 1)"
+          [gridHeight]="getGridHeight(applications().length, 4, 1)"
           [pagination]="false"
-          [enableFilter]="false"
+          [enableFilter]="true"
           [showRefresh]="false"
           (view)="onInvoiceClick($event)">
         </app-grid-table>
