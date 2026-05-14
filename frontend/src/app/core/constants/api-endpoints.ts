@@ -44,6 +44,10 @@ export const API_ENDPOINTS = {
 
   PAYMENT_APPLICATIONS: {
     APPLY: '/payments/apply'
+  },
+
+  OUTSTANDING_SUMMARY: {
+    BASE: '/outstanding-summary'
   }
 
 } as const;
