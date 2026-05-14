@@ -399,19 +399,19 @@ export class PaymentApplicationComponent {
   // STEP 3 ALLOCATION
   // =========================
   readonly allocationReceiptColumns: TableColumn[] = [
-    { key: 'receiptNumber',  label: 'Receipt No',  flex: 1.5, minWidth: 110, type: 'text'     },
+    { key: 'receiptNumber',  label: 'Receipt No',  flex: 1.5, minWidth: 135, type: 'text'     },
     { key: 'receiptDate',    label: 'Date',        flex: 1.5, minWidth: 120, type: 'date'     },
     { key: 'unappliedAmount',label: 'Balance ₹',   flex: 1,   minWidth: 140, type: 'currency' },
-    { key: 'appliedAmount',  label: 'Applied ₹',   flex: 1,   minWidth: 120, type: 'inputAmount'    },
+    { key: 'appliedAmount',  label: 'Applied ₹',   flex: 1,   minWidth: 140, type: 'inputAmount'    },
     { key: 'viewIcon',       label: 'View',        flex: 0.5, minWidth: 70,  type: 'viewIcon' },
     { key: 'deleteIcon',     label: 'Remove',      flex: 0.5, minWidth: 70,  type: 'deleteIcon' }
   ];
 
   readonly allocationInvoiceColumns: TableColumn[] = [
-    { key: 'invoiceNumber', label: 'Invoice No', flex: 1.5, minWidth: 110, type: 'text'     },
+    { key: 'invoiceNumber', label: 'Invoice No', flex: 1.5, minWidth: 135, type: 'text'     },
     { key: 'invoiceDate',   label: 'Date',       flex: 1.5, minWidth: 120, type: 'date'     },
     { key: 'balanceAmount', label: 'Balance ₹',  flex: 1,   minWidth: 140, type: 'currency' },
-    { key: 'appliedAmount', label: 'Applied ₹',  flex: 1,   minWidth: 120, type: 'inputAmount'    },
+    { key: 'appliedAmount', label: 'Applied ₹',  flex: 1,   minWidth: 140, type: 'inputAmount'    },
     { key: 'viewIcon',      label: 'View',       flex: 0.5, minWidth: 70,  type: 'viewIcon' },
     { key: 'deleteIcon',    label: 'Remove',     flex: 0.5, minWidth: 70,  type: 'deleteIcon' }
   ];
@@ -430,26 +430,29 @@ export class PaymentApplicationComponent {
   }
 
 
-
   // =========================
   // STEP 4 (SUBMIT)
   // =========================
   protected isSubmitting = signal(false);
 
+  protected readonly hasAllocations = computed(() => {
+    return this.allocationRows.length > 0;
+  });
+
   readonly reviewReceiptColumns: TableColumn[] = [
-    { key: 'receiptNumber',   label: 'Receipt No',  flex: 1,   minWidth: 140, type: 'text'     },
-    { key: 'receiptDate',     label: 'Date',        flex: 1,   minWidth: 160, type: 'date'     },
-    { key: 'unappliedAmount', label: 'Balance ₹',   flex: 1.5, minWidth: 150, type: 'currency' },
-    { key: 'appliedAmount',   label: 'Applied ₹',   flex: 1.5, minWidth: 150, type: 'currency' },
-    { key: 'viewIcon',        label: 'View',        flex: 0.5, minWidth: 70,  type: 'viewIcon' }
+    { key: 'receiptNumber',   label: 'Receipt No',          flex: 1,   minWidth: 140, type: 'text'     },
+    { key: 'receiptDate',     label: 'Date',                flex: 1,   minWidth: 160, type: 'date'     },
+    { key: 'unappliedAmount', label: 'Initial Balance ₹',   flex: 1.5, minWidth: 150, type: 'currency' },
+    { key: 'appliedAmount',   label: 'Applied ₹',           flex: 1.5, minWidth: 150, type: 'currency' },
+    { key: 'viewIcon',        label: 'View',                flex: 0.5, minWidth: 70,  type: 'viewIcon' }
   ];
 
   readonly reviewInvoiceColumns: TableColumn[] = [
-    { key: 'invoiceNumber', label: 'Invoice No', flex: 1,   minWidth: 140, type: 'text'     },
-    { key: 'invoiceDate',   label: 'Date',       flex: 1,   minWidth: 160, type: 'date'     },
-    { key: 'balanceAmount', label: 'Balance ₹',  flex: 1.5, minWidth: 150, type: 'currency' },
-    { key: 'appliedAmount', label: 'Applied ₹',  flex: 1.5, minWidth: 150, type: 'currency' },
-    { key: 'viewIcon',      label: 'View',       flex: 0.5, minWidth: 70,  type: 'viewIcon' }
+    { key: 'invoiceNumber', label: 'Invoice No',         flex: 1,   minWidth: 140, type: 'text'     },
+    { key: 'invoiceDate',   label: 'Date',               flex: 1,   minWidth: 160, type: 'date'     },
+    { key: 'balanceAmount', label: 'Initial Balance ₹',  flex: 1.5, minWidth: 150, type: 'currency' },
+    { key: 'appliedAmount', label: 'Applied ₹',          flex: 1.5, minWidth: 150, type: 'currency' },
+    { key: 'viewIcon',      label: 'View',               flex: 0.5, minWidth: 70,  type: 'viewIcon' }
   ];
 
   protected async onSubmit(): Promise<void> {

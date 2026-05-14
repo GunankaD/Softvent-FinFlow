@@ -3,7 +3,7 @@
   <app-breadcrumb [items]="breadcrumbs()"></app-breadcrumb>
   <p class="subtitle">Apply payments to invoices</p>
 
-  <mat-vertical-stepper linear>
+  <mat-vertical-stepper linear [disableRipple]="true">
 
     <!-- ================= STEP 1 ================= -->
     <mat-step [stepControl]="customerGroup" [editable]="true">
@@ -255,12 +255,13 @@
             Previous
             </button>
 
-            <div class="next-btn-wrapper">
+            <div class="next-btn-wrapper" [class.invalid]="!hasAllocations()">
             <button
                 mat-raised-button
                 matStepperNext
                 type="button"
                 class="next-btn"
+                [disabled]="!hasAllocations()"
             >
                 Next
                 <mat-icon fontSet="material-symbols-outlined" iconPositionEnd class="outline-icon">
@@ -389,12 +390,12 @@
         </button>
 
         <!-- SUBMIT -->
-        <div class="create-btn-wrapper" [class.loading]="isSubmitting()">
+        <div class="create-btn-wrapper" [class.loading]="isSubmitting()" [class.invalid]="!hasAllocations()">
         <button
             mat-raised-button
             class="create-btn"
             (click)="onSubmit()"
-            [disabled]="isSubmitting()"
+            [disabled]="isSubmitting() || !hasAllocations()"
         >
 
             <mat-progress-spinner
@@ -410,7 +411,7 @@
             class="outline-icon"
             *ngIf="!isSubmitting()"
             >
-            done
+            check_circle
             </mat-icon>
 
             <span *ngIf="!isSubmitting()">Apply Payment</span>

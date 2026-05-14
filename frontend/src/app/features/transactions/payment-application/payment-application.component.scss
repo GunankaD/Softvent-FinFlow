@@ -291,6 +291,10 @@ mat-form-field {
 }
 
 // Step icons
+::ng-deep .mat-step-header {
+  pointer-events: none !important;
+}
+
 ::ng-deep .mat-step-header .mat-step-icon {
   background-color: var(--bg-tertiary) !important;
   color: var(--text-primary) !important;
