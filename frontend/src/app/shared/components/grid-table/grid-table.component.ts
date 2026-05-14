@@ -203,7 +203,7 @@ export class GridTableComponent {
 
           valueFormatter: params => {
             if (params.value == null) return '';
-            return params.value.toLocaleString('en-IN', {
+            return params.value.toLocaleString('en-US', {
               style: 'currency',
               currency: 'INR',
               maximumFractionDigits: 2
@@ -252,6 +252,16 @@ export class GridTableComponent {
             if (isNaN(newValue)) return 0;
 
             return newValue < 0 ? 0 : newValue;
+          },
+          valueFormatter: params => {
+            if (params.value == null) return '';
+
+            return Number(params.value).toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'INR',
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2
+            });
           },
           cellStyle: { overflow: 'visible' } as CellStyle
         };
