@@ -160,6 +160,15 @@ export const routes: Routes = [
         canActivate: [AuthGuard]
     },
 
+    // OUTSTANDING SUMMARY
+    {
+        path: 'outstanding-summary',
+        loadComponent: () =>
+            import('./features/outstanding-summary/outstanding-summary.component')
+            .then(m => m.OutstandingSummaryComponent),
+        canActivate: [AuthGuard]
+    },
+
 
     // WILDCARD ROUTE TO HOME
     {

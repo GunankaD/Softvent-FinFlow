@@ -1,1 +1,19 @@
-<p>outstanding-summary works!</p>
+<div class="container">
+
+  <app-breadcrumb [items]="breadcrumbs()"></app-breadcrumb>
+
+  <p class="subtitle">
+    View customer outstanding balances and payment allocations
+  </p>
+
+  <div>
+    <app-grid-table
+      [columns]="columns"
+      [data]="outstandingSummary()"
+      [loading]="loading()"
+      (refresh)="loadOutstandingSummary()"
+      (view)="onRowClick($event)">
+    </app-grid-table>
+  </div>
+
+</div>
