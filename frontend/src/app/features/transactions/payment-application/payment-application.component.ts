@@ -8,6 +8,7 @@ import {
   Validators
 } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 
 // RXJS
 import { forkJoin } from 'rxjs';
@@ -34,6 +35,7 @@ import { SnackbarService } from '../../../core/services/snackbar/snackbar.servic
 import { BreadcrumbComponent } from '../../../shared/components/breadcrumb/breadcrumb.component';
 import { Breadcrumb } from '../../../shared/components/models/breadcrumb.model';
 import { GridTableComponent } from '../../../shared/components/grid-table/grid-table.component';
+import { ConfirmDialogComponent } from '../../../shared/components/confirm-dialog/confirm-dialog.component';
 
 // DTOs
 import { CustomerSummaryResponse } from '../../../core/models/customer.models';
@@ -84,6 +86,7 @@ export class PaymentApplicationComponent {
   private readonly store = inject(PaymentApplicationStore);
   private readonly snackbar = inject(SnackbarService);
   private readonly router = inject(Router);
+  private readonly dialog = inject(MatDialog);
 
 
   // =========================
@@ -455,6 +458,27 @@ export class PaymentApplicationComponent {
     { key: 'viewIcon',      label: 'View',               flex: 0.5, minWidth: 70,  type: 'viewIcon' }
   ];
 
+  protected onApplyClick(): void {
+
+    if (this.isSubmitting()) return;
+
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      data: {
+        title: 'Apply Payment',
+        message: 'Are you sure you want to apply these payments?',
+        confirmColor: 'green',
+        confirmButtonText: 'Apply'
+      },
+      panelClass: 'custom-dialog-panel'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!result) return;
+
+      this.onSubmit();
+    });
+  }
+  
   protected async onSubmit(): Promise<void> {
 
     const map = this.store.getApplicationsMap();
